@@ -1,0 +1,97 @@
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskr.css);
+
+body,
+talbe,
+th,
+td,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+form,
+fieldset,
+textarea,
+blockquote,
+span,
+* {
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+html,
+body,
+div,
+ul,
+li,
+p,
+h3,
+h1,
+h2,
+h4,
+h5 {
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+ul,
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: #303030;
+}
+textarea,
+input {
+  font-family: 'Noto Sans', sans-serif;
+}
+
+html body {
+  width: 100%;
+  height: 100%;
+}
+
+.common-loading {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background-color: #e17b46;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-justify-content: center;
+}
+
+.common-loading img {
+  width: 30%;
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.topbar {
+  height: 60px;
+}
+.content {
+  min-height: 600px;
+}
+.footer {
+  height: 60px;
+}
