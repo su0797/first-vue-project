@@ -86,6 +86,18 @@ export async function setFcmToken(param, callback) {
   }
 }
 
+export async function geLoginInfo(callback) {
+  try {
+    const result = await axios.post('/common/token/info');
+    if (callback) callback(result.data);
+    return result.data;
+  } catch (err) {
+    if (callback) callback(err.response);
+    // console.log(err);
+    throw new Error(err);
+  }
+}
+
 export const logout = () => {
   deleteStorage();
 };

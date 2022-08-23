@@ -108,7 +108,7 @@
 import { computed, ref, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import { getUser, joinUser, editUser, uploadFile } from '/@service/api';
-import { oauthLogin } from '/@service/login';
+import { oauthLogin, geLoginInfo } from '/@service/login';
 import { selectboxOption, jsonFromFormData, isNotEmpty } from '/@service/util';
 import Select from '/@components/Select.vue';
 
@@ -147,6 +147,8 @@ export default {
         this.msgbox('검색어를 입력하세요.');
         return;
       }
+
+      console.log('param:', param);
       getUser(param).then((result) => {
         console.log('result:', result);
         if (result.error.code != 0) {
@@ -159,6 +161,7 @@ export default {
         }
         this.searchVo = result.data.user;
       });
+      console.log('aaa');
     },
     addData() {
       const form = this.joinForm;
@@ -206,6 +209,9 @@ export default {
       oauthLogin(oauthData, (result) => {
         console.log(result);
         this.oauth.result = result;
+        geLoginInfo().then((r) => {
+          console.log(r);
+        });
       });
     },
   },
