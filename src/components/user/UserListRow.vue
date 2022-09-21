@@ -1,5 +1,4 @@
 <template>
-    <Modal :isAct="isModalAct" @closeModal="closeModal" :user_name="user_name" />
     <tr> 
         <td>{{user_name}}</td>
         <td>{{user_email}}</td>
@@ -25,7 +24,7 @@
         </td>
         <td>    
             <router-link :to="{ name: 'UserModify', params: {user_id: user_id} }"><button type="button" class="btn btn-primary btn-modal">수정</button></router-link>
-            <button type="button" class="btn btn-primary btn-modal btn-stop" @click="openModal()">활성화</button> 
+            <button type="button" class="btn btn-primary btn-modal btn-stop" @click="openModal">활성화</button> 
             <!-- <router-link :to="{ name: 'UserWorkPage', params: {user_id: user_id} }"><button class="btn btn-primary btn-modal btn-stop" >작업 내역</button></router-link> -->
             <button class="btn btn-primary btn-modal btn-stop" >작업 내역</button>
         </td>
@@ -33,8 +32,6 @@
 </template>
 
 <script>
-import Modal from '/@components/Modal.vue';
-
 export default {
     name: 'UserListRow',
     props: {
@@ -55,19 +52,15 @@ export default {
     },
     data() {
     return {
-      isModalAct: false,
       message: ''
     }
   },
   methods: {
     openModal() {
-      this.isModalAct = true;
+        this.$emit("openModal");
   },
-    closeModal() {
-      this.isModalAct = false;
-    },
 },
-components: { Modal }
+components: { }
 }
 </script>
 

@@ -1,4 +1,5 @@
 <template>
+<Modal :isAct="isModalAct" @closeModal="closeModal"/>
 <div class="container">
   <div class="name">
     <h4 class="underline">인턴 관리</h4>
@@ -31,7 +32,7 @@
           </tr>
         </thead>
         <tbody class="table-body">
-          <user-list-row v-for="(user, user_id) in users" :key="user_id" v-bind="user" :assignment_name = assignment_name></user-list-row>
+          <user-list-row v-for="(user, user_id) in users" :key="user_id" v-bind="user" :assignment_name = assignment_name @openModal="openModal"></user-list-row>
         </tbody>
       </table>
     </div>
@@ -43,6 +44,7 @@
 <script>
 import axios from 'axios';
 import UserListRow from '/@components/user/UserListRow.vue';
+import Modal from '/@components/Modal.vue';
 
 export default {
 
@@ -56,6 +58,7 @@ export default {
       ],
       users: [],
       usersFilter: [],
+      isModalAct: false,
     };
   },
   created() {
@@ -70,7 +73,6 @@ export default {
   },
   methods: {
     
-
     getUserData() {
       axios.post('http://52.22.216.42:8090/web/assignment/user/list/',
       {
@@ -111,10 +113,16 @@ export default {
       // else if ((this.selectedOption === 'assignment_id') && (this.keyword !== '')) {
       //   this.selectedUsers = this.users.filter(data => data.assignment_id.includes(this.keyword))
       // }
-    }
+    },
+    openModal() {
+      this.isModalAct = true;
+    },
+    closeModal() {
+      this.isModalAct = false;
+    },
   },
   
-  components: { UserListRow, },
+  components: { UserListRow, Modal},
 };
 </script>
 
