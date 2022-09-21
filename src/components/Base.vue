@@ -1,9 +1,10 @@
 <template>
   <Spinner v-if="spiner" />
+  <TopBar />
   <div class="container">
-    <TopBar />
+    
     <slot />
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 <script>
