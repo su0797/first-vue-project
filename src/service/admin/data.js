@@ -46,9 +46,13 @@ export async function getUserList(param, callback) {
   }
 }
 
-export async function getWorksInfo(callback) {
+export async function getWorksInfo(param, callback) {
   try {
-    const result = await axios.post('/web/all/works');
+    const data = {
+      assignment_id: param.get('assignment_id'),
+    };
+    console.log(data);
+    const result = await axios.post('/web/all/works', data);
     if (callback) callback(result.data);
     return result.data;
   } catch (err) {

@@ -129,6 +129,7 @@ export default {
       searchedData: '',
       selectedSearchOption: '',
       searchOptionList: [],
+      assignment_id: '',
     }
   },
   methods: {
@@ -136,7 +137,7 @@ export default {
       this.pjName = e.target.options[e.target.options.selectedIndex].text;
 
       const setData = new FormData();
-      setData.set('assignment_id', 1);
+      setData.set('assignment_id', this.assignment_id);
 
       getUserList(setData).then((result) => {
         this.names = result.data;
@@ -257,7 +258,11 @@ export default {
     },
   },
   mounted() {
-    getWorksInfo().then((result) => {
+    this.assignment_id = sessionStorage.getItem('assignment_id');
+    const setData = new FormData();
+    setData.set('assignment_id', this.assignment_id);
+
+    getWorksInfo(setData).then((result) => {
       this.projectList = result.data;
 
       for(let i = 0; i < this.projectList.data.length; i++) {
@@ -333,9 +338,6 @@ export default {
     display: inline-block;
     width: 50%;
   }
-  .form-check-input {
-    width: 20%;
-  }
   .form-check-label {
     width: 80%;
     text-align: left;
@@ -349,6 +351,7 @@ export default {
     font-size: 1.3rem;
     margin-top: 15rem;
   }
+  
   @media (max-width: 420px) {
     .divide-area {
       display: none;

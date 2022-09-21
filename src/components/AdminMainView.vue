@@ -5,16 +5,16 @@
       <div class="card-box">
         <p class="card-text"><span class="card-title">
           <span v-if="assignment_id === 1">
-              광진구
+              <a @click="route()">광진구</a>
           </span>
           <span v-else-if="assignment_id === 2">
-              순천
+            <a @click="route()">순천</a>
           </span>
           <span v-else-if="assignment_id === 3">
-              광주
+            <a @click="route()">광주</a>
           </span>
           <span v-else-if="assignment_id === 4">
-              문정원
+            <a @click="route()">문정원</a>
           </span>
           </span><span class="title">진행률</span>{{asd(data_status1, totals)}} {{ asds }}%</p>
         <div class="box">
@@ -45,8 +45,6 @@ export default {
         data_status3: Number,
         data_status4: Number,
         data_status5: Number,
-
-
     },
     data() {
       return {
@@ -58,11 +56,15 @@ export default {
       total(data_status5, data_status4 , data_status3 , data_status6 , data_status1) {
         this.totals = data_status5 + data_status4 + data_status3 + data_status6 + data_status1
         // console.log(this.totals);
-    }, 
+      }, 
       asd(data_status5, totals) {
         this.asds = Math.round(data_status5/totals)
         // console.log(this.asds);
-    },
+      },
+      route() {
+        sessionStorage.setItem('assignment_id', this.assignment_id);
+        this.$router.replace('/admin/tasklist');
+      }
   } 
 }
 </script>
@@ -122,6 +124,9 @@ export default {
 }
 a {
   color: white;
+}
+a:hover {
+  cursor: pointer;
 }
 .text {
   margin-left: 7px;

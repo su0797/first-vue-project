@@ -47,7 +47,7 @@ const routes = [
     component: AdminMain,
   },
   {
-    path: '/tasklist',
+    path: '/admin/tasklist',
     component: TaskList,
   },
   {

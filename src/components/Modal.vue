@@ -79,7 +79,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .modal-dialog {
   display: flex;
   position: fixed;
