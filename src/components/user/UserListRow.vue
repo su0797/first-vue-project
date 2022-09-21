@@ -26,7 +26,8 @@
         <td>    
             <router-link :to="{ name: 'UserModify', params: {user_id: user_id} }"><button type="button" class="btn btn-primary btn-modal">수정</button></router-link>
             <button type="button" class="btn btn-primary btn-modal btn-stop" @click="openModal()">활성화</button> 
-            <router-link :to="{ name: 'UserWorkPage', params: {user_id: user_id} }"><button class="btn btn-primary btn-modal btn-stop" >작업 내역</button></router-link>
+            <!-- <router-link :to="{ name: 'UserWorkPage', params: {user_id: user_id} }"><button class="btn btn-primary btn-modal btn-stop" >작업 내역</button></router-link> -->
+            <button class="btn btn-primary btn-modal btn-stop" >작업 내역</button>
         </td>
     </tr>    
 </template>
