@@ -3,6 +3,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import NotFound from '/@views/NotFound.vue';
 import Home from '/@views/Home.vue';
 import Login from '/@views/Login.vue';
+import User from '/@views/UserMain.vue';
+import UserAddData from '/@views/UserAddData.vue';
+import UserEditData from '/@views/UserEditData.vue';
 import AdminMain from '/@views/AdminMain.vue';
 import TaskList from '/@views/TaskList.vue';
 import UserMain from '/@views/UserMain.vue';
@@ -11,8 +14,8 @@ import UserList from '/@components/user/UserList.vue';
 import UserReg from '/@components/user/UserReg.vue';
 import UserModify from '/@components/user/UserModify.vue';
 import AdminMainView from '/@components/AdminMainView.vue';
-
 import { advancePositionWithMutation } from '@vue/compiler-core';
+
 const routes = [
   {
     path: '/',
@@ -26,6 +29,18 @@ const routes = [
   {
     path: '/login',
     component: Login,
+  },
+  {
+    path: '/user',
+    component: User,
+  },
+  {
+    path: '/user/add',
+    component: UserAddData,
+  },
+  {
+    path: '/user/edit/:data_id',
+    component: UserEditData,
   },
   {
     path: '/admin',
@@ -64,11 +79,6 @@ const routes = [
     name: 'AdminMainView',
     component: AdminMainView,
   },
-  // {
-  //   path: '/admin/user/workpage/:user_id',
-  //   name: 'UserWorkPage',
-  //   component: UserWorkPage,
-  // },
 ];
 
 const router = createRouter({
