@@ -1,5 +1,5 @@
 <template>
-<div >
+<div style="text-align: right;">
     <button type="submit" class="btn btn-secondary"><router-link to="/admin/user/list"><a>인턴관리</a></router-link></button>
 </div>
 
@@ -55,7 +55,7 @@ export default {
 .w70{
   max-width: 700px;
   margin: auto;
-  margin-top: 85px;
+  margin-top: 30px;
 }
 .row {
   justify-content: center;
@@ -145,7 +145,6 @@ a {
   color: white;
   font-size: .8rem;
   margin-top: 25px;
-  float: right;
 }
 
 
