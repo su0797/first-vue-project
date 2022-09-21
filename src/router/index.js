@@ -7,7 +7,7 @@ import AdminMain from '/@views/AdminMain.vue';
 import TaskList from '/@views/TaskList.vue';
 import UserMain from '/@views/UserMain.vue';
 import UserList from '/@components/user/UserList.vue';
-import UserWorkPage from '/@views/UserWorkPage.vue';
+// import UserWorkPage from '/@views/UserWorkPage.vue';
 import UserReg from '/@components/user/UserReg.vue';
 import UserModify from '/@components/user/UserModify.vue';
 import AdminMainView from '/@components/AdminMainView.vue';
@@ -18,57 +18,57 @@ const routes = [
     path: '/',
     component: Home,
   },
-  { 
-    path: '/:catchAll(.*)+', 
-    name: 'NotFound', 
-    component: NotFound 
+  {
+    path: '/:catchAll(.*)+',
+    name: 'NotFound',
+    component: NotFound,
   },
   {
     path: '/login',
-    component: Login
+    component: Login,
   },
   {
     path: '/admin',
-    component: AdminMain
+    component: AdminMain,
   },
   {
     path: '/tasklist',
-    component: TaskList
+    component: TaskList,
   },
   {
     path: '/user',
-    component: UserMain
+    component: UserMain,
   },
   {
     path: '/user/list',
-    name : 'UserList',
+    name: 'UserList',
     component: UserList,
   },
   {
     path: '/admin/user/list',
-    name : 'UserList',
+    name: 'UserList',
     component: UserList,
   },
   {
     path: '/admin/user/register',
-    name : 'UserReg',
+    name: 'UserReg',
     component: UserReg,
   },
   {
     path: '/admin/user/modify/:user_id',
-    name : 'UserModify',
+    name: 'UserModify',
     component: UserModify,
   },
   {
     path: '/admin/view',
-    name : 'AdminMainView',
+    name: 'AdminMainView',
     component: AdminMainView,
   },
-  {
-    path: '/admin/user/workpage/:user_id',
-    name : 'UserWorkPage',
-    component: UserWorkPage,
-  },
+  // {
+  //   path: '/admin/user/workpage/:user_id',
+  //   name: 'UserWorkPage',
+  //   component: UserWorkPage,
+  // },
 ];
 
 const router = createRouter({
