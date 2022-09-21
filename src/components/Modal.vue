@@ -96,6 +96,10 @@ export default {
   border-radius: 5px;
   width: 440px;
   height: 250px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  text-align: center;
 }
 
 .modal-body {
@@ -131,6 +135,6 @@ export default {
 }
 .btn-close {
   margin-left: 390px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 </style>
