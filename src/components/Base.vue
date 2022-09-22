@@ -1,6 +1,7 @@
 <template>
   <Spinner v-if="spiner" />
-  <TopBar />
+  <router-view :key="$route.fullPath"><TopBar /></router-view>
+  
   <div class="container">
     
     <slot />

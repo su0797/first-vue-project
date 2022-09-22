@@ -26,11 +26,14 @@ import { useStore } from 'vuex';
 export default {
   emits: [],
   components: {},
-  mounted() {
+  created() {
     getLoginInfo().then((result) => {
-      const user_name = result.data.user.user_name;
-      console.log(user_name);
-      this.loginName = user_name;
+      console.log(result);
+      if(result.data.user !== null){
+        const user_name = result.data.user.user_name;
+        console.log(user_name);
+        this.loginName = user_name;
+      }
     });
   },
   data() {

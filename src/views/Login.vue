@@ -56,11 +56,11 @@ export default {
     getLoginInfo().then((result) => {
       if(!result) {
         const user_name = result.data.user.user_name;
-        console.log(user_name);
+        // console.log(user_name);
 
         this.oauth.username = result.data.user.user_name;
       } else {
-        console.log("정보없음");
+        // console.log("정보없음");
       }
       
     })
@@ -80,12 +80,14 @@ export default {
       oauthData.set('password', this.oauth.password);
 
       oauthLogin(oauthData, (result) => {
-        console.log("result: ", result);
+        // console.log("result: ", result);
 
         this.oauth.result = result;
         
         if(this.idCheck) {
           this.$cookies.set('userName', this.oauth.username)
+        } else {
+          this.$cookies.remove('userName');
         }
 
         if(result.error !== 'invalid_grant'){
@@ -103,7 +105,7 @@ export default {
         }
         
       })
-    }
+    },
   }
 }
 </script>

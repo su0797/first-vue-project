@@ -62,7 +62,7 @@ export default {
         // console.log(this.asds);
       },
       route() {
-        localStorage.setItem('assignment_id', this.assignment_id);
+        sessionStorage.setItem('assignment_id', this.assignment_id);
         this.$router.replace('/admin/tasklist');
       }
   } 

@@ -22,7 +22,7 @@
           <div class="modal-body">
             <div class="center">업무를 분배받을 인턴을 선택해주세요.</div>
             <div class="form-group">
-              <div class="form-check" :key="i" v-for="(name, i) in assignName">
+              <div class="form-check" :key="i" v-for="(name, i) in user.name">
                 <input class="form-check-input float-none" type="radio" name="userName" :id="i" v-model="userSelected" :value="name" @change="checkRadio">
                 <label class="form-check-label" :for="i">
                   {{ name }}
@@ -96,10 +96,6 @@ export default {
   data() {
     return {
       listSelected: '',
-      data: {
-        work_id: '',
-        data_status: ''
-      },
       lists: [
         { text: "목록 선택", value: '' },
         { text: "분배 전", value: "1" },
@@ -118,11 +114,7 @@ export default {
       allChecked: false,
       selectText: '',
       selectList: [],
-      names: [],
-      assignName: [],
-      tasks: [],
       ownName: '',
-      userSelected: '',
       modalShow: false,
       divideBtn: true,
       searchedNone: false,
@@ -130,6 +122,15 @@ export default {
       selectedSearchOption: '',
       searchOptionList: [],
       assignment_id: '',
+      idsArray: [],
+      userSelected: '',
+      userSelectedId:'',
+      names: [],
+      user: {
+        id: [],
+        name: []
+      },
+      dataId: [],
     }
   },
   methods: {
@@ -143,10 +144,10 @@ export default {
         this.names = result.data;
 
         for(let i = 0; i < this.names.user.length; i++) {
-          this.assignName.push(this.names.user[i].user_name);
+          this.user.id.push(this.names.user[i].user_id);
+          this.user.name.push(this.names.user[i].user_name);
         }
       });
-
       this.showAll();
     },
     showTask(e) {
@@ -161,8 +162,12 @@ export default {
         setData.set('data_status', this.listSelected);
         
         getDataInfo(setData).then((result) => {
-          // console.log("result: ", result);
           this.dataList = result.data;
+
+          for(let i = 0; i < this.dataList.data.length; i++) {
+            this.dataId[i] = this.dataList.data[i].data_id;
+          }
+          console.log(this.dataId);
 
           for(let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
@@ -191,14 +196,20 @@ export default {
       this.divideBtn = false;
     },
     divideTask() {
+
+      for(let i = 0; i < this.user.id.length; i++) {
+        if(this.user.name[i] === this.userSelected) {
+          this.userSelectedId = this.user.id[i];
+        }
+      }
       this.ownName = this.userSelected;
       this.tasks = this.selectList;
 
-      console.log(this.ownName + "님의 업무");
       for(let i = 0; i < this.tasks.length; i++) { 
-        console.log(this.tasks[i]);
+        this.idsArray[i] = this.dataId[this.tasks[i]];
       }
-      
+      console.log(this.idsArray);
+
       this.cancel();
       this.divideBtn = true;
       this.selectList = [];
