@@ -3,7 +3,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import NotFound from '/@views/NotFound.vue';
 import Home from '/@views/Home.vue';
 import Login from '/@views/Login.vue';
-import User from '/@views/UserMain.vue';
 import UserAddData from '/@views/UserAddData.vue';
 import UserEditData from '/@views/UserEditData.vue';
 import AdminMain from '/@views/AdminMain.vue';
@@ -29,10 +28,6 @@ const routes = [
   {
     path: '/login',
     component: Login,
-  },
-  {
-    path: '/user',
-    component: User,
   },
   {
     path: '/user/add',
