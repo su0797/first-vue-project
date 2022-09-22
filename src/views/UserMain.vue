@@ -6,8 +6,15 @@
 			class="form-select select-project"
 			id="selectProject"
 			@change="showProject($event)">
-			<option value="null" selected>업무 선택</option>
-			<option :key="i" :value="project.work_id" v-for="(project, i) in projectList">
+			<option
+				value="null"
+				selected>
+				업무 선택
+			</option>
+			<option
+				:key="i"
+				:value="project.work_id"
+				v-for="(project, i) in projectList">
 				{{ project.work_name }}
 			</option>
 		</select>
@@ -16,8 +23,15 @@
 			class="form-select select-project"
 			id="selectTask"
 			@change="showTask($event)">
-			<option value="null" selected>목록 선택</option>
-			<option :key="i" :value="task.tkcode" v-for="(task, i) in taskList">
+			<option
+				value="null"
+				selected>
+				목록 선택
+			</option>
+			<option
+				:key="i"
+				:value="task.tkcode"
+				v-for="(task, i) in taskList">
 				{{ task.tkname }}
 			</option>
 		</select>
@@ -40,10 +54,22 @@
 		<!-- 검색영역 -->
 		<div class="flex">
 			<div class="flex-area"></div>
-			<div class="search-area flex-area" v-if="selectedProjectCode && selectedTaskCode">
-				<select v-model="selectedSearchOption" class="form-select" ref="searchSelect">
-					<option value="" selected>선택</option>
-					<option :value="searchOption" v-for="(searchOption, i) in searchOptionList" :key="i">
+			<div
+				class="search-area flex-area"
+				v-if="selectedProjectCode && selectedTaskCode">
+				<select
+					v-model="selectedSearchOption"
+					class="form-select"
+					ref="searchSelect">
+					<option
+						value=""
+						selected>
+						선택
+					</option>
+					<option
+						:value="searchOption"
+						v-for="(searchOption, i) in searchOptionList"
+						:key="i">
 						{{ searchOption }}
 					</option>
 				</select>
@@ -55,12 +81,21 @@
 					@input="changeKeyword"
 					@keypress.enter="searchTable"
 					placeholder="검색어를 입력하세요" />
-				<button type="button" class="btn" @click="searchTable">검색</button>
+				<button
+					type="button"
+					class="btn"
+					@click="searchTable">
+					검색
+				</button>
 			</div>
 		</div>
 
 		<!-- 테이블 -->
-		<div class="none-data" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
+		<div
+			class="none-data"
+			v-if="searchedNone">
+			해당 검색어를 찾을 수 없습니다.
+		</div>
 		<div
 			class="table-responsive"
 			v-if="selectedProjectCode && selectedTaskCode && searchedNone === false">
@@ -69,14 +104,19 @@
 					<tr>
 						<th></th>
 						<th scope="col">데이터 상태</th>
-						<th scope="col" v-for="(dataKey, i) in dataListKey" :key="i">
+						<th
+							scope="col"
+							v-for="(dataKey, i) in dataListKey"
+							:key="i">
 							{{ dataKey }}
 						</th>
 						<th scope="col">최종수정날짜</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="(data, i) in dataListValue" :key="i">
+					<tr
+						v-for="(data, i) in dataListValue"
+						:key="i">
 						<td scope="row">
 							<router-link :to="`/user/edit/${dataList.data[i].data_id}`">
 								<button
@@ -91,7 +131,9 @@
 						<td scoped="row">
 							{{ tableTaskList[dataList.data[i].data_status] }}
 						</td>
-						<td v-for="(datakey, j) in dataListKey" :key="j">
+						<td
+							v-for="(datakey, j) in dataListKey"
+							:key="j">
 							{{ data[datakey] }}
 						</td>
 						<td scoped="row">
@@ -105,7 +147,7 @@
 </template>
 
 <script>
-import { getUserSearch } from '../service/user';
+import { getUserSearch } from '/@service/user';
 import { getUserWorkData } from '/@service/user';
 import { getUserWorkId } from '/@service/user';
 
