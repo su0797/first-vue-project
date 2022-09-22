@@ -51,7 +51,7 @@ export async function getWorksInfo(param, callback) {
     const data = {
       assignment_id: param.get('assignment_id'),
     };
-    console.log(data);
+
     const result = await axios.post('/web/all/works', data);
     if (callback) callback(result.data);
     return result.data;

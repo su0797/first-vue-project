@@ -35,7 +35,7 @@ export default {
     return {
       src: '',
       oauth: {
-        username: '',
+        username: this.$cookies.get('userName'),
         password: '',
         user_type: '',
         result: '',
@@ -83,7 +83,11 @@ export default {
         console.log("result: ", result);
 
         this.oauth.result = result;
-      
+        
+        if(this.idCheck) {
+          this.$cookies.set('userName', this.oauth.username)
+        }
+
         if(result.error !== 'invalid_grant'){
           getLoginInfo().then((result) => {
             const user_type = result.data.user.user_type;

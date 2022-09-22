@@ -11,7 +11,7 @@
         <router-link to="/login" @click="logout">
           <span>로그아웃</span>
         </router-link>
-        <div class="username">
+        <div class="username" v-if="loginName!==''">
           <span></span> <b><span class="empha">{{ loginName }}</span>님</b>
         </div>
       </div>
