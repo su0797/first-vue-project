@@ -77,7 +77,7 @@ export default {
         })
         .then(({ data }) => {
           console.log(data);
-            let msg = "글 수정을 완료했습니다.";
+            let msg = "수정을 완료했습니다.";
             alert(msg);
             this.$router.push("/admin/user/list");
         })

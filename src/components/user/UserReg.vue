@@ -76,7 +76,7 @@ export default {
         assignment_id: this.assignment_id,
       })
       .then(({data}) => {
-        let msg = '등록 시 문제가 발생했습니다.';
+        let msg = '등록을 완료했습니다.';
         if(data === 'sucess') {
           msg = '등록 완료';
         }
