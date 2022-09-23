@@ -59,7 +59,7 @@
     </div>
 
     <div class="show-nothing" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
-    <div class="table-responsive" v-if="pjSelected && listSelected && !searchedNone">
+    <div ref="table" class="table-responsive" v-if="pjSelected && listSelected && !searchedNone">
       <table class="table">
         <thead>
           <tr>
@@ -90,7 +90,7 @@
   </div>
 </template>
 <script>
-import { getDataInfo, getUserSearch, getUserList, getWorksInfo } from '/@service/admin/data';
+import { getDataInfo, getUserSearch, getUserList, getWorksInfo, setWorkDistribute } from '/@service/admin/data';
 
 export default {
   data() {
@@ -107,6 +107,7 @@ export default {
       pjSelected: '',
       projectList: [],
       projectListValue: [],
+      projectListKey: [],
       dataList: [],
       dataListKey: [],
       dataListValue: [],
@@ -114,7 +115,6 @@ export default {
       allChecked: false,
       selectText: '',
       selectList: [],
-      ownName: '',
       modalShow: false,
       divideBtn: true,
       searchedNone: false,
@@ -135,6 +135,7 @@ export default {
   },
   methods: {
     showList(e) {
+      console.log("오냐:" + this.assignment_id);
       this.pjName = e.target.options[e.target.options.selectedIndex].text;
 
       const setData = new FormData();
@@ -152,22 +153,36 @@ export default {
     },
     showTask(e) {
       this.selectText = e.target.options[e.target.options.selectedIndex].text;
+      // sessionStorage.setItem('selectText', this.selectText);
+			// sessionStorage.setItem('listSelected', this.listSelected);
+
       this.showAll();
     },
     showAll() {
       if(this.selectText !== '') {
         const setData = new FormData();
 
-        setData.set('work_id', this.pjSelected);
+        let work_id = '';
+        for(let i = 0; i < this.projectListValue.length; i++) {
+          if(this.projectListValue[i] === this.pjName) {
+            work_id = this.projectListKey[i];
+          }
+        }
+
+        // sessionStorage.setItem('projectListValue', this.projectListValue);
+        // sessionStorage.setItem('projectListKey', this.projectListKey);
+        // sessionStorage.setItem('pjSelected', work_id);
+        // sessionStorage.setItem('pjName', this.pjName);
+
+        setData.set('work_id', work_id);
         setData.set('data_status', this.listSelected);
-        
+
         getDataInfo(setData).then((result) => {
           this.dataList = result.data;
-
+        
           for(let i = 0; i < this.dataList.data.length; i++) {
             this.dataId[i] = this.dataList.data[i].data_id;
           }
-          console.log(this.dataId);
 
           for(let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
@@ -196,19 +211,30 @@ export default {
       this.divideBtn = false;
     },
     divideTask() {
-
       for(let i = 0; i < this.user.id.length; i++) {
         if(this.user.name[i] === this.userSelected) {
           this.userSelectedId = this.user.id[i];
         }
       }
-      this.ownName = this.userSelected;
       this.tasks = this.selectList;
 
+      let ids = '';
       for(let i = 0; i < this.tasks.length; i++) { 
         this.idsArray[i] = this.dataId[this.tasks[i]];
       }
-      console.log(this.idsArray);
+
+      // const setData = new FormData();
+      // setData.set('user_id', this.userSelectedId);
+      // setData.set('idsArray', this.idsArray);
+
+      // setWorkDistribute(setData).then((result) => {
+      //   console.log('result : ', result);
+      //   if (result.error.code != 0) {
+      //     this.msgbox(result.error.msg);
+      //     return;
+      //   }
+      //   this.msgbox(this.msg.SUCCESS);
+      // });
 
       this.cancel();
       this.divideBtn = true;
@@ -217,8 +243,6 @@ export default {
     cancel() {
       this.userSelected = '';
       this.selectList = [];
-      
-      return;
     },
     changeKeyword(w) {
       this.searchedData = w.target.value;
@@ -269,7 +293,9 @@ export default {
     },
   },
   mounted() {
+    console.log("되냐");
     this.assignment_id = sessionStorage.getItem('assignment_id');
+
     const setData = new FormData();
     setData.set('assignment_id', this.assignment_id);
 
@@ -278,9 +304,9 @@ export default {
 
       for(let i = 0; i < this.projectList.data.length; i++) {
         this.projectListValue.push(this.projectList.data[i].work_name);
+        this.projectListKey.push(this.projectList.data[i].work_id);
       }
-    
-    })
+    });
   },
   computed: {
     allSelected: {
