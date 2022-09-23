@@ -39,7 +39,7 @@ export default {
       user_email: '',
       user_phone: '',
       user_type: '',
-
+      assignment_id: 0,
     };
   },
   created() {

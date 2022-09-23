@@ -1,5 +1,12 @@
 <template>
-<Modal :isAct="isModalAct" @closeModal="closeModal"/>
+<Modal
+:isAct="isModalAct"
+@closeModal="closeModal"
+:user_name="modalUserName"  
+:user_id="modalUserId" 
+:user_email="modalUserEmail"  
+:user_type="modalUserType"  
+:user_status="modalUserStatus"/>
 <div class="container">
   <div class="name">
     <h4 class="underline">인턴 관리</h4>
@@ -32,7 +39,7 @@
           </tr>
         </thead>
         <tbody class="table-body">
-          <user-list-row v-for="(user, user_id) in users" :key="user_id" v-bind="user" :assignment_name = assignment_name @openModal="openModal"></user-list-row>
+          <user-list-row v-for="(user, i) in users" :key="i" :user="user" :assignment_name = assignment_name @openModal="openModal($event)" :user_id = user.user_id ></user-list-row>
         </tbody>
       </table>
     </div>
@@ -59,6 +66,12 @@ export default {
       users: [],
       usersFilter: [],
       isModalAct: false,
+      modalUser: {},
+      modalUserName: '',
+      modalUserId: 0,
+      modalUserEmail: '',
+      modalUserType: 0,
+      modalUserStatus: 0,
     };
   },
   created() {
@@ -76,7 +89,7 @@ export default {
     getUserData() {
       axios.post('http://52.22.216.42:8090/web/assignment/user/list/',
       {
-        assignment_id: 0
+        assignment_id: 0,
       })
       .then(({ data }) => {
       this.users = data.data.user;
@@ -110,12 +123,16 @@ export default {
       else {
         this.getUserData();
       }
-      // else if ((this.selectedOption === 'assignment_id') && (this.keyword !== '')) {
-      //   this.selectedUsers = this.users.filter(data => data.assignment_id.includes(this.keyword))
-      // }
+
     },
-    openModal() {
+    openModal(id) {
       this.isModalAct = true;
+      this.modalUser = this.users.filter((data)=>data.user_id === id)
+      this.modalUserName = this.modalUser[0].user_name
+      this.modalUserId = this.modalUser[0].user_id
+      this.modalUserEmail = this.modalUser[0].user_email
+      this.modalUserType = this.modalUser[0].user_type
+      this.modalUserStatus = this.modalUser[0].user_status
     },
     closeModal() {
       this.isModalAct = false;

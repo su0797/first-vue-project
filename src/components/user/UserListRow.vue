@@ -1,66 +1,46 @@
 <template>
-    <tr> 
-        <td>{{user_name}}</td>
-        <td>{{user_email}}</td>
-        <td>{{user_password}}</td>
-        <td>{{user_phone}}</td>
+    <tr class="tr" :class="{ 'tr-disabled' : user.user_status === 0 }" >
+        <td>{{user.user_name}}</td>
+        <td>{{user.user_email}}</td>
+        <td>{{user.user_password}}</td>
+        <td>{{user.user_phone}}</td>
         <td>
-            {{assignment_name[assignment_id - 1]}}
-            <!-- <div v-if="assignment_id === 1">
-                광진구
-            </div>
-            <div v-else-if="assignment_id === 2">
-                순천
-            </div>
-            <div v-else-if="assignment_id === 3">
-                광주
-            </div>
-            <div v-else-if="assignment_id === 4">
-                문정원
-            </div>
-            <div v-else>
-                지역이 없습니다.
-            </div>   -->
+            {{assignment_name[user.assignment_id -1]}}
         </td>
-        <td>    
-            <router-link :to="{ name: 'UserModify', params: {user_id: user_id} }"><button type="button" class="btn btn-primary btn-modal">수정</button></router-link>
-            <button type="button" class="btn btn-primary btn-modal btn-stop" @click="openModal">활성화</button> 
-            <!-- <router-link :to="{ name: 'UserWorkPage', params: {user_id: user_id} }"><button class="btn btn-primary btn-modal btn-stop" >작업 내역</button></router-link> -->
-            <button class="btn btn-primary btn-modal btn-stop" >작업 내역</button>
+        <td>   
+            <button type="button" class="btn btn-primary btn-modal" @click="movePage" :disabled="user.user_status === 0" >수정</button>
+            <button type="button" class="btn btn-primary btn-modal btn-stop" @click="openModal(user.user_id)"  :disabled="user.user_status === 0"  >활성화</button> 
+            <button class="btn btn-primary btn-modal btn-stop"  :disabled="user.user_status === 0" >작업 내역</button>
         </td>
-    </tr>    
+    </tr>
 </template>
 
 <script>
 export default {
     name: 'UserListRow',
     props: {
+        user: Object,
         user_id : Number,
-        user_type : Number,
-        user_name : String,
-        user_email : String,
-        user_password : String,
-        user_phone : String,
-        assignment_id : Number,
         assignment_name: Array,
         user_status: Number,
-        create_time: String,
-        update_time: String,
-        user_type_name: String,
-        user_status_name: String,
-        role: String,
     },
     data() {
     return {
-      message: ''
+      message: '',
+      isDisalbed: true
     }
-  },
+  }, 
   methods: {
-    openModal() {
-        this.$emit("openModal");
-  },
-},
-components: { }
+    openModal(id) {
+        this.$emit("openModal", id);
+    },
+    movePage() {
+      this.$router.push(`/admin/user/modify/${this.user_id}`)
+    },
+    isChangeColor() {
+
+    },
+    }
 }
 </script>
 
@@ -136,5 +116,7 @@ components: { }
 .btn-primary {
     font-size: .8rem;
 }
-
+.tr-disabled {
+    background-color: #EFEFEF;
+}
 </style>

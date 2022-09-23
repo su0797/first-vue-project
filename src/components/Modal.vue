@@ -1,5 +1,4 @@
 <template>
-<!-- <div class="modal-dialog" v-if="isAct"> -->
   <div class="modal-content" v-if="isAct">
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal"></button>
     <div class="modal-body">
@@ -8,10 +7,9 @@
     </div>
     <div class="modal--box">
       <button type="button" class="modal-clo" data-bs-dismiss="modal" @click="closeModal">취소</button>
-      <button type="button" class="modal-del" @click="dataDelete">정지</button>
+      <button type="button" class="modal-del" @click="[dataDelete(), disableUser()]">정지</button>
     </div>
   </div>
-<!-- </div>  -->
 </template>
 
 <script>
@@ -19,61 +17,39 @@ import axios from 'axios';
 export default {
   data() {
     return {
-  
     };
   },
-  // created() {
-  //   axios.get('http://52.22.216.42:8090/common/user/info/').then(({ data }) => {
-  //       // console.log(data.data.user.user_id);
-  //       this.user_id = data.data.user.user_id;
-  //       this.user_name = data.data.user.user_name;
-  //       this.user_email = data.data.user.user_email;
-  //       this.user_phone = data.data.user.user_phone;
-  //       this.user_status = data.data.user.user_status;
-  //       this.user_type = data.data.user.user_type;
-  //   })
-    // .then(({ data }) => {
-    //   this.users = data.user;
-    //   // console.log(data);
-    // })
-  // },
     name: 'Modal',
     props: {
-      product: Object,
       isAct: Boolean,
-      user_id : Number,
-      user_type : Number,
-      user_name : String,
-      user_email : String,
-      user_password : String,
-      user_phone : String,
-      assignment_id : Number,
-      assignment_name: Array,
+      user_name: String,
+      user_type: Number,
+      user_id: Number,
+      user_email: String,
       user_status: Number,
-      create_time: String,
-      update_time: String,
-      user_type_name: String,
-      user_status_name: String,
-      role: String,
   },
   methods: {
     closeModal() {
       this.$emit("closeModal");
     },
     dataDelete() {
-      axios.get('http://52.22.216.42:8090/common/user/edit/', {
-      user_id: this.user_id,
-      user_email:  this.user_email,
-      user_type: this.user_type,
-      user_status: 0
+      axios.put('http://52.22.216.42:8090/common/user/edit/', {
+        user_id: this.user_id,
+        user_email: this.user_email,
+        user_type: this.user_type,
+        user_status: 0
     })
       .then(({ data }) => {
         this.users = data.user;
         console.log(data);
           let msg = "계정을 정지하였습니다.";
           alert(msg);
-          this.$router.push("/admin/user/list");
+           this.$router.go({name: 'UserList'});
+          this.closeModal();
         })
+    },
+    disableUser() {
+      this.$emit("disableUser");
     },
   },
 }; 
