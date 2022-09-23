@@ -8,7 +8,8 @@
 			class="form-control"
 			id="exampleFormControlInput1"
 			:value="note"
-			@input="$emit('inputFromChild', $event)" />
+			@input="$emit('inputFromChild', $event)"
+			required />
 	</div>
 </template>
 
