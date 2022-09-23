@@ -1,18 +1,18 @@
 <template>
   <div class="container">
     <!-- 업무선택 영역 -->
-    <select class="form-select select-project" v-model="pjSelected" @change="showList($event)">
+    <select class="form-select select-project" v-model="selectedWork" @change="showList($event)">
       <option value=''>업무 선택</option>
-      <option :key="i" :value="i+1" v-for="(project, i) in projectListValue" >{{ project }}</option>
+      <option :key="i" :value="i+1" v-for="(project, i) in workListValue" >{{ project }}</option>
     </select>
     <!-- 분배 전, 실측, 조사불가, 완료 선택 영역 -->
-    <select class="form-select select-project" v-model="listSelected" @change="showTask($event)">
+    <select class="form-select select-project" v-model="selectedTask" @change="showTask($event)">
       <option :key="i" :value="list.value" v-for="(list, i) in lists">{{ list.text }}</option>
     </select>
 
     <!-- 목록명 영역(제목) -->
-    <div class="subject" v-if="listSelected">
-      <h4>{{ pjName }} {{ selectText }} 목록</h4>
+    <div class="subject" v-if="selectedTask">
+      <h4>{{ workName }} {{ selectedTaskName }} 목록</h4>
     </div>
 
     <!-- Modal -->
@@ -23,7 +23,7 @@
             <div class="center">업무를 분배받을 인턴을 선택해주세요.</div>
             <div class="form-group">
               <div class="form-check" :key="i" v-for="(name, i) in user.name">
-                <input class="form-check-input float-none" type="radio" name="userName" :id="i" v-model="userSelected" :value="name" @change="checkRadio">
+                <input class="form-check-input float-none" type="radio" name="userName" :id="i" v-model="selectedUser" :value="name" @change="checkRadio">
                 <label class="form-check-label" :for="i">
                   {{ name }}
                 </label>
@@ -40,13 +40,13 @@
 
     <div class="flex">
       <!-- 업무분배 버튼 영역 -->
-      <div class="divide-area flex-area" v-if="listSelected && listSelected !== '조사불가' && pjSelected">
+      <div class="divide-area flex-area" v-if="selectedTask && selectedTask !== '조사불가' && selectedWork">
         <button class="btn btn-secondary" type="button" v-if="selectList.length !== 0" data-bs-toggle="modal" data-bs-target="#taskDivision">업무 분배</button>
         <button class="btn btn-secondary" type="button" v-else @click="this.msgbox('분배할 데이터를 선택해주세요.')">업무 분배</button>
       </div>
 
       <!-- 검색영역 -->
-      <div class="search-area flex-area" v-if="pjSelected && listSelected">
+      <div class="search-area flex-area" v-if="selectedWork && selectedTask">
         <select class="form-select" v-model="selectedSearchOption" ref="searchSelect">
           <option value="">선택</option>
           <option :value="searchOption" v-for="(searchOption, i) in searchOptionList" :key="i">
@@ -59,7 +59,7 @@
     </div>
 
     <div class="show-nothing" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
-    <div ref="table" class="table-responsive" v-if="pjSelected && listSelected && !searchedNone">
+    <div ref="table" class="table-responsive" v-if="selectedWork && selectedTask && !searchedNone">
       <table class="table">
         <thead>
           <tr>
@@ -95,7 +95,7 @@ import { getDataInfo, getUserSearch, getUserList, getWorksInfo, setWorkDistribut
 export default {
   data() {
     return {
-      listSelected: '',
+      selectedTask: '',
       lists: [
         { text: "목록 선택", value: '' },
         { text: "분배 전", value: "1" },
@@ -103,17 +103,17 @@ export default {
         { text: "조사불가", value: "4" },
         { text: "완료", value: "5" },
       ],
-      pjName: '',
-      pjSelected: '',
+      workName: '',
+      selectedWork: '',
       projectList: [],
-      projectListValue: [],
-      projectListKey: [],
+      workListValue: [],
+      workListKey: [],
       dataList: [],
       dataListKey: [],
       dataListValue: [],
       selectedTaskList: [],
       allChecked: false,
-      selectText: '',
+      selectedTaskName: '',
       selectList: [],
       modalShow: false,
       divideBtn: true,
@@ -123,8 +123,8 @@ export default {
       searchOptionList: [],
       assignment_id: '',
       idsArray: [],
-      userSelected: '',
-      userSelectedId:'',
+      selectedUser: '',
+      selectedUserId:'',
       names: [],
       user: {
         id: [],
@@ -134,9 +134,9 @@ export default {
     }
   },
   methods: {
-    showList(e) {
+    showList(e) {   // 업무 셀렉트 선택시
       console.log("오냐:" + this.assignment_id);
-      this.pjName = e.target.options[e.target.options.selectedIndex].text;
+      this.workName = e.target.options[e.target.options.selectedIndex].text;
 
       const setData = new FormData();
       setData.set('assignment_id', this.assignment_id);
@@ -151,31 +151,31 @@ export default {
       });
       this.showAll();
     },
-    showTask(e) {
-      this.selectText = e.target.options[e.target.options.selectedIndex].text;
-      // sessionStorage.setItem('selectText', this.selectText);
-			// sessionStorage.setItem('listSelected', this.listSelected);
+    showTask(e) {   // 분배전, 실측필요, 조사불가, 완료 선택시
+      this.selectedTaskName = e.target.options[e.target.options.selectedIndex].text;
+      // sessionStorage.setItem('selectedTaskName', this.selectedTaskName);
+			// sessionStorage.setItem('selectedTask', this.selectedTask);
 
       this.showAll();
     },
-    showAll() {
-      if(this.selectText !== '') {
+    showAll() {   // 셀렉트에 맞는 
+      if(this.selectedTaskName !== '') {
         const setData = new FormData();
 
         let work_id = '';
-        for(let i = 0; i < this.projectListValue.length; i++) {
-          if(this.projectListValue[i] === this.pjName) {
-            work_id = this.projectListKey[i];
+        for(let i = 0; i < this.workListValue.length; i++) {
+          if(this.workListValue[i] === this.workName) {
+            work_id = this.workListKey[i];
           }
         }
 
-        // sessionStorage.setItem('projectListValue', this.projectListValue);
-        // sessionStorage.setItem('projectListKey', this.projectListKey);
-        // sessionStorage.setItem('pjSelected', work_id);
-        // sessionStorage.setItem('pjName', this.pjName);
+        // sessionStorage.setItem('workListValue', this.workListValue);
+        // sessionStorage.setItem('workListKey', this.workListKey);
+        // sessionStorage.setItem('selectedWork', work_id);
+        // sessionStorage.setItem('workName', this.workName);
 
         setData.set('work_id', work_id);
-        setData.set('data_status', this.listSelected);
+        setData.set('data_status', this.selectedTask);
 
         getDataInfo(setData).then((result) => {
           this.dataList = result.data;
@@ -195,7 +195,7 @@ export default {
           }
           // checkbox
           // this.selectedTaskList = this.dataListValue.filter(
-          //   (data) => data === this.selectText
+          //   (data) => data === this.selectedTaskName
           // )
 
           for(let i = 0; i < this.dataListValue.length; i++) {
@@ -212,8 +212,8 @@ export default {
     },
     divideTask() {
       for(let i = 0; i < this.user.id.length; i++) {
-        if(this.user.name[i] === this.userSelected) {
-          this.userSelectedId = this.user.id[i];
+        if(this.user.name[i] === this.selectedUser) {
+          this.selectedUserId = this.user.id[i];
         }
       }
       this.tasks = this.selectList;
@@ -224,7 +224,7 @@ export default {
       }
 
       // const setData = new FormData();
-      // setData.set('user_id', this.userSelectedId);
+      // setData.set('user_id', this.selectedUserId);
       // setData.set('idsArray', this.idsArray);
 
       // setWorkDistribute(setData).then((result) => {
@@ -241,7 +241,7 @@ export default {
       this.selectList = [];
     },
     cancel() {
-      this.userSelected = '';
+      this.selectedUser = '';
       this.selectList = [];
     },
     changeKeyword(w) {
@@ -254,8 +254,8 @@ export default {
       if(this.selectedSearchOption !== '' && this.searchedData !== '') {
         const setSearch = new FormData();
 
-        setSearch.set('work_id', this.pjSelected);
-        setSearch.set('data_status', this.listSelected);
+        setSearch.set('work_id', this.selectedWork);
+        setSearch.set('data_status', this.selectedTask);
         setSearch.set('columnName', this.selectedSearchOption);
         setSearch.set('keyword', this.searchedData);
 
@@ -303,8 +303,8 @@ export default {
       this.projectList = result.data;
 
       for(let i = 0; i < this.projectList.data.length; i++) {
-        this.projectListValue.push(this.projectList.data[i].work_name);
-        this.projectListKey.push(this.projectList.data[i].work_id);
+        this.workListValue.push(this.projectList.data[i].work_name);
+        this.workListKey.push(this.projectList.data[i].work_id);
       }
     });
   },
