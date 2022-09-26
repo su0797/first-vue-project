@@ -2,14 +2,18 @@
   <div class="container">
     <!-- 업무선택 영역 -->
     <select class="form-select select-project" v-model="selectedWork" @change="showList($event)">
-      <option value=''>업무 선택</option>
-      <option :key="i" :value="i+1" v-for="(project, i) in workListValue" >{{ project }}</option>
+      <option value="null" selected>업무 선택</option>
+      <option :key="i" :value="project.work_id" v-for="(project, i) in projectList">
+        {{ project.work_name }}
+      </option>
     </select>
     <!-- 분배 전, 실측, 조사불가, 완료 선택 영역 -->
     <select class="form-select select-project" v-model="selectedTask" @change="showTask($event)">
-      <option :key="i" :value="list.value" v-for="(list, i) in lists">{{ list.text }}</option>
+      <option value="null" selected>목록선택</option>
+      <option :key="i" :value="list.value" v-for="(list, i) in lists">
+        {{ list.text }}
+      </option>
     </select>
-
     <!-- 목록명 영역(제목) -->
     <div class="subject" v-if="selectedTask">
       <h4>{{ workName }} {{ selectedTaskName }} 목록</h4>
@@ -23,7 +27,7 @@
             <div class="center">업무를 분배받을 인턴을 선택해주세요.</div>
             <div class="form-group">
               <div class="form-check" :key="i" v-for="(name, i) in user.name">
-                <input class="form-check-input float-none" type="radio" name="userName" :id="i" v-model="selectedUser" :value="name" @change="checkRadio">
+                <input class="form-check-input float-none" type="radio" name="userName" :id="i" v-model="selectedUser" :value="name" @change="checkRadio" />
                 <label class="form-check-label" :for="i">
                   {{ name }}
                 </label>
@@ -64,28 +68,28 @@
         <thead>
           <tr>
             <th scope="col">
-              <input type="checkbox"
-                      :value="allSelected"
-                      v-model="allSelected" /></th>
+              <input type="checkbox" :value="allSelected" v-model="allSelected" />
+            </th>
             <th></th>
-            <th :key="i" v-for="(datakey, i) in dataListKey">{{ datakey }}</th>
+            <th :key="i" v-for="(datakey, i) in dataListKey">
+              {{ datakey }}
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr :key="i" v-for="(data, i) in dataListValue">
             <td scope="row">
-              <input type="checkbox" 
-                      :value="i"
-                      v-model="selectList" />
+              <input type="checkbox" :value="i" v-model="selectList" />
             </td>
             <td>
               <button type="button" class="btn btn-secondary">수정</button>
             </td>
-            <td :key="j" v-for="(datakey, j) in dataListKey">{{ data[datakey] }}</td>
+            <td :key="j" v-for="(datakey, j) in dataListKey">
+              {{ data[datakey] }}
+            </td>
           </tr>
         </tbody>
       </table>
-      <!-- {{ selectList }} -->
     </div>
   </div>
 </template>
@@ -93,15 +97,37 @@
 import { getDataInfo, getUserSearch, getUserList, getWorksInfo, setWorkDistribute } from '/@service/admin/data';
 
 export default {
+  created() {
+    this.assignment_id = sessionStorage.getItem('assignment_id');
+    const setData = new FormData();
+    setData.set('assignment_id', this.assignment_id);
+
+    getWorksInfo(setData).then((result) => {
+      this.projectList = result.data.data;
+
+      for (let i = 0; i < this.projectList.length; i++) {
+        this.workListKey.push(this.projectList[i].work_id);
+        this.workListValue.push(this.projectList[i].work_name);
+      }
+      this.selectedWork = sessionStorage.getItem('selectedWork');
+      this.workName = sessionStorage.getItem('workName');
+      this.selectedTaskName = sessionStorage.getItem('selectedTaskName');
+      this.selectedTask = sessionStorage.getItem('selectedTask');
+
+      this.getDividenUser();
+      this.showAll();
+
+      console.log(this.user);
+    });
+  },
   data() {
     return {
       selectedTask: '',
       lists: [
-        { text: "목록 선택", value: '' },
-        { text: "분배 전", value: "1" },
-        { text: "실측필요", value: "3" },
-        { text: "조사불가", value: "4" },
-        { text: "완료", value: "5" },
+        { text: '분배 전', value: '1' },
+        { text: '실측필요', value: '3' },
+        { text: '조사불가', value: '4' },
+        { text: '완료', value: '5' },
       ],
       workName: '',
       selectedWork: '',
@@ -124,85 +150,86 @@ export default {
       assignment_id: '',
       idsArray: [],
       selectedUser: '',
-      selectedUserId:'',
+      selectedUserId: '',
       names: [],
       user: {
         id: [],
-        name: []
+        name: [],
       },
       dataId: [],
-    }
+    };
   },
   methods: {
-    showList(e) {   // 업무 셀렉트 선택시
-      console.log("오냐:" + this.assignment_id);
-      this.workName = e.target.options[e.target.options.selectedIndex].text;
-
+    // 분배 받을 유저 갖고오기
+    getDividenUser() {
       const setData = new FormData();
       setData.set('assignment_id', this.assignment_id);
 
       getUserList(setData).then((result) => {
         this.names = result.data;
 
-        for(let i = 0; i < this.names.user.length; i++) {
+        for (let i = 0; i < this.names.user.length; i++) {
           this.user.id.push(this.names.user[i].user_id);
           this.user.name.push(this.names.user[i].user_name);
         }
       });
-      this.showAll();
     },
-    showTask(e) {   // 분배전, 실측필요, 조사불가, 완료 선택시
-      this.selectedTaskName = e.target.options[e.target.options.selectedIndex].text;
-      // sessionStorage.setItem('selectedTaskName', this.selectedTaskName);
-			// sessionStorage.setItem('selectedTask', this.selectedTask);
+    // 업무 셀렉트 선택시
+    showList(e) {
+      this.workName = e.target.options[e.target.options.selectedIndex].text;
+      sessionStorage.setItem('workName', this.workName);
+      sessionStorage.setItem('selectedWork', this.selectedWork);
 
       this.showAll();
     },
-    showAll() {   // 셀렉트에 맞는 
-      if(this.selectedTaskName !== '') {
+    // 분배전, 실측필요, 조사불가, 완료 선택시
+    showTask(e) {
+      this.selectedTaskName = e.target.options[e.target.options.selectedIndex].text;
+      sessionStorage.setItem('selectedTaskName', this.selectedTaskName);
+      sessionStorage.setItem('selectedTask', this.selectedTask);
+
+      this.showAll();
+    },
+    showAll() {
+      // 셀렉트에 맞는
+      if (this.selectedTaskName !== '') {
         const setData = new FormData();
 
         let work_id = '';
-        for(let i = 0; i < this.workListValue.length; i++) {
-          if(this.workListValue[i] === this.workName) {
+        for (let i = 0; i < this.workListValue.length; i++) {
+          if (this.workListValue[i] === this.workName) {
             work_id = this.workListKey[i];
           }
         }
 
-        // sessionStorage.setItem('workListValue', this.workListValue);
-        // sessionStorage.setItem('workListKey', this.workListKey);
-        // sessionStorage.setItem('selectedWork', work_id);
-        // sessionStorage.setItem('workName', this.workName);
+        sessionStorage.setItem('workListValue', this.workListValue);
+        sessionStorage.setItem('workListKey', this.workListKey);
+        sessionStorage.setItem('selectedWork', work_id);
+        sessionStorage.setItem('workName', this.workName);
 
         setData.set('work_id', work_id);
         setData.set('data_status', this.selectedTask);
 
         getDataInfo(setData).then((result) => {
           this.dataList = result.data;
-        
-          for(let i = 0; i < this.dataList.data.length; i++) {
+
+          for (let i = 0; i < this.dataList.data.length; i++) {
             this.dataId[i] = this.dataList.data[i].data_id;
           }
 
-          for(let i = 0; i < this.dataList.data.length; i++) {
+          for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
             this.searchOptionList = this.dataListKey;
           }
           this.dataListValue = [];
-          for(let i = 0; i < this.dataList.data.length; i++) {
+          for (let i = 0; i < this.dataList.data.length; i++) {
             this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
           }
-          // checkbox
-          // this.selectedTaskList = this.dataListValue.filter(
-          //   (data) => data === this.selectedTaskName
-          // )
 
-          for(let i = 0; i < this.dataListValue.length; i++) {
+          for (let i = 0; i < this.dataListValue.length; i++) {
             this.selectedTaskList[i] = this.dataListValue[i];
           }
-          // console.log(this.selectedTaskList);
-
         });
       }
       this.selectList = [];
@@ -211,47 +238,35 @@ export default {
       this.divideBtn = false;
     },
     divideTask() {
-      for(let i = 0; i < this.user.id.length; i++) {
-        if(this.user.name[i] === this.selectedUser) {
+      for (let i = 0; i < this.user.id.length; i++) {
+        if (this.user.name[i] === this.selectedUser) {
           this.selectedUserId = this.user.id[i];
         }
       }
       this.tasks = this.selectList;
 
       let ids = '';
-      for(let i = 0; i < this.tasks.length; i++) { 
+      for (let i = 0; i < this.tasks.length; i++) {
         this.idsArray[i] = this.dataId[this.tasks[i]];
       }
 
-      // const setData = new FormData();
-      // setData.set('user_id', this.selectedUserId);
-      // setData.set('idsArray', this.idsArray);
-
-      // setWorkDistribute(setData).then((result) => {
-      //   console.log('result : ', result);
-      //   if (result.error.code != 0) {
-      //     this.msgbox(result.error.msg);
-      //     return;
-      //   }
-      //   this.msgbox(this.msg.SUCCESS);
-      // });
-
       this.cancel();
-      this.divideBtn = true;
+      this.$router.go();
       this.selectList = [];
     },
     cancel() {
       this.selectedUser = '';
       this.selectList = [];
+      this.divideBtn = true;
     },
     changeKeyword(w) {
       this.searchedData = w.target.value;
     },
     resetSearchOption() {
-      this.selectedSearchOption= '';
+      this.selectedSearchOption = '';
     },
     searchTable() {
-      if(this.selectedSearchOption !== '' && this.searchedData !== '') {
+      if (this.selectedSearchOption !== '' && this.searchedData !== '') {
         const setSearch = new FormData();
 
         setSearch.set('work_id', this.selectedWork);
@@ -262,136 +277,113 @@ export default {
         getUserSearch(setSearch).then((result) => {
           this.dataList = result.data;
 
-          for(let i = 0; i < this.dataList.data.length; i++) {
+          for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
             this.searchOptionList = this.dataListKey;
           }
           this.dataListValue = [];
-          for(let i = 0; i < this.dataList.data.length; i++) {
+          for (let i = 0; i < this.dataList.data.length; i++) {
             this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
           }
           if (this.dataListValue.length === 0) {
-              this.searchedNone = true;
-            }
+            this.searchedNone = true;
+          }
         });
 
         this.resetSearchOption();
         this.searchedData = '';
       } else if ((this.selectedSearchOption === '') & (this.searchedData !== '')) {
-				alert('검색할 칼럼을 선택해주세요');
-				this.$refs.searchSelect.focus();
-			} else if ((this.selectedSearchOption !== '') & (this.searchedData === '')) {
-				alert('검색할 키워드를 입력해주세요');
-				this.$refs.searchInput.focus();
-			} else {
-				this.searchedNone = false;
-				this.resetSearchOption();
-				this.searchedData = '';
-				this.showAll();
-			}
-    },
-  },
-  mounted() {
-    console.log("되냐");
-    this.assignment_id = sessionStorage.getItem('assignment_id');
-
-    const setData = new FormData();
-    setData.set('assignment_id', this.assignment_id);
-
-    getWorksInfo(setData).then((result) => {
-      this.projectList = result.data;
-
-      for(let i = 0; i < this.projectList.data.length; i++) {
-        this.workListValue.push(this.projectList.data[i].work_name);
-        this.workListKey.push(this.projectList.data[i].work_id);
+        alert('검색할 칼럼을 선택해주세요');
+        this.$refs.searchSelect.focus();
+      } else if ((this.selectedSearchOption !== '') & (this.searchedData === '')) {
+        alert('검색할 키워드를 입력해주세요');
+        this.$refs.searchInput.focus();
+      } else {
+        this.searchedNone = false;
+        this.resetSearchOption();
+        this.searchedData = '';
+        this.showAll();
       }
-    });
+    },
   },
   computed: {
     allSelected: {
-      get: function() {
-          return this.selectedTaskList ? (this.selectList ? (this.selectList.length === this.selectedTaskList.length) : false) : false;
+      get: function () {
+        return this.selectedTaskList ? (this.selectList ? this.selectList.length === this.selectedTaskList.length : false) : false;
       },
-      set: function(e) {
-        if(e) {
-          // for(let i in this.selectedTaskList) {
-          //   this.selectList[i] = this.selectedTaskList[i].name;
-          //   console.log("값 : " + this.selectList[i]);
-          // }
-
-          for(let i = 0; i < this.selectedTaskList.length; i++) {
+      set: function (e) {
+        if (e) {
+          for (let i = 0; i < this.selectedTaskList.length; i++) {
             // this.selectList[i] = this.selectedTaskList[i];
             this.selectList[i] = i;
           }
         } else {
           this.selectList = [];
         }
-        // this.selectList = e ? this.selectedTaskList : [];
       },
     },
-  }
-}
-
+  },
+};
 </script>
 <style scoped>
-  .container {
-    margin-top: 20px;
-    padding: 0;
-  }
+.container {
+  margin-top: 20px;
+  padding: 0;
+}
 
-  .subject {
-    text-align: center;
-    margin: 30px;
+.subject {
+  text-align: center;
+  margin: 30px;
+}
+.divide-area .btn-secondary {
+  font-size: 0.8rem;
+  border: none;
+  background-color: #e17b46 !important;
+}
+.divide-area .btn-secondary:hover {
+  background-color: #dc6425 !important;
+}
+.modal-content {
+  width: 80%;
+  margin: 0 auto;
+}
+.modal-body {
+  padding-top: 20px;
+}
+.center {
+  text-align: center;
+}
+.modal-footer {
+  justify-content: center;
+  border: none;
+}
+.form-group {
+  margin: 0 auto;
+  width: 60%;
+  padding-top: 20px;
+}
+.form-check {
+  display: inline-block;
+  width: 50%;
+}
+.form-check-label {
+  width: 80%;
+  text-align: left;
+  padding-top: 3px;
+  margin-left: 10px;
+}
+.show-nothing {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  margin-top: 15rem;
+}
+
+@media (max-width: 420px) {
+  .divide-area {
+    display: none;
   }
-  .divide-area .btn-secondary {
-    font-size: .8rem;
-    border: none;
-    background-color: #e17b46 !important;
-  }
-  .divide-area .btn-secondary:hover {
-    background-color: #dc6425 !important;
-  }
-  .modal-content {
-    width: 80%;
-    margin: 0 auto;
-  }
-  .modal-body {
-    padding-top: 20px;
-  }
-  .center {
-    text-align: center;
-  }
-  .modal-footer {
-    justify-content: center;
-    border: none;
-  }
-  .form-group {
-    margin: 0 auto;
-    width: 60%;
-    padding-top: 20px;
-  }
-  .form-check {
-    display: inline-block;
-    width: 50%;
-  }
-  .form-check-label {
-    width: 80%;
-    text-align: left;
-    padding-top: 3px;
-    margin-left: 10px;
-  }
-  .show-nothing {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.3rem;
-    margin-top: 15rem;
-  }
-  
-  @media (max-width: 420px) {
-    .divide-area {
-      display: none;
-    }
-  }
+}
 </style>
