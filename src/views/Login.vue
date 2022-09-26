@@ -103,8 +103,7 @@ export default {
             this.$cookies.set('type', user_type);
 
             if(user_type == 1) {
-              // this.$router.push('/admin').catch(() => {});
-              this.$router.replace('admin');
+              this.$router.push('/admin').catch(() => {});
             } else {
               this.$router.push('/user').catch(() => {});
             }
