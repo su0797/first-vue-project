@@ -116,8 +116,6 @@ export default {
 
       this.getDividenUser();
       this.showAll();
-
-      console.log(this.user);
     });
   },
   data() {
@@ -164,6 +162,7 @@ export default {
     getDividenUser() {
       const setData = new FormData();
       setData.set('assignment_id', this.assignment_id);
+      setData.set('user_status', 1);
 
       getUserList(setData).then((result) => {
         this.names = result.data;
@@ -213,22 +212,24 @@ export default {
         getDataInfo(setData).then((result) => {
           this.dataList = result.data;
 
-          for (let i = 0; i < this.dataList.data.length; i++) {
-            this.dataId[i] = this.dataList.data[i].data_id;
-          }
+          if(this.dataList !== null) {
+            for (let i = 0; i < this.dataList.data.length; i++) {
+              this.dataId[i] = this.dataList.data[i].data_id;
+            }
 
-          for (let i = 0; i < this.dataList.data.length; i++) {
-            const arr = JSON.parse(this.dataList.data[i].data_json);
-            this.dataListKey = Object.keys(arr);
-            this.searchOptionList = this.dataListKey;
-          }
-          this.dataListValue = [];
-          for (let i = 0; i < this.dataList.data.length; i++) {
-            this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
-          }
+            for (let i = 0; i < this.dataList.data.length; i++) {
+              const arr = JSON.parse(this.dataList.data[i].data_json);
+              this.dataListKey = Object.keys(arr);
+              this.searchOptionList = this.dataListKey;
+            }
+            this.dataListValue = [];
+            for (let i = 0; i < this.dataList.data.length; i++) {
+              this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
+            }
 
-          for (let i = 0; i < this.dataListValue.length; i++) {
-            this.selectedTaskList[i] = this.dataListValue[i];
+            for (let i = 0; i < this.dataListValue.length; i++) {
+              this.selectedTaskList[i] = this.dataListValue[i];
+            }
           }
         });
       }
@@ -250,9 +251,22 @@ export default {
         this.idsArray[i] = this.dataId[this.tasks[i]];
       }
 
-      this.cancel();
-      this.$router.go();
-      this.selectList = [];
+      const setData = new FormData();
+      setData.set('user_id', this.selectedUserId);
+      setData.set('idsArray', this.idsArray);
+
+      setWorkDistribute(setData).then((result) => {
+        console.log('result : ', result);
+        if (result.error.code != 0) {
+          this.msgbox(result.error.msg);
+          return;
+        }
+        this.msgbox(this.msg.SUCCESS);
+
+        this.cancel();
+        this.selectList = [];
+        this.$router.go();
+      });
     },
     cancel() {
       this.selectedUser = '';

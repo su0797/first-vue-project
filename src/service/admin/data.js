@@ -37,6 +37,7 @@ export async function getUserList(param, callback) {
   try {
     const data = {
       assignment_id: param.get('assignment_id'),
+      user_status: param.get('user_status')
     };
     const result = await axios.post('/web/assignment/user/list', data);
     if (callback) callback(result.data);

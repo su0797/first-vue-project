@@ -52,6 +52,10 @@ export default {
 
     return { user };
   },
+  created() {
+    this.$cookies.remove('name');
+    this.$cookies.remove('type');
+  },
   mounted() {
     getLoginInfo().then((result) => {
       if(!result) {
@@ -92,12 +96,16 @@ export default {
 
         if(result.error !== 'invalid_grant'){
           getLoginInfo().then((result) => {
+            const user_name = result.data.user.user_name;
             const user_type = result.data.user.user_type;
             
+            this.$cookies.set('name', user_name);
+            this.$cookies.set('type', user_type);
+
             if(user_type == 1) {
-              this.$router.replace('admin');
+              this.$router.push('/admin').catch(() => {});
             } else {
-              this.$router.replace('user');
+              this.$router.push('/user').catch(() => {});
             }
           });
         } else {

@@ -15,17 +15,17 @@ import AdminMainView from '/@components/AdminMainView.vue';
 import { advancePositionWithMutation } from '@vue/compiler-core';
 
 const routes = [
-  {
-    path: '/',
-    component: Home,
-  },
+  // {
+  //   path: '/',
+  //   component: Home,
+  // },
   {
     path: '/:catchAll(.*)+',
     name: 'NotFound',
     component: NotFound,
   },
   {
-    path: '/login',
+    path: '/',
     component: Login,
   },
   {
