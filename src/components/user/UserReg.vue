@@ -85,7 +85,8 @@ export default {
       });
     },
     moveList() {
-      this.$router.push({name: 'UserList'})
+      // this.$router.push({name: 'UserList'})
+      this.$router.replace("/admin/user/list");
     }
   }
 }

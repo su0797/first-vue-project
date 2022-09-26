@@ -83,7 +83,8 @@ export default {
         })
     },
     moveList() {
-      this.$router.push("/admin/user/list");
+      // this.$router.push("/admin/user/list");
+      this.$router.replace("/admin/user/list");
     },
   }
 }

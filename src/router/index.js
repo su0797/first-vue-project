@@ -39,6 +39,7 @@ const routes = [
   {
     path: '/admin',
     component: AdminMain,
+    meth: {authRequired: true},
   },
   {
     path: '/admin/tasklist',
@@ -81,8 +82,18 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, _from) => {
-  // console.log(to, _from);
+// router.beforeEach((to, _from) => {
+//   // console.log(to, _from);
+// });
+
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(function(routeInfo) {
+    return routeInfo.meta.authRequired;
+  })) {
+    alert('로그인을 해주세요');
+  } else {
+    next();
+  }
 });
 
 export default router;
