@@ -114,7 +114,7 @@ export default {
           this.errors['form'].push('Error');
         }
       }
-      if (this.data_status == 2) {
+      if (this.data_status == 2 || this.data_status == null) {
         this.errors['status'].push('Error');
       }
       if (this.errors['form'].length != 0 && this.data_status == 6) {
@@ -155,7 +155,7 @@ export default {
             Array.prototype.slice.call(forms).forEach(function (form) {
               form.classList.remove('was-validated');
             });
-            this.$router.push('/user').catch(() => {});
+            this.$router.go(-1);
           })
           .catch((err) => {
             console.log(err);

@@ -138,7 +138,7 @@ export default {
             Array.prototype.slice.call(forms).forEach(function (form) {
               form.classList.remove('was-validated');
             });
-            this.$router.push('/user').catch(() => {});
+            this.$router.go(-1);
           })
           .catch((err) => {
             console.log(err);
