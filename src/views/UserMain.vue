@@ -1,6 +1,6 @@
 <template>
+  <!-- 업무선택, 목록선택 셀렉트박스 -->
   <div class="container">
-    <!-- 업무선택, 목록선택 셀렉트박스 -->
     <select v-model="selectedProjectCode" class="form-select select-project" id="selectProject" @change="showProject($event)">
       <option value="null" selected disabled>업무 선택</option>
       <option :key="i" :value="project.work_id" v-for="(project, i) in projectList">
