@@ -2,13 +2,13 @@
   <div class="container">
     <!-- 업무선택, 목록선택 셀렉트박스 -->
     <select v-model="selectedProjectCode" class="form-select select-project" id="selectProject" @change="showProject($event)">
-      <option value="null" selected>업무 선택</option>
+      <option value="null" selected disabled>업무 선택</option>
       <option :key="i" :value="project.work_id" v-for="(project, i) in projectList">
         {{ project.work_name }}
       </option>
     </select>
     <select v-model="selectedTaskCode" class="form-select select-project" id="selectTask" @change="showTask($event)">
-      <option value="null" selected>목록 선택</option>
+      <option value="null" selected disabled>목록 선택</option>
       <option :key="i" :value="task.tkcode" v-for="(task, i) in taskList">
         {{ task.tkname }}
       </option>

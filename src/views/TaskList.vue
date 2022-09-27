@@ -2,14 +2,14 @@
   <div class="container">
     <!-- 업무선택 영역 -->
     <select class="form-select select-project" v-model="selectedWork" @change="showList($event)">
-      <option value="null" selected>업무 선택</option>
+      <option value="null" selected disabled>업무 선택</option>
       <option :key="i" :value="project.work_id" v-for="(project, i) in projectList">
         {{ project.work_name }}
       </option>
     </select>
     <!-- 분배 전, 실측, 조사불가, 완료 선택 영역 -->
     <select class="form-select select-project" v-model="selectedTask" @change="showTask($event)">
-      <option value="null" selected>목록선택</option>
+      <option value="null" selected disabled>목록선택</option>
       <option :key="i" :value="list.value" v-for="(list, i) in lists">
         {{ list.text }}
       </option>
@@ -212,7 +212,7 @@ export default {
         getDataInfo(setData).then((result) => {
           this.dataList = result.data;
 
-          if(this.dataList !== null) {
+          if (this.dataList !== null) {
             for (let i = 0; i < this.dataList.data.length; i++) {
               this.dataId[i] = this.dataList.data[i].data_id;
             }
