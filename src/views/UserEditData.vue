@@ -20,7 +20,7 @@
           v-else-if="column.meta_type === '4'"
         />
       </div>
-      <UserRadioBox :radioValue="(data_status = data_status)" @radioFromChild="data_status = Number($event.target.value)" />
+      <UserRadioBox :radioValue="(data_status = data_status)" @radioFromChild="changeStatusValue($event)" />
       <button type="submit" class="btn btn-secondary">저장</button>
     </form>
   </div>
@@ -77,6 +77,15 @@ export default {
     });
   },
   methods: {
+    changeStatusValue(e) {
+      this.data_status = Number(e.target.value);
+      if (this.data_status != 2 && this.data_status != 6) {
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms).forEach(function (form) {
+          form.classList.remove('was-validated');
+        });
+      }
+    },
     checkForm() {
       this.errors = {
         form: [],
@@ -84,6 +93,7 @@ export default {
       };
       for (var key in this.inputValueList) {
         if (this.inputValueList[key] === '') {
+          this.inputValueList[key] = null;
           this.errors['form'].push('Error');
         }
       }
