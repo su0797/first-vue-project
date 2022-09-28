@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import common from '/@service/common';
 
 import NotFound from '/@views/NotFound.vue';
 import Home from '/@views/Home.vue';
@@ -31,48 +32,57 @@ const routes = [
   {
     path: '/user/add',
     component: UserAddData,
+    meta: {requireAuth: true},
   },
   {
     path: '/user/edit/:data_id',
     component: UserEditData,
+    meta: {requireAuth: true},
   },
   {
     path: '/admin',
     component: AdminMain,
-    meth: {authRequired: true},
+    meta: {requireAuth: true},
   },
   {
     path: '/admin/tasklist',
     component: TaskList,
+    meta: {requireAuth: true},
   },
   {
     path: '/user',
     component: UserMain,
+    meta: {requireAuth: true},
   },
   {
     path: '/user/list',
     name: 'UserList',
     component: UserList,
+    meta: {requireAuth: true},
   },
   {
     path: '/admin/user/list',
     name: 'UserList',
     component: UserList,
+    meta: {requireAuth: true},
   },
   {
     path: '/admin/user/register',
     name: 'UserReg',
     component: UserReg,
+    meta: {requireAuth: true},
   },
   {
     path: '/admin/user/modify/:user_id',
     name: 'UserModify',
     component: UserModify,
+    meta: {requireAuth: true},
   },
   {
     path: '/admin/view',
     name: 'AdminMainView',
     component: AdminMainView,
+    meta: {requireAuth: true},
   },
 ];
 
@@ -87,13 +97,16 @@ const router = createRouter({
 // });
 
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(function(routeInfo) {
-    return routeInfo.meta.authRequired;
-  })) {
-    alert('로그인을 해주세요');
-  } else {
-    next();
+  const loggedln = sessionStorage.getItem(common.ACCESS_TOKEN);
+
+  if(to.matched.some(record => record.meta.requireAuth)) {
+    if(!loggedln) {
+      alert('로그인이 필요합니다.');
+      next('/');
+      return;
+    }
   }
+  next();
 });
 
 export default router;

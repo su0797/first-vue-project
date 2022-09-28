@@ -25,7 +25,7 @@
 </template>
 <script>
 import { computed, ref } from 'vue';
-import { oauthLogin, getLoginInfo } from '/@service/login';
+import { oauthLogin, getLoginInfo, deleteStorage } from '/@service/login';
 import { isNotEmpty, jsonFromFormData } from '/@service/util';
 import { useStore } from 'vuex';
 import { getUser } from '/@service/api';
@@ -55,6 +55,8 @@ export default {
   created() {
     this.$cookies.remove('name');
     this.$cookies.remove('type');
+
+    deleteStorage();
   },
   mounted() {
     getLoginInfo().then((result) => {

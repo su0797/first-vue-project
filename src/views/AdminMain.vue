@@ -27,7 +27,11 @@ export default {
     axios.get('http://52.22.216.42:8090/web/assignment/nums/').then(({ data }) => {
       this.datas = data.data.data;
       console.log(this.datas);
-      sessionStorage.clear();
+
+      sessionStorage.removeItem('selectedWork');
+      sessionStorage.removeItem('workName');
+      sessionStorage.removeItem('selectedTaskName');
+      sessionStorage.removeItem('selectedTask');
     });
   },
   components: {
