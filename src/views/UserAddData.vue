@@ -114,7 +114,7 @@ export default {
           this.errors['form'].push('Error');
         }
       }
-      if (this.data_status == 2 || this.data_status == null) {
+      if (this.data_status == null) {
         this.errors['status'].push('Error');
       }
       if (this.errors['form'].length != 0 && this.data_status == 6) {

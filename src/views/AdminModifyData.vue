@@ -20,7 +20,7 @@
           v-else-if="column.meta_type === '4'"
         />
       </div>
-      <UserRadioBox :radioValue="(data_status = data_status)" @radioFromChild="changeStatusValue($event)" />
+      <UserRadioBox :radioValue="(data_status = data_status)" @radioFromChild="changeStatusValue($event)" v-if="data_status != 1 && data_status != 2" />
       <button type="submit" class="btn btn-secondary">저장</button>
     </form>
   </div>
@@ -55,8 +55,8 @@ export default {
     const setAddData = new FormData();
     const setEditData = new FormData();
 
-    this.projectCode = sessionStorage.getItem('projectCode');
-    this.projectName = sessionStorage.getItem('projectName');
+    this.projectCode = sessionStorage.getItem('selectedWork');
+    this.projectName = sessionStorage.getItem('workName');
     this.data_id = sessionStorage.getItem('data_id');
 
     setAddData.set('work_id', this.projectCode);
@@ -70,6 +70,7 @@ export default {
       this.dataList = result.data;
       this.data_status = this.dataList.data.data_status;
       this.inputValueList = JSON.parse(this.dataList.data.data_json);
+      console.log(this.data_status);
     });
   },
   methods: {
@@ -93,21 +94,21 @@ export default {
           this.errors['form'].push('Error');
         }
       }
-      if (this.data_status == 2) {
-        this.errors['status'].push('Error');
-      }
+      // if (this.data_status == 1 || this.data_status == 2) {
+      // 	this.errors['status'].push('Error');
+      // }
       if (this.errors['form'].length != 0 && this.data_status == 6) {
         alert('모든 입력창을 채워주세요');
         var forms = document.querySelectorAll('.needs-validation');
         Array.prototype.slice.call(forms).forEach(function (form) {
           form.classList.add('was-validated');
         });
-      } else if (this.errors['status'].length != 0) {
-        alert('데이터 상태에 체크를 해주세요');
-        var forms = document.querySelectorAll('.needs-validation');
-        Array.prototype.slice.call(forms).forEach(function (form) {
-          form.classList.add('was-validated');
-        });
+        // } else if (this.errors['status'].length != 0) {
+        // 	alert('데이터 상태에 체크를 해주세요');
+        // 	var forms = document.querySelectorAll('.needs-validation');
+        // 	Array.prototype.slice.call(forms).forEach(function (form) {
+        // 		form.classList.add('was-validated');
+        // 	});
       } else {
         this.isPassValidatoin = true;
       }
