@@ -16,7 +16,7 @@
           <span v-else-if="assignment_id === 4">
             <a @click="route()">문정원</a>
           </span>
-          </span><span class="title">진행률</span>{{asd(data_status1, totals)}} {{ asds }}%</p>
+          </span><span class="title">진행률</span>{{avg()}} {{ avgs }}%</p>
         <div class="box">
             <p class="card-text1"><span class="text">분배 전</span><span class="count_1">{{ data_status1 }} <span class="text-count">건</span></span></p>
             <hr class="hr-dashed"> 
@@ -27,7 +27,7 @@
             <p class="card-text4"><span class="text">완료</span><span class="count_4" style="margin-left: 216px;" >{{ data_status6 }} <span class="text-count">건</span></span></p>
             <hr class="hr-dashed">
         </div>
-        <p class="total">{{ total(data_status6, data_status5, data_status4 ,data_status3 ,data_status1) }}(총 {{ totals }} 건) </p>
+        <p class="total">{{ total() }}(총 {{ totals }} 건) </p>
       </div>
     </div>
   </div>
@@ -49,18 +49,18 @@ export default {
     data() {
       return {
         totals: 0,
-        asds: 0,
+        avgs: 0,
       }
     },
     methods: {
-      total(data_status5, data_status4 , data_status3 , data_status6 , data_status1) {
-        this.totals = data_status5 + data_status4 + data_status3 + data_status6 + data_status1
+      total() {
+        this.totals = this.data_status5 + this.data_status4 + this.data_status3 + this.data_status6 + this.data_status1
         // console.log(this.totals);
-      }, 
-      asd(data_status5, totals) {
-        this.asds = Math.round(data_status5/totals)
+    }, 
+      avg() {
+        this.avgs = Math.round(this.data_status5/this.totals)
         // console.log(this.asds);
-      },
+    },
       route() {
         sessionStorage.setItem('assignment_id', this.assignment_id);
         this.$router.push('/admin/tasklist').catch(() => {});
