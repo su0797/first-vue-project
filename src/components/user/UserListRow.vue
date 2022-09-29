@@ -1,17 +1,17 @@
 <template>
     <tr class="tr" :class="{ 'tr-disabled' : user.user_status === 0 }" >
-        <td class="user_name">{{user.user_name}}</td>
-        <td class="user_email">{{user.user_email}}</td>
-        <td class="user_password" style="width: 40%;">{{user.user_password}}</td>
-        <td class="user_phone">{{user.user_phone}}</td>
-        <td class="assignment_name">
+        <td class="user_name" style="width: 20%;">{{user.user_name}}</td>
+        <td class="user_email" style="width: 20%;">{{user.user_email}}</td>
+        <!-- <td class="user_password" style="width: 40%;">{{user.user_password}}</td> -->
+        <td class="user_phone" style="width: 20%;">{{user.user_phone}}</td>
+        <td class="assignment_name" style="width: 20%;">
             {{assignment_name[user.assignment_id -1]}}
         </td>
-        <td class="status_button" style="width: 15%;">   
+        <td class="status_button" style="width: 20%;">   
             <button type="button" class="btn btn-primary btn-modal" @click="moveModifyPage" :disabled="user.user_status === 0" >수정</button>
             <button type="button" class="btn btn-primary btn-modal btn-stop" style="width: 75px; text-align: center;" @click="openModal(user.user_id)" :disabled="user.user_status === 0"  v-if="user.user_status == 1" >{{ msg }}</button> 
             <button type="button" class="btn btn-primary btn-modal btn-stop" style="width: 75px; text-align: center;" @click="openModal(user.user_id)" :disabled="user.user_status === 0"  v-if="user.user_status == 0">{{ nextMsg }}</button> 
-            <button class="btn btn-primary btn-modal btn-stop"  :disabled="user.user_status === 0" >작업 내역</button>
+            <button class="btn btn-primary btn-modal btn-stop"  :disabled="user.user_status === 0" @click="moveUserWorkPage">작업 내역</button>
         </td>
     </tr>
 </template>
@@ -40,7 +40,11 @@ export default {
     moveModifyPage() {
         this.$router.push(`/admin/user/modify/${this.user_id}`).catch(() => {});
     },
-    }
+     moveUserWorkPage() {
+      this.$router.push(`/admin/user/workpage/${this.user_id}`).catch(() => {});
+    },
+    isChangeColor() {},
+  },
 }
 </script>
 
