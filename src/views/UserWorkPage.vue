@@ -156,17 +156,17 @@ export default {
 			dataListValue: [],
 		};
 	},
-	created() {
-		axios.get(`http://52.22.216.42:8090/common/user/info/${this.$route.params.user_id}`).then(({ data }) => {
-			// console.log(data.data.user.user_id);
-			this.user_id = data.data.user.user_id;
-			this.user_name = data.data.user.user_name;
-			this.user_email = data.data.user.user_email;
-			this.user_phone = data.data.user.user_phone;
-			this.assignment_id = data.data.user.assignment_id;
-			this.user_type = data.data.user.user_type;
-		})
-	},
+	// created() {
+	// 	axios.get(`http://52.22.216.42:8090/common/user/info/${this.$route.params.user_id}`).then(({ data }) => {
+	// 		// console.log(data.data.user.user_id);
+	// 		this.user_id = data.data.user.user_id;
+	// 		this.user_name = data.data.user.user_name;
+	// 		this.user_email = data.data.user.user_email;
+	// 		this.user_phone = data.data.user.user_phone;
+	// 		this.assignment_id = data.data.user.assignment_id;
+	// 		this.user_type = data.data.user.user_type;
+	// 	})
+	// },
 	methods: {
 		showProject(e) {
 			this.pjName = e.target.options[e.target.options.selectedIndex].text;
