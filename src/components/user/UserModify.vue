@@ -80,7 +80,7 @@ export default {
         .then(({ data }) => {
           console.log(data);
             let msg = "수정을 완료했습니다.";
-            alert(msg);
+            this.msgbox(msg);
             // this.$router.push("/admin/user/list").catch(() => {});
             this.moveList();
         })
