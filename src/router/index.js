@@ -32,57 +32,62 @@ const routes = [
   {
     path: '/user/add',
     component: UserAddData,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
   },
   {
     path: '/user/edit/:data_id',
     component: UserEditData,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
   },
   {
     path: '/admin',
     component: AdminMain,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
   },
   {
     path: '/admin/tasklist',
     component: TaskList,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
   },
   {
     path: '/user',
     component: UserMain,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
   },
   {
     path: '/user/list',
     name: 'UserList',
     component: UserList,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
   },
   {
     path: '/admin/user/list',
     name: 'UserList',
     component: UserList,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
   },
   {
     path: '/admin/user/register',
     name: 'UserReg',
     component: UserReg,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
   },
   {
     path: '/admin/user/modify/:user_id',
     name: 'UserModify',
     component: UserModify,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
   },
   {
     path: '/admin/view',
     name: 'AdminMainView',
     component: AdminMainView,
-    meta: {requireAuth: true},
+    meta: { requireAuth: true },
+  },
+  {
+    path: '/admin/tasklist/modify/:data',
+    name: 'AdminModifyData',
+    component: AdminModifyData,
   },
 ];
 
@@ -99,8 +104,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const loggedln = sessionStorage.getItem(common.ACCESS_TOKEN);
 
-  if(to.matched.some(record => record.meta.requireAuth)) {
-    if(!loggedln) {
+  if (to.matched.some((record) => record.meta.requireAuth)) {
+    if (!loggedln) {
       alert('로그인이 필요합니다.');
       next('/');
       return;
