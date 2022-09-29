@@ -79,6 +79,7 @@
 			<div class="table-responsive" v-if="selectedProjectCode" 
 						:items-per-page="itemsPerPage"
 						:v-model="currentPage">
+				
 				<table class="table">
 					<thead>
 						<tr>
@@ -101,16 +102,13 @@
 						</tr>
 					</tbody>
 				</table>
-				<!-- pagination -->
 				<vue-awesome-paginate
-					:total-items="totalItems"
-					:items-per-page="itemsPerPage"
-					:max-pages-shown="MaxPagesShown"
-					:current-page="currentPage"
-					:on-click="onClickHandler"
-					:show-breakpoint-buttons="false"
-					/>
-				<!-- pagination -->
+						:total-items="defineTotalItems"
+						:items-per-page="itemsPerPage"
+						:max-pages-shown="MaxPagesShown"
+						:current-page="currentPage"
+						:on-click="onClickHandler"
+						:show-breakpoint-buttons="false"/>
 			</div>
 		</div>
 	</div>
@@ -168,6 +166,9 @@ export default {
 	// 	})
 	// },
 	methods: {
+		defineTotalItems() {
+			this.defineTotalItems = this.dataListValue.length
+		},
 		showProject(e) {
 			this.pjName = e.target.options[e.target.options.selectedIndex].text;
 			this.showTable();
@@ -190,6 +191,7 @@ export default {
 					for (let i = 0; i < this.dataList.data.length; i++) {
 						this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
 					}
+					this.defineTotalItems();
 				});
 			}
 		},
@@ -199,7 +201,6 @@ export default {
 		
 		onClickHandler(page) {
 			console.log(page);
-			
 		},
 	},
 	
