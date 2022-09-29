@@ -2,14 +2,14 @@
   <div class="container">
     <!-- 업무선택 영역 -->
     <select class="form-select select-project" v-model="selectedWork" @change="showList($event)">
-      <option value="null" selected disabled>업무 선택</option>
+      <option value="null" selected>업무 선택</option>
       <option :key="i" :value="project.work_id" v-for="(project, i) in projectList">
         {{ project.work_name }}
       </option>
     </select>
     <!-- 분배 전, 실측, 조사불가, 완료 선택 영역 -->
     <select class="form-select select-project" v-model="selectedTask" @change="showTask($event)">
-      <option value="null" selected disabled>목록선택</option>
+      <option value="null" selected>목록선택</option>
       <option :key="i" :value="list.value" v-for="(list, i) in lists">
         {{ list.text }}
       </option>
@@ -82,7 +82,9 @@
               <input type="checkbox" :value="i" v-model="selectList" />
             </td>
             <td>
-              <button type="button" class="btn btn-secondary">수정</button>
+              <router-link :to="`/admin/tasklist/modify/${dataList.data[i].data_id}`">
+                <button type="button" class="btn btn-secondary" @click="pushDataId(dataList.data[i].data_id)">수정</button>
+              </router-link>
             </td>
             <td :key="j" v-for="(datakey, j) in dataListKey">
               {{ data[datakey] }}
@@ -116,6 +118,8 @@ export default {
 
       this.getDividenUser();
       this.showAll();
+
+      console.log(this.user);
     });
   },
   data() {
@@ -123,9 +127,9 @@ export default {
       selectedTask: '',
       lists: [
         { text: '분배 전', value: '1' },
-        { text: '실측필요', value: '3' },
-        { text: '조사불가', value: '4' },
-        { text: '완료', value: '5' },
+        { text: '실측필요', value: '4' },
+        { text: '조사불가', value: '5' },
+        { text: '완료', value: '6' },
       ],
       workName: '',
       selectedWork: '',
@@ -149,6 +153,7 @@ export default {
       idsArray: [],
       selectedUser: '',
       selectedUserId: '',
+      data_id: '',
       names: [],
       user: {
         id: [],
@@ -162,7 +167,6 @@ export default {
     getDividenUser() {
       const setData = new FormData();
       setData.set('assignment_id', this.assignment_id);
-      setData.set('user_status', 1);
 
       getUserList(setData).then((result) => {
         this.names = result.data;
@@ -172,6 +176,10 @@ export default {
           this.user.name.push(this.names.user[i].user_name);
         }
       });
+    },
+    //데이터 아이디 EditForm에 전송
+    pushDataId(id) {
+      sessionStorage.setItem('data_id', id);
     },
     // 업무 셀렉트 선택시
     showList(e) {
@@ -212,24 +220,22 @@ export default {
         getDataInfo(setData).then((result) => {
           this.dataList = result.data;
 
-          if (this.dataList !== null) {
-            for (let i = 0; i < this.dataList.data.length; i++) {
-              this.dataId[i] = this.dataList.data[i].data_id;
-            }
+          for (let i = 0; i < this.dataList.data.length; i++) {
+            this.dataId[i] = this.dataList.data[i].data_id;
+          }
 
-            for (let i = 0; i < this.dataList.data.length; i++) {
-              const arr = JSON.parse(this.dataList.data[i].data_json);
-              this.dataListKey = Object.keys(arr);
-              this.searchOptionList = this.dataListKey;
-            }
-            this.dataListValue = [];
-            for (let i = 0; i < this.dataList.data.length; i++) {
-              this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
-            }
+          for (let i = 0; i < this.dataList.data.length; i++) {
+            const arr = JSON.parse(this.dataList.data[i].data_json);
+            this.dataListKey = Object.keys(arr);
+            this.searchOptionList = this.dataListKey;
+          }
+          this.dataListValue = [];
+          for (let i = 0; i < this.dataList.data.length; i++) {
+            this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
+          }
 
-            for (let i = 0; i < this.dataListValue.length; i++) {
-              this.selectedTaskList[i] = this.dataListValue[i];
-            }
+          for (let i = 0; i < this.dataListValue.length; i++) {
+            this.selectedTaskList[i] = this.dataListValue[i];
           }
         });
       }
@@ -251,22 +257,9 @@ export default {
         this.idsArray[i] = this.dataId[this.tasks[i]];
       }
 
-      const setData = new FormData();
-      setData.set('user_id', this.selectedUserId);
-      setData.set('idsArray', this.idsArray);
-
-      setWorkDistribute(setData).then((result) => {
-        console.log('result : ', result);
-        if (result.error.code != 0) {
-          this.msgbox(result.error.msg);
-          return;
-        }
-        this.msgbox(this.msg.SUCCESS);
-
-        this.cancel();
-        this.selectList = [];
-        this.$router.go();
-      });
+      this.cancel();
+      this.$router.go();
+      this.selectList = [];
     },
     cancel() {
       this.selectedUser = '';

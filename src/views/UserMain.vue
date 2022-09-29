@@ -1,6 +1,6 @@
 <template>
-  <!-- 업무선택, 목록선택 셀렉트박스 -->
   <div class="container">
+    <!-- 업무선택, 목록선택 셀렉트박스 -->
     <select v-model="selectedProjectCode" class="form-select select-project" id="selectProject" @change="showProject($event)">
       <option value="null" selected disabled>업무 선택</option>
       <option :key="i" :value="project.work_id" v-for="(project, i) in projectList">
@@ -19,8 +19,7 @@
 
     <!-- 제목 -->
     <div v-if="selectedProjectCode && selectedTaskCode">
-      <h3>{{ pjName }}</h3>
-      <h3>{{ tkName }} 목록</h3>
+      <h3>{{ pjName }} {{ tkName }} 목록</h3>
     </div>
 
     <!-- 검색영역 -->
@@ -76,9 +75,7 @@
 </template>
 
 <script>
-import { getUserSearch } from '/@service/user';
-import { getUserWorkData } from '/@service/user';
-import { getUserWorkId } from '/@service/user';
+import { getUserSearch, getUserWorkData, getUserWorkId } from '/@service/user';
 
 export default {
   created() {
@@ -111,11 +108,12 @@ export default {
       searchOptionList: [],
       taskList: [
         { tkname: '할일', tkcode: 2 },
+        { tkname: '실측필요', tkcode: 4 },
         { tkname: '임시저장', tkcode: 3 },
         { tkname: '완료', tkcode: 6 },
       ],
       projectList: [],
-      tableTaskList: ['삭제', '할당전', '할 일', '임시저장', '실측필요', '조사불가', '완료'],
+      tableTaskList: ['삭제', '할당전', '할일', '임시저장', '실측필요', '조사불가', '완료'],
     };
   },
 
@@ -209,6 +207,10 @@ export default {
 </script>
 
 <style scoped>
+h3 {
+  text-align: center;
+  margin: 30px;
+}
 .container {
   margin-top: 20px;
   padding: 0;
@@ -221,12 +223,6 @@ export default {
 }
 .btn-add-data:hover {
   background-color: #c15a33;
-}
-h3,
-h4,
-h5 {
-  text-align: center;
-  margin: 30px;
 }
 .none-data {
   display: flex;
