@@ -40,7 +40,7 @@
 
 <script>
 import axios from 'axios';
-
+import { isNotEmpty } from '/@service/util';
 export default {
   data() {
     return {
@@ -54,19 +54,23 @@ export default {
   },
   methods: {
     checkValue() {
-      let err = true;
-      let msg = '';
-      
-      !this.user_name && ((msg = '인턴 이름을 입력해 주세요.'), (err= false), this.$refs.user_name.focus());
-      err && !this.user_email && ((msg = '아이디를 입력해 주세요.'), (err= false), this.$refs.user_email.focus());
-      err && !this.user_password && ((msg = '비밀번호를 입력해 주세요.'), (err= false), this.$refs.user_password.focus());
-      err && !this.user_phone && ((msg = '전화번호를 입력해 주세요.'), (err= false), this.$refs.user_password.focus());
-      err && !this.assignment_id && ((msg = '과제를 입력해 주세요.'), (err= false), this.$refs.user_password.focus());
-
-      if(!err) alert(msg);
-      else this.registIntern();
+      if (!isNotEmpty(this.user_name)) {
+        this.msgbox('입력칸을 모두 채워주세요.');
+        return;
+      } else if (!isNotEmpty(this.user_email)) {
+        this.msgbox('입력칸을 모두 채워주세요.');
+        return;
+      } else if (!isNotEmpty(this.user_password)) {
+        this.msgbox('입력칸을 모두 채워주세요.');
+        return;
+      } else if (!isNotEmpty(this.user_phone)) {
+        this.msgbox('입력칸을 모두 채워주세요.');
+        return;
+      } else if (!isNotEmpty(this.assignment_id)) {
+        this.msgbox('입력칸을 모두 채워주세요.');
+        return;
+      } else this.registIntern();
     },
-
     registIntern() {
       axios.post('http://52.22.216.42:8090/common/user/join', {
         user_name: this.user_name,
@@ -85,11 +89,11 @@ export default {
       });
     },
     moveList() {
-      // this.$router.push({name: 'UserList'})
-      // this.$router.replace("/admin/user/list");
+      // this.$router.replace("/admin/user/list").catch(() => {});
       this.$router.go(-1);
-    }
-  }
+    },
+
+}
 }
 </script>
 

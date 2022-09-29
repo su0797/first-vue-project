@@ -1,7 +1,5 @@
 <template>
-<Modal
-:isAct="isModalAct"
-@closeModal="closeModal"
+<Modal :isAct="isModalAct" @closeModal="closeModal"
 :user_name="modalUserName"  
 :user_id="modalUserId" 
 :user_email="modalUserEmail"  
@@ -81,7 +79,7 @@ export default {
   })
     .then(({ data }) => {
       this.users = data.data.user;
-      // console.log(this.users);
+      console.log(this.users);
     });
   },
   methods: {
@@ -96,7 +94,7 @@ export default {
       });
     },
     movePage() {
-      this.$router.push({ name: 'UserReg' });
+      this.$router.push("/admin/user/register").catch(() => {});
     },
     changeKeyword(w) {
       this.keyword = w.target.value;
@@ -162,9 +160,9 @@ h4 {
 .table-body{
     vertical-align: middle;
 }
-.manage {
+/* .manage {
     width: 15%;
-}
+} */
 
 .flex-area .btn-secondary {
   font-size: .8rem;
