@@ -13,6 +13,7 @@ import UserList from '/@components/user/UserList.vue';
 import UserReg from '/@components/user/UserReg.vue';
 import UserModify from '/@components/user/UserModify.vue';
 import AdminMainView from '/@components/AdminMainView.vue';
+import AdminModifyData from '/@views/AdminModifyData.vue';
 import { advancePositionWithMutation } from '@vue/compiler-core';
 
 const routes = [
