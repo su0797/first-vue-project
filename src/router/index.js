@@ -14,6 +14,8 @@ import UserReg from '/@components/user/UserReg.vue';
 import UserModify from '/@components/user/UserModify.vue';
 import AdminMainView from '/@components/AdminMainView.vue';
 import AdminModifyData from '/@views/AdminModifyData.vue';
+import UserWorkPage from '/@views/UserWorkPage.vue';
+
 import { advancePositionWithMutation } from '@vue/compiler-core';
 
 const routes = [
@@ -89,6 +91,11 @@ const routes = [
     path: '/admin/tasklist/modify/:data',
     name: 'AdminModifyData',
     component: AdminModifyData,
+  },
+  {
+    path: '/admin/user/workpage/:user_id',
+    name : 'UserWorkPage',
+    component: UserWorkPage,
   },
 ];
 
