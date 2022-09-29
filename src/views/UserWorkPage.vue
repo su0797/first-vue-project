@@ -117,9 +117,7 @@
 </template>
 
 <script>
-import {getAdminUserDataInfo} from "/@service/admin/data";
-
-
+import {getDataInfo} from "/@service/admin/data";
 
 export default {
 	data() {
@@ -180,7 +178,7 @@ export default {
 
 				setData.set('work_id', this.selectedProjectCode);
 
-				getAdminUserDataInfo(setData).then((result) => {
+				getDataInfo(setData).then((result) => {
 					console.log('result: ', result);
 					this.dataList = result.data;
 
