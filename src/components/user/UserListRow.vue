@@ -43,7 +43,6 @@ export default {
      moveUserWorkPage() {
       this.$router.push(`/admin/user/workpage/${this.user_id}`).catch(() => {});
     },
-    isChangeColor() {},
   },
 }
 </script>

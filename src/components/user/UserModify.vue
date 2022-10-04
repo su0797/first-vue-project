@@ -45,7 +45,6 @@ export default {
   },
   created() {
     axios.get(`http://52.22.216.42:8090/common/user/info/${this.$route.params.user_id}`).then(({ data }) => {
-        // console.log(data.data.user.user_id);
         this.user_id = data.data.user.user_id;
         this.user_name = data.data.user.user_name;
         this.user_email = data.data.user.user_email;
@@ -81,12 +80,10 @@ export default {
           console.log(data);
             let msg = "수정을 완료했습니다.";
             this.msgbox(msg);
-            // this.$router.push("/admin/user/list").catch(() => {});
             this.moveList();
         })
     },
     moveList() {
-      // this.$router.replace("/admin/user/list").catch(() => {});
       this.$router.go(-1);
     },
   }

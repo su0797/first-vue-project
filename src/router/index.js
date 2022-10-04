@@ -9,7 +9,7 @@ import UserEditData from '/@views/UserEditData.vue';
 import AdminMain from '/@views/AdminMain.vue';
 import TaskList from '/@views/TaskList.vue';
 import UserMain from '/@views/UserMain.vue';
-import UserList from '/@components/user/UserList.vue';
+import UserList from '/@views/UserList.vue';
 import UserReg from '/@components/user/UserReg.vue';
 import UserModify from '/@components/user/UserModify.vue';
 import AdminMainView from '/@components/AdminMainView.vue';

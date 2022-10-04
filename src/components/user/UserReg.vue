@@ -89,7 +89,6 @@ export default {
       });
     },
     moveList() {
-      // this.$router.replace("/admin/user/list").catch(() => {});
       this.$router.go(-1);
     },
 
