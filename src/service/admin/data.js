@@ -1,4 +1,4 @@
-import axios from "../axios";
+import axios from "/@service/axios";
 import common from '/@service/common';
 import { isNotEmpty } from '/@service/util';
 
@@ -25,6 +25,7 @@ export async function getUserSearch(param, callback) {
 			columnName: param.get('columnName'),
 			keyword: param.get('keyword'),
 		};
+
 		const result = await axios.post('/web/search', data);
 		if (callback) callback(result.data);
 		return result.data;
@@ -65,13 +66,11 @@ export async function getWorksInfo(param, callback) {
 
 export async function setWorkDistribute(param, callback) {
   try{
-    console.log(param.get('user_id'));
-    console.log(param.get('idsArray'));
     const data = {
       user_id: param.get('user_id'),
       idsArray: JSON.parse('['+ param.get('idsArray') +']')
     }
-    console.log(data);
+    console.log(data.idsArray);
     const result = await axios.post('/web/work/distribution', data);
     if (callback) callback(result.data);
     return result.data;

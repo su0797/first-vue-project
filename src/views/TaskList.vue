@@ -118,8 +118,6 @@ export default {
 
       this.getDividenUser();
       this.showAll();
-
-      console.log(this.user);
     });
   },
   data() {
@@ -258,6 +256,19 @@ export default {
       for (let i = 0; i < this.tasks.length; i++) {
         this.idsArray[i] = this.dataId[this.tasks[i]];
       }
+
+      const setData = new FormData();
+      setData.set('user_id', this.selectedUserId);
+      setData.set('idsArray', this.idsArray);
+
+      setWorkDistribute(setData).then((result) => {
+        console.log('result : ', result);
+        if (result.error.code != 0) {
+          this.msgbox(result.error.msg);
+          return;
+        }
+        this.msgbox(this.msg.SUCCESS);
+      });
 
       this.cancel();
       this.$router.go();
