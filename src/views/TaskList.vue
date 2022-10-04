@@ -44,9 +44,12 @@
 
     <div class="flex">
       <!-- 업무분배 버튼 영역 -->
-      <div class="divide-area flex-area" v-if="selectedTask && selectedTask !== '조사불가' && selectedWork">
+      <div class="divide-area flex-area" v-if="selectedTask && selectedTaskName !== '완료' && selectedWork">
         <button class="btn btn-secondary" type="button" v-if="selectList.length !== 0" data-bs-toggle="modal" data-bs-target="#taskDivision">업무 분배</button>
         <button class="btn btn-secondary" type="button" v-else @click="this.msgbox('분배할 데이터를 선택해주세요.')">업무 분배</button>
+      </div>
+      <div class="divide-area flex-area" v-else>
+
       </div>
 
       <!-- 검색영역 -->
@@ -367,11 +370,24 @@ export default {
 .modal-content {
   width: 80%;
   margin: 0 auto;
+  font-size: .8rem;
 }
 .modal-body {
   padding-top: 20px;
 }
-.center {
+.modal-footer .btn-primary {
+  background-color: #E17B46;
+  border: 1px solid #e17b46;
+  font-size: .8rem;
+}
+.modal-footer .btn-secondary {
+  border: 1px solid #B9B9B9;
+  color: #828282;
+  background-color: #fff;
+  font-size: .8rem;
+}
+.modal-body .center {
+  font-weight: 700;
   text-align: center;
 }
 .modal-footer {

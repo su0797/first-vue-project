@@ -70,7 +70,7 @@ export async function setWorkDistribute(param, callback) {
       user_id: param.get('user_id'),
       idsArray: JSON.parse('['+ param.get('idsArray') +']')
     }
-    console.log(data.idsArray);
+ 
     const result = await axios.post('/web/work/distribution', data);
     if (callback) callback(result.data);
     return result.data;
