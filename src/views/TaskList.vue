@@ -268,11 +268,11 @@ export default {
           return;
         }
         this.msgbox(this.msg.SUCCESS);
-      });
 
-      this.cancel();
-      this.$router.go();
-      this.selectList = [];
+        this.cancel();
+        this.selectList = [];
+        this.$router.go();
+      });
     },
     cancel() {
       this.selectedUser = '';
