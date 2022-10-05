@@ -3,7 +3,7 @@
   <div class="modal-content" v-if="isAct">
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal"></button>
     <div class="modal-body">
-      <h4 style="margin-top: 5px; margin-bottom: 8px; font-size: 1.2rem; font-weight: 400;">{{ user_name }}님의 계정을 정지하시겠습니까?</h4>
+      <h4 style="margin-top: 5px; margin-bottom: 8px; font-size: 1.15rem; font-weight: 400;">{{ user_name }}님의 계정을 정지하시겠습니까?</h4>
       <span style="font-size: 0.8rem;">(한 번 정지한 계정은 다시 활성화시킬 수 없습니다.)</span>
     </div>
     <div class="modal--box">
