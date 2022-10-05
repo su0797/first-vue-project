@@ -55,19 +55,19 @@ export default {
   methods: {
     checkValue() {
       if (!isNotEmpty(this.user_name)) {
-        this.msgbox('입력칸을 모두 채워주세요.');
+        this.msgbox('입력란을 모두 채워주세요.');
         return;
       } else if (!isNotEmpty(this.user_email)) {
-        this.msgbox('입력칸을 모두 채워주세요.');
+        this.msgbox('입력란을 모두 채워주세요.');
         return;
       } else if (!isNotEmpty(this.user_password)) {
-        this.msgbox('입력칸을 모두 채워주세요.');
+        this.msgbox('입력란을 모두 채워주세요.');
         return;
       } else if (!isNotEmpty(this.user_phone)) {
-        this.msgbox('입력칸을 모두 채워주세요.');
+        this.msgbox('입력란을 모두 채워주세요.');
         return;
       } else if (!isNotEmpty(this.assignment_id)) {
-        this.msgbox('입력칸을 모두 채워주세요.');
+        this.msgbox('입력란을 모두 채워주세요.');
         return;
       } else this.registIntern();
     },

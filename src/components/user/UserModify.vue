@@ -41,6 +41,8 @@ export default {
       user_phone: '',
       user_type: '',
       assignment_id: 0,
+
+      errors: []
     };
   },
   created() {
@@ -55,14 +57,18 @@ export default {
   },
   methods: {
     checkValue() {
+      this.errors=[]
       if (!isNotEmpty(this.user_name)) {
-        this.msgbox('입력칸을 모두 채워주세요.');
+        this.msgbox('입력란을 모두 채워주세요.');
+        this.errors.push("error")
         return;
       } else if (!isNotEmpty(this.user_phone)) {
-        this.msgbox('입력칸을 모두 채워주세요.');
+        this.msgbox('입력란을 모두 채워주세요.');
+        this.errors.push("error")
         return;
       } else if (!isNotEmpty(this.assignment_id)) {
-        this.msgbox('입력칸을 모두 채워주세요.');
+        this.msgbox('입력란을 모두 채워주세요.');
+        this.errors.push("error")
         return;
       } else this.modifyArticle();
     },

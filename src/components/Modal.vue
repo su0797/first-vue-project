@@ -42,8 +42,6 @@ export default {
       .then(({ data }) => {
         this.users = data.user;
         console.log(data);
-          let msg = "계정을 정지하였습니다.";
-          alert(msg);
            this.$router.go({name: 'UserList'});
           this.closeModal();
         })
