@@ -40,10 +40,13 @@ export default {
     moveModifyPage() {
         this.$router.push(`/admin/user/modify/${this.user_id}`).catch(() => {});
     },
-     moveUserWorkPage() {
-      this.$router.push(`/admin/user/workpage/${this.user_id}`).catch(() => {});
+    moveUserWorkPage() {
+        sessionStorage.setItem('user_name', this.user.user_name)
+        sessionStorage.setItem('user_id', this.user.user_id)
+        sessionStorage.setItem('assignment_id', this.user.assignment_id)
+        this.$router.push(`/admin/user/workpage/${this.user_id}`).catch(() => {});
     },
-  },
+    },
 }
 </script>
 
