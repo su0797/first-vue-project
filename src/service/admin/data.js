@@ -4,10 +4,20 @@ import { isNotEmpty } from '/@service/util';
 
 export async function getDataInfo(param, callback) {
   try {
-    const data = {
-      work_id: param.get('work_id'),
-      data_status: param.get('data_status')
+    let data = {};
+    if(param.get('user_id')) {
+      data = {
+        work_id: param.get('work_id'),
+        data_status: param.get('data_status'),
+        user_id: param.get('user_id'),
+      }
+    } else {
+      data = {
+        work_id: param.get('work_id'),
+        data_status: param.get('data_status')
+      }
     }
+    
     const result = await axios.post('/web/manager/work/info', data);
     
     if(callback) callback(result.data);
@@ -68,7 +78,8 @@ export async function setWorkDistribute(param, callback) {
   try{
     const data = {
       user_id: param.get('user_id'),
-      idsArray: JSON.parse('['+ param.get('idsArray') +']')
+      idsArray: JSON.parse('['+ param.get('idsArray') +']'),
+      data_status: param.get('data_status'),
     }
  
     const result = await axios.post('/web/work/distribution', data);

@@ -36,7 +36,8 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="cancel">취소</button>
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="divideTask()" :disabled="divideBtn">분배</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="divideTaskTodo()" :disabled="divideBtn">할일 분배</button>
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="divideTaskLocation()" :disabled="divideBtn">실측 분배</button>
           </div>
         </div>
       </div>
@@ -218,9 +219,14 @@ export default {
         sessionStorage.setItem('workListKey', this.workListKey);
         sessionStorage.setItem('selectedWork', work_id);
         sessionStorage.setItem('workName', this.workName);
-
-        setData.set('work_id', work_id);
-        setData.set('data_status', this.selectedTask);
+        if(this.selectedTask == 4) {
+          setData.set('work_id', work_id);
+          setData.set('data_status', this.selectedTask);
+          setData.set('user_id', -1);
+        } else {
+          setData.set('work_id', work_id);
+          setData.set('data_status', this.selectedTask);
+        }
 
         getDataInfo(setData).then((result) => {
           this.dataList = result.data;
@@ -244,7 +250,6 @@ export default {
               this.selectedTaskList[i] = this.dataListValue[i];
             }
           }
-          const time = this.dataList.data[0].update_time;
         });
       }
       this.selectList = [];
@@ -252,7 +257,7 @@ export default {
     checkRadio() {
       this.divideBtn = false;
     },
-    divideTask() {
+    divideTaskTodo() {
       for (let i = 0; i < this.user.id.length; i++) {
         if (this.user.name[i] === this.selectedUser) {
           this.selectedUserId = this.user.id[i];
@@ -268,7 +273,31 @@ export default {
       const setData = new FormData();
       setData.set('user_id', this.selectedUserId);
       setData.set('idsArray', this.idsArray);
+      setData.set('data_status', 2);
 
+      this.divideTask(setData);
+    },
+    divideTaskLocation() {
+      for (let i = 0; i < this.user.id.length; i++) {
+        if (this.user.name[i] === this.selectedUser) {
+          this.selectedUserId = this.user.id[i];
+        }
+      }
+      this.tasks = this.selectList;
+
+      let ids = '';
+      for (let i = 0; i < this.tasks.length; i++) {
+        this.idsArray[i] = this.dataId[this.tasks[i]];
+      }
+
+      const setData = new FormData();
+      setData.set('user_id', this.selectedUserId);
+      setData.set('idsArray', this.idsArray);
+      setData.set('data_status', 4);
+
+      this.divideTask(setData);
+    },
+    divideTask(setData) {
       setWorkDistribute(setData).then((result) => {
         console.log('result : ', result);
         if (result.error.code != 0) {
