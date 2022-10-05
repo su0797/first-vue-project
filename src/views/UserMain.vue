@@ -45,10 +45,10 @@
           <tr>
             <th></th>
             <th scope="col">데이터 상태</th>
+            <th scope="col">최종수정날짜</th>
             <th scope="col" v-for="(dataKey, i) in dataListKey" :key="i">
               {{ dataKey }}
             </th>
-            <th scope="col">최종수정날짜</th>
           </tr>
         </thead>
         <tbody>
@@ -61,11 +61,11 @@
             <td scoped="row">
               {{ tableTaskList[dataList.data[i].data_status] }}
             </td>
+            <td scoped="row">
+              {{ switchDateFormat(i) }}
+            </td>
             <td v-for="(datakey, j) in dataListKey" :key="j">
               {{ data[datakey] }}
-            </td>
-            <td scoped="row">
-              {{ dataList.data[i].update_time }}
             </td>
           </tr>
         </tbody>
@@ -173,6 +173,26 @@ export default {
           }
         });
       }
+    },
+    stringToDate(date) {
+      let yyyy = date.substring(0, 4);
+      let mm = date.substring(4, 6);
+      let dd = date.substring(6, 8);
+      mm = Number(mm) - 1;
+
+      let stringNewDate = new Date(yyyy, mm, dd);
+      stringNewDate.setDate(stringNewDate.getDate());
+
+      return (
+        stringNewDate.getFullYear() +
+        '-' +
+        (stringNewDate.getMonth() + 1 > 9 ? (stringNewDate.getMonth() + 1).toString() : '0' + (stringNewDate.getMonth() + 1)) +
+        '-' +
+        (stringNewDate.getDate() > 9 ? stringNewDate.getDate().toString() : '0' + stringNewDate.getDate().toString())
+      );
+    },
+    switchDateFormat(index) {
+      return this.stringToDate(this.dataList.data[index].update_time);
     },
     goAddForm() {
       this.$router.push('/user/add').catch(() => {});

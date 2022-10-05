@@ -91,7 +91,7 @@ export default {
         status: [],
       };
       for (var key in this.inputValueList) {
-        if (this.inputValueList[key] == '' || this.inputValueList[key] == null) {
+        if (this.inputValueList[key] == '') {
           this.inputValueList[key] = '';
           this.errors['form'].push('Error');
         }
@@ -100,7 +100,7 @@ export default {
         this.errors['status'].push('Error');
       }
       if (this.errors['form'].length != 0 && this.data_status == 6) {
-        msgbox('모든 입력란을 채워주세요');
+        msgbox('모든 입력창을 채워주세요');
         var forms = document.querySelectorAll('.needs-validation');
         Array.prototype.slice.call(forms).forEach(function (form) {
           form.classList.add('was-validated');
@@ -112,7 +112,6 @@ export default {
           form.classList.add('was-validated');
         });
       } else {
-        console.log(this.errors.form);
         this.isPassValidatoin = true;
       }
     },
