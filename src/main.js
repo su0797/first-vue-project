@@ -21,3 +21,20 @@ app.use(global);
 app.use(VueAwesomePaginate);
 app.use(VueGtag, { config: gtagConfig }, app.router);
 app.mount('#app');
+
+app.config.globalProperties.$filters = {
+  dateFormat(value) {
+    if(value == '' || value == null) return '';
+
+    
+    let year = value.slice(0,4);
+    let month = value.slice(4,6);
+    let day = value.slice(6,8);
+    let hh = value.slice(8,10);
+    let mm = value.slice(10,12);
+    let ss = value.slice(12,14);
+
+
+    return year + '-' + month + '-' + day;
+  }
+}

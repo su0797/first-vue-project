@@ -74,6 +74,7 @@
               <input type="checkbox" :value="allSelected" v-model="allSelected" />
             </th>
             <th></th>
+            <th scope="col">최종수정날짜</th>
             <th :key="i" v-for="(datakey, i) in dataListKey">
               {{ datakey }}
             </th>
@@ -88,6 +89,9 @@
               <router-link :to="`/admin/tasklist/modify/${dataList.data[i].data_id}`">
                 <button type="button" class="btn btn-secondary" @click="pushDataId(dataList.data[i].data_id)">수정</button>
               </router-link>
+            </td>
+            <td scoped="row">
+              {{ $filters.dateFormat(dataList.data[i].update_time) }}
             </td>
             <td :key="j" v-for="(datakey, j) in dataListKey">
               {{ data[datakey] }}
@@ -240,6 +244,7 @@ export default {
               this.selectedTaskList[i] = this.dataListValue[i];
             }
           }
+          const time = this.dataList.data[0].update_time;
         });
       }
       this.selectList = [];
@@ -348,6 +353,7 @@ export default {
     },
   },
 };
+
 </script>
 <style scoped>
 .container {
