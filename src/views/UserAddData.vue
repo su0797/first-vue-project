@@ -6,7 +6,7 @@
     <form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
       <div v-for="(column, i) in columnList.data" :key="i">
         <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_name] = inputValue)" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-if="column.meta_type === '1'" />
-        <UserSelectBox :label="column.meta_name" :selectValue="(inputValueList[column.meta_name] = selectValue)" @selectFromChild="inputValueList[column.meta_name] = String($event.target.value)" v-else-if="column.meta_type === '2'" />
+        <UserSelectBox :label="column.meta_name" :selectValue="(inputValueList[column.meta_name] = selectValue)" @selectFromChild="inputValueList[column.meta_name] = Number($event.target.value)" v-else-if="column.meta_type === '2'" />
         <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_name] = note)" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-else-if="column.meta_type === '5'" />
         <UserRadioBox :label="column.meta_name" :radioValue="(inputValueList[column.meta_name] = radioValue)" @radioFromChild="inputValueList[column.meta_name] = Number($event.target.value)" v-else-if="column.meta_type === '4'" />
       </div>
@@ -30,10 +30,10 @@ export default {
     return {
       inputValueList: {},
       columnList: [],
-      inputValue: '',
-      selectValue: '',
-      radioValue: '',
-      note: '',
+      inputValue: null,
+      selectValue: null,
+      radioValue: null,
+      note: null,
       data_status: null,
       errors: {
         form: [],
@@ -112,8 +112,8 @@ export default {
         status: [],
       };
       for (var key in this.inputValueList) {
-        if (this.inputValueList[key] == '') {
-          this.inputValueList[key] = '';
+        if (this.inputValueList[key] == null || this.inputValueList[key] == '') {
+          this.inputValueList[key] = null;
           this.errors['form'].push('Error');
         }
       }
@@ -140,18 +140,21 @@ export default {
       this.checkForm();
       if (this.isPassValidatoin) {
         var inputData = JSON.stringify(this.inputValueList);
+        if (this.data_status == 4) {
+          this.user_id = -1;
+        }
         axios({
           method: 'post',
-          url: '/web/db/store',
+          url: '/web/db/edit',
           data: {
-            work_id: this.projectCode,
+            data_id: this.data_id,
             user_id: this.user_id,
             data_json: inputData,
             data_status: this.data_status,
           },
         })
           .then((res) => {
-            console.log(inputData, this.data_status, this.user_id);
+            console.log(inputData, this.data_id, this.data_status, this.user_id);
             e.target.reset();
             this.inputValueList = {};
             var forms = document.querySelectorAll('.needs-validation');

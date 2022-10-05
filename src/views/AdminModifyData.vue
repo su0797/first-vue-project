@@ -88,8 +88,8 @@ export default {
         status: [],
       };
       for (var key in this.inputValueList) {
-        if (this.inputValueList[key] == '') {
-          this.inputValueList[key] = '';
+        if (this.inputValueList[key] == '' || this.inputValueList[key] == null) {
+          this.inputValueList[key] = null;
           this.errors['form'].push('Error');
         }
       }

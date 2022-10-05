@@ -91,8 +91,8 @@ export default {
         status: [],
       };
       for (var key in this.inputValueList) {
-        if (this.inputValueList[key] == '') {
-          this.inputValueList[key] = '';
+        if (this.inputValueList[key] == '' || this.inputValueList[key] == null) {
+          this.inputValueList[key] = null;
           this.errors['form'].push('Error');
         }
       }
@@ -119,6 +119,9 @@ export default {
       this.checkForm();
       if (this.isPassValidatoin) {
         var inputData = JSON.stringify(this.inputValueList);
+        if (this.data_status == 4) {
+          this.user_id = -1;
+        }
         axios({
           method: 'post',
           url: '/web/db/edit',

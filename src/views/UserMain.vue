@@ -62,7 +62,7 @@
               {{ tableTaskList[dataList.data[i].data_status] }}
             </td>
             <td scoped="row">
-              {{ switchDateFormat(i) }}
+              {{ $filters.dateFormat(dataList.data[i].update_time) }}
             </td>
             <td v-for="(datakey, j) in dataListKey" :key="j">
               {{ data[datakey] }}
@@ -88,6 +88,7 @@ import { getUserSearch, getUserWorkData, getUserWorkId } from '/@service/user';
 export default {
   created() {
     this.assignment_id = this.$cookies.get('assignmentId');
+    this.user_id = this.$cookies.get('userId');
 
     const setData = new FormData();
     setData.set('assignment_id', this.assignment_id);
@@ -132,11 +133,12 @@ export default {
       searchOptionList: [],
       taskList: [
         { tkname: '할일', tkcode: 2 },
+        { tkname: '실측', tkcode: 4 },
         { tkname: '임시저장', tkcode: 3 },
         { tkname: '완료', tkcode: 6 },
       ],
       projectList: [],
-      tableTaskList: ['삭제', '할당전', '할일', '임시저장', '실측필요', '조사불가', '완료'],
+      tableTaskList: ['삭제', '할당전', '할일', '임시저장', '실측', '조사불가', '완료'],
     };
   },
 
@@ -159,6 +161,7 @@ export default {
 
         setData.set('work_id', this.selectedProjectCode);
         setData.set('data_status', this.selectedTaskCode);
+        setData.set('user_id', this.user_id);
 
         getUserWorkData(setData).then((result) => {
           this.dataList = result.data;
@@ -173,26 +176,6 @@ export default {
           }
         });
       }
-    },
-    stringToDate(date) {
-      let yyyy = date.substring(0, 4);
-      let mm = date.substring(4, 6);
-      let dd = date.substring(6, 8);
-      mm = Number(mm) - 1;
-
-      let stringNewDate = new Date(yyyy, mm, dd);
-      stringNewDate.setDate(stringNewDate.getDate());
-
-      return (
-        stringNewDate.getFullYear() +
-        '-' +
-        (stringNewDate.getMonth() + 1 > 9 ? (stringNewDate.getMonth() + 1).toString() : '0' + (stringNewDate.getMonth() + 1)) +
-        '-' +
-        (stringNewDate.getDate() > 9 ? stringNewDate.getDate().toString() : '0' + stringNewDate.getDate().toString())
-      );
-    },
-    switchDateFormat(index) {
-      return this.stringToDate(this.dataList.data[index].update_time);
     },
     goAddForm() {
       this.$router.push('/user/add').catch(() => {});
