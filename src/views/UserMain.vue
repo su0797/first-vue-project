@@ -71,7 +71,14 @@
         </tbody>
       </table>
     </div>
-    <vue-awesome-paginate :total-items="this.totalItems" :items-per-page="this.itemsPerPage" :max-pages-shown="this.MaxPagesShown" :current-page="this.currentPage" :on-click="onClickHandler" />
+    <vue-awesome-paginate
+      :total-items="this.totalItems"
+      :items-per-page="this.itemsPerPage"
+      :max-pages-shown="this.MaxPagesShown"
+      :current-page="this.currentPage"
+      :on-click="onClickHandler"
+      v-if="selectedProjectCode && selectedTaskCode && searchedNone === false"
+    />
   </div>
 </template>
 
