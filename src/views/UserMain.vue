@@ -70,14 +70,8 @@
           </tr>
         </tbody>
       </table>
-      <!-- <vue-awesome-paginate
-				:total-items="defineTotalItems"
-				:items-per-page="itemsPerPage"
-				:max-pages-shown="MaxPagesShown"
-				:current-page="currentPage"
-				:on-click="onClickHandler"
-				:show-breakpoint-buttons="false" /> -->
     </div>
+    <vue-awesome-paginate :total-items="this.totalItems" :items-per-page="this.itemsPerPage" :max-pages-shown="this.MaxPagesShown" :current-page="this.currentPage" :on-click="onClickHandler" />
   </div>
 </template>
 
@@ -110,9 +104,9 @@ export default {
   data() {
     return {
       //⬇️ paginate 변수
-      selectPage: 1,
-      itemsPerPage: 5, //한 페이지 당 출력해야하는 행의 갯수
-      MaxPagesShown: 5, // 페이지 숫자 버튼 값 기본값 5개
+      totalItems: 0,
+      itemsPerPage: 30, //한 페이지 당 출력해야하는 행의 갯수
+      MaxPagesShown: 10, // 페이지 숫자 버튼 값 기본값 5개
       currentPage: 1, //  현재 활성 페이지 기본값 1
 
       //⬇️ user 데이터
@@ -155,27 +149,37 @@ export default {
       sessionStorage.setItem('taskCode', this.selectedTaskCode);
       this.showTable();
     },
+    getData() {
+      const setData = new FormData();
+
+      setData.set('work_id', this.selectedProjectCode);
+      setData.set('data_status', this.selectedTaskCode);
+      setData.set('user_id', this.user_id);
+      setData.set('row_count', this.itemsPerPage);
+      setData.set('page_no', this.currentPage);
+
+      getUserWorkData(setData).then((result) => {
+        this.dataList = result.data;
+        this.totalItems = this.dataList.total_count;
+        if (this.dataList != null) {
+          this.dataListValue = [];
+          for (let i = 0; i < this.dataList.data.length; i++) {
+            const arr = JSON.parse(this.dataList.data[i].data_json);
+            this.dataListKey = Object.keys(arr);
+            this.searchOptionList = this.dataListKey;
+            this.dataListValue.push(arr);
+          }
+        }
+      });
+    },
     showTable() {
       if (this.pjName != '' && this.tkName != '') {
-        const setData = new FormData();
-
-        setData.set('work_id', this.selectedProjectCode);
-        setData.set('data_status', this.selectedTaskCode);
-        setData.set('user_id', this.user_id);
-
-        getUserWorkData(setData).then((result) => {
-          this.dataList = result.data;
-          if (this.dataList != null) {
-            this.dataListValue = [];
-            for (let i = 0; i < this.dataList.data.length; i++) {
-              const arr = JSON.parse(this.dataList.data[i].data_json);
-              this.dataListKey = Object.keys(arr);
-              this.searchOptionList = this.dataListKey;
-              this.dataListValue.push(arr);
-            }
-          }
-        });
+        this.getData();
       }
+    },
+    onClickHandler(page) {
+      this.currentPage = page;
+      this.getData();
     },
     goAddForm() {
       this.$router.push('/user/add').catch(() => {});

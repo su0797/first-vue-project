@@ -9,6 +9,8 @@ export async function getUserWorkData(param, callback) {
       work_id: param.get('work_id'),
       data_status: param.get('data_status'),
       user_id: param.get('user_id'),
+      row_count: param.get('row_count'),
+      page_no: param.get('page_no'),
     };
     const result = await axios.post('/web/work/info', data);
 
