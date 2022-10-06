@@ -1,17 +1,19 @@
 <template>
-<!-- <div class="modal-background" v-if="isAct"> -->
-  <div class="modal-content" v-if="isAct">
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal"></button>
-    <div class="modal-body">
-      <h4 style="margin-top: 5px; margin-bottom: 8px; font-size: 1.15rem; font-weight: 400;">{{ user_name }}님의 계정을 정지하시겠습니까?</h4>
-      <span style="font-size: 0.8rem;">(한 번 정지한 계정은 다시 활성화시킬 수 없습니다.)</span>
-    </div>
-    <div class="modal--box">
-      <button type="button" class="modal-clo" data-bs-dismiss="modal" @click="closeModal">취소</button>
-      <button type="button" class="modal-del" @click="[dataDelete(), disableUser()]">정지</button>
+  <div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="adminModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal"></button>
+        <div class="modal-body">
+          <h4 style="margin-top: 5px; margin-bottom: 8px; font-size: 1.15rem; font-weight: 400;">{{ user_name }}님의 계정을 정지하시겠습니까?</h4>
+          <span style="font-size: 0.8rem;">(한 번 정지한 계정은 다시 활성화시킬 수 없습니다.)</span>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="modal-clo" data-bs-dismiss="modal" @click="closeModal">취소</button>
+          <button type="button" class="modal-del" @click="[dataDelete(), disableUser()]">정지</button>
+        </div>
+      </div>
     </div>
   </div>
-<!-- </div> -->
 </template>
 
 <script>
@@ -45,7 +47,6 @@ export default {
       .then(({ data }) => {
         this.users = data.user;
         console.log(data);
-          //  this.$router.push("/admin/user/list").catch(() => {});
           this.$router.go({name: 'UserList'});
           this.closeModal();
         })
@@ -58,16 +59,11 @@ export default {
 </script>
 
 <style scoped>
-.modal-background {
-  display: flex;
-  position: fixed;
-  flex-direction: column;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.2);
-  width: 100%;
-  height: 100%;
-  margin: 0;
+.modal.fade .modal-dialog {
+  transition: none;
+  transform: none;
 }
+
 .modal-content {
   position: fixed;
   background-color: white;
@@ -87,8 +83,9 @@ export default {
   color: #828282;
 }
 
-.modal--box {
+.modal-footer {
   margin-bottom: 30px;
+  border: none;
 }
 
 .modal-del {

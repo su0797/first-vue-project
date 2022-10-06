@@ -23,7 +23,7 @@
           </select>
       </div>
       <div style="text-align: center; margin-top: 60px;">
-        <button class="btn move" type="button" @click="moveList">목록</button>
+        <button class="btn move" type="button" @click="moveList">취소</button>
         <button class="btn check" type="submit">수정</button>
       </div>
     </form>
@@ -63,7 +63,7 @@ export default {
     checkValue() {
       this.errors=[]
       if (!isNotEmpty(this.user_name) || !isNotEmpty(this.user_phone) || !isNotEmpty(this.assignment_id)) {
-        this.msgbox('입력란을 모두 채워주세요.');
+        this.msgbox('입력란을 채워주세요.');
         this.errors.push("error")
       }
       if (this.errors.length != 0){

@@ -58,7 +58,7 @@ export default {
   methods: {
     checkValue() {
       if (!isNotEmpty(this.user_name) || !isNotEmpty(this.user_email) || !isNotEmpty(this.user_password) || !isNotEmpty(this.user_phone) || !isNotEmpty(this.assignment_id)) {
-        this.msgbox('입력란을 모두 채워주세요.');
+        this.msgbox('입력란을 채워주세요.');
         this.errors.push("error")
       }
       if (this.errors.length != 0){
