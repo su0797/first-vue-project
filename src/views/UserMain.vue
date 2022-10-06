@@ -71,14 +71,19 @@
         </tbody>
       </table>
     </div>
-    <vue-awesome-paginate
-      :total-items="this.totalItems"
-      :items-per-page="this.itemsPerPage"
-      :max-pages-shown="this.MaxPagesShown"
-      :current-page="this.currentPage"
-      :on-click="onClickHandler"
-      v-if="selectedProjectCode && selectedTaskCode && searchedNone === false"
-    />
+    <div class="pagination-center">
+      <vue-awesome-paginate
+        :total-items="this.totalItems"
+        :items-per-page="this.itemsPerPage"
+        :max-pages-shown="this.MaxPagesShown"
+        :current-page="this.currentPage"
+        :on-click="onClickHandler"
+        :show-breakpoint-buttons="false"
+        :show-ending-buttons="true"
+        firstPageContent="<<"
+        lastPageContent=">>"
+      />
+    </div>
   </div>
 </template>
 
@@ -112,8 +117,8 @@ export default {
     return {
       //⬇️ paginate 변수
       totalItems: 0,
-      itemsPerPage: 30, //한 페이지 당 출력해야하는 행의 갯수
-      MaxPagesShown: 10, // 페이지 숫자 버튼 값 기본값 5개
+      itemsPerPage: 5, //한 페이지 당 출력해야하는 행의 갯수
+      MaxPagesShown: 5, // 페이지 숫자 버튼 값 기본값 5개
       currentPage: 1, //  현재 활성 페이지 기본값 1
 
       //⬇️ user 데이터
@@ -268,5 +273,9 @@ h3 {
   align-items: center;
   font-size: 1.3rem;
   margin-top: 15rem;
+}
+.pagination-center {
+  display: flex;
+  width: 100%;
 }
 </style>
