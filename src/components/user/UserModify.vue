@@ -88,8 +88,7 @@ export default {
             user_phone: this.user_phone,
             assignment_id: this.assignment_id,
         })
-        .then(({ data }) => {
-          console.log(data);
+        .then(() => {
             let msg = "수정을 완료했습니다.";
             msgbox(msg);
             this.moveList();

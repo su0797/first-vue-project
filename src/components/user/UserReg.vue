@@ -50,7 +50,6 @@ export default {
       user_password: '',
       user_phone: '',
       assignment_id: '',
-
       isPassValidation: false,
       errors: []
     };
@@ -62,7 +61,6 @@ export default {
         this.errors.push("error")
       }
       if (this.errors.length != 0){
-        console.log(this.errors)
         var forms = document.querySelectorAll('.needs-validation');
         Array.prototype.slice.call(forms).forEach(function (form) {
           form.classList.add('was-validated');

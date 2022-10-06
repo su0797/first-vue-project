@@ -1,6 +1,6 @@
 <template>
 <div>
-  <Modal :isAct="isModalAct" @closeModal="closeModal"
+  <Modal 
   :user_name="modalUserName"  
   :user_id="modalUserId" 
   :user_email="modalUserEmail"  
@@ -31,7 +31,6 @@
             <tr>
                 <th scope="col">이름</th>
                 <th scope="col">아이디</th>
-                <!-- <th scope="col">비밀번호</th> -->
                 <th scope="col">전화번호</th>
                 <th scope="col">과제</th>
                 <th scope="col" class="manage">관리</th>
@@ -65,7 +64,6 @@ export default {
       ],
       users: [],
       usersFilter: [],
-      isModalAct: false,
       modalUser: {},
       modalUserName: '',
       modalUserId: 0,
@@ -81,7 +79,6 @@ export default {
   })
     .then(({ data }) => {
       this.users = data.data.user;
-      console.log(this.users);
     });
   },
   methods: {
@@ -126,16 +123,12 @@ export default {
 
     },
     openModal(id) {
-      this.isModalAct = true;
       this.modalUser = this.users.filter((data)=>data.user_id === id)
       this.modalUserName = this.modalUser[0].user_name
       this.modalUserId = this.modalUser[0].user_id
       this.modalUserEmail = this.modalUser[0].user_email
       this.modalUserType = this.modalUser[0].user_type
       this.modalUserStatus = this.modalUser[0].user_status
-    },
-    closeModal() {
-      this.isModalAct = false;
     },
   },
   

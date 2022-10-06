@@ -20,13 +20,13 @@
           </span>
           <span class="title">진행률</span>{{avg()}} {{ avgs }}%</p>
         <div class="box">
-            <p class="card-text1"><span class="text">분배 전</span><span class="count_1">{{ numberWithCommas(data_status1) }} <span class="text-count">건</span></span></p>
+            <p class="card-text1 fix"><span class="text">분배 전</span><span class="count_1">{{ numberWithCommas(data_status1) }} <span class="text-count">건</span></span></p>
             <hr class="hr-dashed"> 
-            <p class="card-text2"><span class="text">임시저장</span> <span class="count_2" style="margin-left: 187px;">{{ numberWithCommas(data_status3) }} <span class="text-count">건</span></span></p>
+            <p class="card-text2 fix"><span class="text">임시저장</span> <span class="count_2">{{ numberWithCommas(data_status3) }} <span class="text-count">건</span></span></p>
             <hr class="hr-dashed">
-            <p class="card-text3"><span class="text">실측/조사불가</span> <span class="count_3" style="margin-left: 155px;">{{ numberWithCommas(data_status4) }} / {{ numberWithCommas(data_status5) }}</span> <span class="text-count">건</span></p>
+            <p class="card-text3 fix"><span class="text">실측/조사불가</span> <span class="count_3">{{ numberWithCommas(data_status4) }} / {{ numberWithCommas(data_status5) }} <span class="text-count">건</span></span></p>
             <hr class="hr-dashed">
-            <p class="card-text4"><span class="text">완료</span><span class="count_4" style="margin-left: 216px;" >{{ numberWithCommas(data_status6) }} <span class="text-count">건</span></span></p>
+            <p class="card-text4 fix"><span class="text">완료</span><span class="count_4">{{ numberWithCommas(data_status6) }} <span class="text-count">건</span></span></p>
             <hr class="hr-dashed">
         </div>
         <p class="total">{{ total() }}(총 {{ numberWithCommas(totals) }} 건) </p>
@@ -139,13 +139,19 @@ a:hover {
 .text {
   margin-left: 7px;
 }
+.fix{
+  position: relative;
+}
 .count_1, .count_2, .count_3, .count_4 {
+    position: absolute;
+    right: 5px;
     font-size: 0.8rem;
-    margin-left: 200px;
-    font-weight: 700;
+    font-weight: 500;
 }
 .count_1 {
+ 
   color: #494949;
+  margin-left: 170px;
 }
 .count_2, .count_3{
   color: #D64C57;
@@ -154,6 +160,7 @@ a:hover {
   color: #3E8CDB;
 }
 .text-count {
+  /* position: fixed; */
   color: black;
   font-size: 0.8rem;
   font-weight: 500;
@@ -168,7 +175,7 @@ a:hover {
     color: #828282;
     position: absolute;
     bottom: 18px;
-    margin-left: 224px;
+    right: 20px;
 }
 
 .btn {

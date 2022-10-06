@@ -26,7 +26,6 @@ export default {
   },
     name: 'Modal',
     props: {
-      isAct: Boolean,
       user_name: String,
       user_type: Number,
       user_id: Number,
@@ -34,9 +33,6 @@ export default {
       user_status: Number,
   },
   methods: {
-    closeModal() {
-      this.$emit("closeModal");
-    },
     dataDelete() {
       axios.put('http://52.22.216.42:8090/common/user/edit/', {
         user_id: this.user_id,
