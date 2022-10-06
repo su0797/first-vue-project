@@ -127,7 +127,7 @@ export default {
           },
         })
           .then((res) => {
-            console.log(inputData, this.data_status, this.projectCode);
+            // console.log(inputData, this.data_status, this.projectCode);
             e.target.reset();
             this.inputValueList = {};
             var forms = document.querySelectorAll('.needs-validation');
