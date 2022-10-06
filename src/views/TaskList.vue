@@ -76,6 +76,7 @@
             </th>
             <th></th>
             <th scope="col">최종수정날짜</th>
+            <th scope="col" v-if="selectedTask==6">작성자</th>
             <th :key="i" v-for="(datakey, i) in dataListKey">
               {{ datakey }}
             </th>
@@ -94,12 +95,28 @@
             <td scoped="row">
               {{ $filters.dateFormat(dataList.data[i].update_time) }}
             </td>
+            <td scoped="row" v-if="selectedTask==6">
+              {{ dataList.data[i].user_id }}
+            </td>
             <td :key="j" v-for="(datakey, j) in dataListKey">
               {{ data[datakey] }}
             </td>
           </tr>
         </tbody>
       </table>
+      <div class="pagination-center">
+        <vue-awesome-paginate
+          :total-items="this.totalItems"
+          :items-per-page="this.itemsPerPage"
+          :max-pages-shown="this.MaxPagesShown"
+          :current-page="this.currentPage"
+          :on-click="onClickHandler"
+          :show-breakpoint-buttons="false"
+          :show-ending-buttons="true"
+          firstPageContent="<<"
+          lastPageContent=">>"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -130,6 +147,12 @@ export default {
   },
   data() {
     return {
+      // paginate 변수
+      totalItems: 0,
+      itemsPerPage: 100, //한 페이지 당 출력해야하는 행의 갯수
+      MaxPagesShown: 5, // 페이지 숫자 버튼 값 기본값 5개
+      currentPage: 1, //  현재 활성 페이지 기본값 1
+
       selectedTask: '',
       lists: [
         { text: '분배 전', value: '1' },
@@ -363,6 +386,10 @@ export default {
         this.showAll();
       }
     },
+    onClickHandler(page) {
+			this.currentPage = page;
+      this.showAll();
+		},
   },
   computed: {
     allSelected: {
@@ -389,7 +416,10 @@ export default {
   margin-top: 20px;
   padding: 0;
 }
-
+.pagination-center {
+  display: flex;
+  width: 100%;
+}
 .subject {
   text-align: center;
   margin: 30px;
