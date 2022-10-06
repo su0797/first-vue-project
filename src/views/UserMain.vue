@@ -71,7 +71,7 @@
         </tbody>
       </table>
     </div>
-    <div class="pagination-center">
+    <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false">
       <vue-awesome-paginate
         :total-items="this.totalItems"
         :items-per-page="this.itemsPerPage"
