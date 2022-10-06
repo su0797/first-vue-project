@@ -55,7 +55,7 @@
           <tr v-for="(data, i) in dataListValue" :key="i">
             <td scope="row">
               <router-link :to="`/user/edit/${dataList.data[i].data_id}`">
-                <button class="btn btn-secondary" type="button" id="buttonInput" @click="pushDataId(dataList.data[i].data_id)">수정</button>
+                <button class="btn btn-secondary" type="button" id="buttonInput" @click="pushDataId(dataList.data[i].data_id)">수정 {{ i }}</button>
               </router-link>
             </td>
             <td scoped="row">
@@ -74,9 +74,9 @@
     <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false">
       <vue-awesome-paginate
         :total-items="this.totalItems"
-        :items-per-page="this.itemsPerPage"
         :max-pages-shown="this.MaxPagesShown"
         :current-page="this.currentPage"
+        :itemsPerPage="this.itemsPerPage"
         :on-click="onClickHandler"
         :show-breakpoint-buttons="false"
         :show-ending-buttons="true"
@@ -117,7 +117,7 @@ export default {
     return {
       //⬇️ paginate 변수
       totalItems: 0,
-      itemsPerPage: 5, //한 페이지 당 출력해야하는 행의 갯수
+      itemPerPage: 100,
       MaxPagesShown: 5, // 페이지 숫자 버튼 값 기본값 5개
       currentPage: 1, //  현재 활성 페이지 기본값 1
 

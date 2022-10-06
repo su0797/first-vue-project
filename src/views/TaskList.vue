@@ -49,9 +49,7 @@
         <button class="btn btn-secondary" type="button" v-if="selectList.length !== 0" data-bs-toggle="modal" data-bs-target="#taskDivision">업무 분배</button>
         <button class="btn btn-secondary" type="button" v-else @click="this.msgbox('분배할 데이터를 선택해주세요.')">업무 분배</button>
       </div>
-      <div class="divide-area flex-area" v-else>
-
-      </div>
+      <div class="divide-area flex-area" v-else></div>
 
       <!-- 검색영역 -->
       <div class="search-area flex-area" v-if="selectedWork && selectedTask">
@@ -76,7 +74,7 @@
             </th>
             <th></th>
             <th scope="col">최종수정날짜</th>
-            <th scope="col" v-if="selectedTask==6">작성자</th>
+            <th scope="col" v-if="selectedTask == 6">작성자</th>
             <th :key="i" v-for="(datakey, i) in dataListKey">
               {{ datakey }}
             </th>
@@ -95,7 +93,7 @@
             <td scoped="row">
               {{ $filters.dateFormat(dataList.data[i].update_time) }}
             </td>
-            <td scoped="row" v-if="selectedTask==6">
+            <td scoped="row" v-if="selectedTask == 6">
               {{ dataList.data[i].user_id }}
             </td>
             <td :key="j" v-for="(datakey, j) in dataListKey">
@@ -104,7 +102,7 @@
           </tr>
         </tbody>
       </table>
-      <div class="pagination-center">
+      <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false">
         <vue-awesome-paginate
           :total-items="this.totalItems"
           :items-per-page="this.itemsPerPage"
@@ -192,6 +190,57 @@ export default {
     };
   },
   methods: {
+    getData() {
+      const setData = new FormData();
+
+      let work_id = '';
+      for (let i = 0; i < this.workListValue.length; i++) {
+        if (this.workListValue[i] === this.workName) {
+          work_id = this.workListKey[i];
+        }
+      }
+
+      sessionStorage.setItem('workListValue', this.workListValue);
+      sessionStorage.setItem('workListKey', this.workListKey);
+      sessionStorage.setItem('selectedWork', work_id);
+      sessionStorage.setItem('workName', this.workName);
+      if (this.selectedTask == 4) {
+        setData.set('work_id', work_id);
+        setData.set('data_status', this.selectedTask);
+        setData.set('user_id', -1);
+        setData.set('row_count', this.itemsPerPage);
+        setData.set('page_no', this.currentPage);
+      } else {
+        setData.set('work_id', work_id);
+        setData.set('data_status', this.selectedTask);
+        setData.set('row_count', this.itemsPerPage);
+        setData.set('page_no', this.currentPage);
+      }
+
+      getDataInfo(setData).then((result) => {
+        this.dataList = result.data;
+        this.totalItems = this.dataList.total_count;
+        if (this.dataList != null) {
+          for (let i = 0; i < this.dataList.data.length; i++) {
+            this.dataId[i] = this.dataList.data[i].data_id;
+          }
+
+          for (let i = 0; i < this.dataList.data.length; i++) {
+            const arr = JSON.parse(this.dataList.data[i].data_json);
+            this.dataListKey = Object.keys(arr);
+            this.searchOptionList = this.dataListKey;
+          }
+          this.dataListValue = [];
+          for (let i = 0; i < this.dataList.data.length; i++) {
+            this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
+          }
+
+          for (let i = 0; i < this.dataListValue.length; i++) {
+            this.selectedTaskList[i] = this.dataListValue[i];
+          }
+        }
+      });
+    },
     // 분배 받을 유저 갖고오기
     getDividenUser() {
       const setData = new FormData();
@@ -229,51 +278,7 @@ export default {
     showAll() {
       // 셀렉트에 맞는
       if (this.selectedTaskName !== '') {
-        const setData = new FormData();
-
-        let work_id = '';
-        for (let i = 0; i < this.workListValue.length; i++) {
-          if (this.workListValue[i] === this.workName) {
-            work_id = this.workListKey[i];
-          }
-        }
-
-        sessionStorage.setItem('workListValue', this.workListValue);
-        sessionStorage.setItem('workListKey', this.workListKey);
-        sessionStorage.setItem('selectedWork', work_id);
-        sessionStorage.setItem('workName', this.workName);
-        if(this.selectedTask == 4) {
-          setData.set('work_id', work_id);
-          setData.set('data_status', this.selectedTask);
-          setData.set('user_id', -1);
-        } else {
-          setData.set('work_id', work_id);
-          setData.set('data_status', this.selectedTask);
-        }
-
-        getDataInfo(setData).then((result) => {
-          this.dataList = result.data;
-
-          if (this.dataList != null) {
-            for (let i = 0; i < this.dataList.data.length; i++) {
-              this.dataId[i] = this.dataList.data[i].data_id;
-            }
-
-            for (let i = 0; i < this.dataList.data.length; i++) {
-              const arr = JSON.parse(this.dataList.data[i].data_json);
-              this.dataListKey = Object.keys(arr);
-              this.searchOptionList = this.dataListKey;
-            }
-            this.dataListValue = [];
-            for (let i = 0; i < this.dataList.data.length; i++) {
-              this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
-            }
-
-            for (let i = 0; i < this.dataListValue.length; i++) {
-              this.selectedTaskList[i] = this.dataListValue[i];
-            }
-          }
-        });
+        this.getData();
       }
       this.selectList = [];
     },
@@ -387,9 +392,9 @@ export default {
       }
     },
     onClickHandler(page) {
-			this.currentPage = page;
+      this.currentPage = page;
       this.showAll();
-		},
+    },
   },
   computed: {
     allSelected: {
@@ -409,7 +414,6 @@ export default {
     },
   },
 };
-
 </script>
 <style scoped>
 .container {
@@ -435,21 +439,21 @@ export default {
 .modal-content {
   width: 80%;
   margin: 0 auto;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 .modal-body {
   padding-top: 20px;
 }
 .modal-footer .btn-primary {
-  background-color: #E17B46;
+  background-color: #e17b46;
   border: 1px solid #e17b46;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 .modal-footer .btn-secondary {
-  border: 1px solid #B9B9B9;
+  border: 1px solid #b9b9b9;
   color: #828282;
   background-color: #fff;
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 .modal-body .center {
   font-weight: 700;
