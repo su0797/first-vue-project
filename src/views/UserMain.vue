@@ -117,7 +117,7 @@ export default {
     return {
       //⬇️ paginate 변수
       totalItems: 0,
-      itemPerPage: 100,
+      itemsPerPage: 100,
       MaxPagesShown: 5, // 페이지 숫자 버튼 값 기본값 5개
       currentPage: 1, //  현재 활성 페이지 기본값 1
 
