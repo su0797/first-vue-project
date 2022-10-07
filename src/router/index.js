@@ -58,12 +58,6 @@ const routes = [
     meta: { requireAuth: true },
   },
   {
-    path: '/user/list',
-    name: 'UserList',
-    component: UserList,
-    meta: { requireAuth: true },
-  },
-  {
     path: '/admin/user/list',
     name: 'UserList',
     component: UserList,
