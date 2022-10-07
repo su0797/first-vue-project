@@ -33,7 +33,7 @@
 <script>
 import axios from 'axios';
 import { isNotEmpty } from '/@service/util';
-import { msgbox } from '../../service/common';
+import { msgbox } from '/@service/common';
 
 export default {
   data() {

@@ -44,7 +44,7 @@
 
 <script>
 import axios from 'axios';
-import UserListRow from '/@components/user/UserListRow.vue';
+import UserListRow from '/@components/UserListRow.vue';
 import Modal from '/@components/Modal.vue';
 
 export default {
@@ -143,9 +143,6 @@ h4 {
 .table-body {
   vertical-align: middle;
 }
-/* .manage {
-    width: 15%;
-} */
 
 .flex-area .btn-secondary {
   font-size: 0.8rem;
