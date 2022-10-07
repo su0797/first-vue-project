@@ -43,6 +43,7 @@
       <table class="table">
         <thead>
           <tr>
+            <th>#</th>
             <th></th>
             <th scope="col">데이터 상태</th>
             <th scope="col">최종수정날짜</th>
@@ -53,9 +54,10 @@
         </thead>
         <tbody>
           <tr v-for="(data, i) in dataListValue" :key="i">
+            <td>{{ (currentPage - 1) * 100 + (i + 1) }}</td>
             <td scope="row">
               <router-link :to="`/user/edit/${dataList.data[i].data_id}`">
-                <button class="btn btn-secondary" type="button" id="buttonInput" @click="pushDataId(dataList.data[i].data_id)">수정 {{ i }}</button>
+                <button class="btn btn-secondary" type="button" id="buttonInput" @click="pushDataId(dataList.data[i].data_id)">수정</button>
               </router-link>
             </td>
             <td scoped="row">
@@ -277,5 +279,20 @@ h3 {
 .pagination-center {
   display: flex;
   width: 100%;
+}
+.table-responsive tr th:first-child,
+.table-responsive tr td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 99;
+}
+.table-responsive tr td:nth-child(-n + 2) {
+  background: #fff;
+}
+.table-responsive tr th:nth-child(2),
+.table-responsive tr td:nth-child(2) {
+  position: sticky;
+  left: 37.31px;
+  z-index: 99;
 }
 </style>

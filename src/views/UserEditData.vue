@@ -133,7 +133,6 @@ export default {
           },
         })
           .then((res) => {
-            // console.log(inputData, this.data_id, this.data_status, this.user_id);
             e.target.reset();
             this.inputValueList = {};
             var forms = document.querySelectorAll('.needs-validation');
