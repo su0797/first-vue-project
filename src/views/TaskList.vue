@@ -72,6 +72,7 @@
             <th scope="col">
               <input type="checkbox" :value="allSelected" v-model="allSelected" />
             </th>
+            <th>No.</th>
             <th></th>
             <th scope="col">최종수정날짜</th>
             <th scope="col" v-if="selectedTask == 6">작성자</th>
@@ -85,6 +86,7 @@
             <td scope="row">
               <input type="checkbox" :value="i" v-model="selectList" />
             </td>
+            <td>{{ i+1 }}</td>
             <td>
               <router-link :to="`/admin/tasklist/modify/${dataList.data[i].data_id}`">
                 <button type="button" class="btn btn-secondary" @click="pushDataId(dataList.data[i].data_id)">수정</button>
@@ -94,7 +96,7 @@
               {{ $filters.dateFormat(dataList.data[i].update_time) }}
             </td>
             <td scoped="row" v-if="selectedTask == 6">
-              {{ dataList.data[i].user_id }}
+              {{ dataList.data[i].user_name }}
             </td>
             <td :key="j" v-for="(datakey, j) in dataListKey">
               {{ data[datakey] }}
@@ -102,19 +104,19 @@
           </tr>
         </tbody>
       </table>
-      <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false">
-        <vue-awesome-paginate
-          :total-items="this.totalItems"
-          :items-per-page="this.itemsPerPage"
-          :max-pages-shown="this.MaxPagesShown"
-          :current-page="this.currentPage"
-          :on-click="onClickHandler"
-          :show-breakpoint-buttons="false"
-          :show-ending-buttons="true"
-          firstPageContent="<<"
-          lastPageContent=">>"
-        />
-      </div>
+    </div>
+    <div class="pagination-center" v-if="selectedWork && selectedTask && !searchedNone">
+      <vue-awesome-paginate
+        :total-items="this.totalItems"
+        :items-per-page="this.itemsPerPage"
+        :max-pages-shown="this.MaxPagesShown"
+        :current-page="this.currentPage"
+        :on-click="onClickHandler"
+        :show-breakpoint-buttons="false"
+        :show-ending-buttons="true"
+        firstPageContent="<<"
+        lastPageContent=">>"
+      />
     </div>
   </div>
 </template>
@@ -219,6 +221,9 @@ export default {
 
       getDataInfo(setData).then((result) => {
         this.dataList = result.data;
+
+        // console.log(this.dataList);
+
         this.totalItems = this.dataList.total_count;
         if (this.dataList != null) {
           for (let i = 0; i < this.dataList.data.length; i++) {
@@ -420,9 +425,23 @@ export default {
   margin-top: 20px;
   padding: 0;
 }
-.pagination-center {
-  display: flex;
-  width: 100%;
+.table-responsive tr td:nth-child(-n+3) {
+  background: #fff;
+}
+.table-responsive tr th:first-child, .table-responsive tr td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 99;
+}
+.table-responsive tr th:nth-child(2), .table-responsive tr td:nth-child(2) {
+  position: sticky;
+  left: 28.99px;
+  z-index: 99;
+}
+.table-responsive tr th:nth-child(3), .table-responsive tr td:nth-child(3) {
+  position: sticky;
+  left: 66.6px;
+  z-index: 99;
 }
 .subject {
   text-align: center;

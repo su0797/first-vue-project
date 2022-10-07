@@ -21,7 +21,6 @@ export async function getDataInfo(param, callback) {
         page_no: param.get('page_no'),
       };
     }
-
     const result = await axios.post('/web/manager/work/info', data);
 
     if (callback) callback(result.data);

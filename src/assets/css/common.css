@@ -129,7 +129,9 @@ html body {
 }
 /* 테이블 공통 */
 .table {
+  width: 100%;
   min-width: 40rem;
+  border-collapse: collapse;
 }
 .table th,
 .table td {
@@ -140,8 +142,8 @@ html body {
 }
 .table th {
   background-color: #fbebe3 !important;
-  border-top: 2px solid #b9b9b9;
-  border-bottom: 2px solid #b9b9b9 !important;
+  /* border-top: 2px solid #b9b9b9;
+  border-bottom: 2px solid #b9b9b9 !important; */
 }
 .table .btn-secondary {
   margin: 0;
@@ -153,13 +155,22 @@ html body {
   background-color: #c15a33 !important;
 }
 .table-responsive {
-  overflow: scroll;
-  height: 100%;
-  max-height: 700px;
-  margin-top: 20px;
-  white-space: nowrap;
-  scrollbar-color: #e4e4e4;
+  overflow: scroll !important;
+  height: 100% !important;
+  max-height: 500px !important;
+  margin-top: 20px !important;
+  white-space: nowrap !important;
+  scrollbar-color: #e4e4e4 !important;
 }
+.table-responsive thead {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.table>:not(:last-child)>:last-child>* {
+  border-bottom: 1px solid #eaecef !important;
+}
+
 /* 업무 선택영역 셀렉트 */
 .select-project {
   display: inline-block !important;
@@ -238,6 +249,10 @@ table::-webkit-scrollbar-thumb {
 }
 .paginate-buttons:hover {
   border: 1px solid #d8d8d8;
+}
+.pagination-center {
+  display: flex;
+  width: 100%;
 }
 .active-page {
   background-color: #efefef;
