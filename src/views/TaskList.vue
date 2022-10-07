@@ -86,7 +86,7 @@
             <td scope="row">
               <input type="checkbox" :value="i" v-model="selectList" />
             </td>
-            <td>{{ i+1 }}</td>
+            <td>{{ (((currentPage-1)*100))+(i+1) }}</td>
             <td>
               <router-link :to="`/admin/tasklist/modify/${dataList.data[i].data_id}`">
                 <button type="button" class="btn btn-secondary" @click="pushDataId(dataList.data[i].data_id)">수정</button>
