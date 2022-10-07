@@ -24,7 +24,7 @@ export default {
     };
   },
   created() {
-    axios.get('http://52.22.216.42:8090/web/assignment/nums/').then(({ data }) => {
+    axios.get('http://49.50.164.147:8090/web/assignment/nums/').then(({ data }) => {
       this.datas = data.data.data;
       sessionStorage.removeItem('selectedWork');
       sessionStorage.removeItem('workName');
@@ -35,8 +35,7 @@ export default {
   components: {
     AdminMainView,
   },
-  methods: {
-  },
+  methods: {},
 };
 </script>
 
