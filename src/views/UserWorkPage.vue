@@ -11,11 +11,11 @@
 				</option>
 			</select>
 		</div>
-		<h4 class="title">{{ user_name }}님의<br class="sp" />업무현황 페이지</h4>
+		<h4 class="title">{{ user_name }}님의<br class="sp" /> 업무현황 페이지</h4>
 		<div class="total-percent bg">
 			<div class="main">
 				<h5 class="theme_total">
-					{{ projects[0] }} <br class="sp" /><span class="theme_name">전체</span>
+					{{ projects[assignment_id-1] }} <br class="sp" /><span class="theme_name">전체</span>
 				</h5>
 				<p class="user_per">
 					{{ progress[0] }}%<br class="sp" /><span class="avg_per"
@@ -24,16 +24,16 @@
 				</p>
 			</div>
 			<p class="temp_storage">
-				・임시저장 :<br class="sp" /><span class="ts">{{ temp_storage[0] }}</span
+				・임시저장 : <br class="sp" /><span class="ts">{{ userAssigmentStatus.data_status3 }}</span
 				>개
 			</p>
 			<p class="actual_measurement">
-				・실측 :<br class="sp" />
-				<span class="am">{{ actual_measurement[0] }}</span
+				・실측 : <br class="sp" />
+				<span class="am">{{ userAssigmentStatus.data_status4 }}</span
 				>개
 			</p>
 			<p class="completion">
-				・완료 : <br class="sp" /><span class="com">{{ completion[0] }}</span
+				・완료 : <br class="sp" /><span class="com">{{ userAssigmentStatus.data_status6 }}</span
 				>개
 			</p>
 		</div>
@@ -41,7 +41,7 @@
 		<div  v-if="selectedProjectCode">
 			<div class="total-percent line">
 				<div class="main">
-					<h5 class="theme_total">문정원_OTT</h5>
+					<h5 class="theme_total" @change="showProject($event)">{{ pjName }}</h5>
 					<p class="user_per">
 						{{ progress[0] }}% <br class="sp" /><span class="avg_per"
 							>(평균 {{ avg_progress[0] }}%)</span
@@ -50,15 +50,15 @@
 				</div>
 
 				<p class="temp_storage">
-					・임시저장 : <br class="sp" /><span class="ts">{{ temp_storage[0] }}</span
+					・임시저장 : <br class="sp" /><span class="ts">{{ userWorkStatus.data_status3 }}</span
 					>개
 				</p>
 				<p class="actual_measurement">
-					・실측 : <br class="sp" /><span class="am">{{ actual_measurement[0] }}</span
+					・실측 : <br class="sp" /><span class="am">{{ userWorkStatus.data_status4 }}</span
 					>개
 				</p>
 				<p class="completion">
-					・완료 : <br class="sp" /><span class="com">{{ completion[0] }}</span
+					・완료 : <br class="sp" /><span class="com">{{ userWorkStatus.data_status6 }}</span
 					>개
 				</p>
 			</div>
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 import { getUserWorkId } from "/@service/user";
 import {getDataInfo} from "/@service/admin/data";
 
@@ -122,29 +122,42 @@ export default {
 		return {
 			user_name: '',
 			user_id: '',
-
-			// ▼셀렉트 데이터 임시
 			pjName: '',
 			selectedProjectCode: '',
 			projectList: [],
-			projects: ['문정원', '광진구', '광주', '순천'],
-			progress: ['26.3'],
-			avg_progress: ['5.9'],
-			temp_storage: ['26'],
-			actual_measurement: ['10'],
-			completion: ['55'],
+			projects: ['광진구', '순천', '광주', '문정원'],
+			
+			progress: [],
+			avg_progress: [],
+			temp_storage: [],
+			actual_measurement: [],
+			completion: [],
 			dataList: [],
 			dataListKey: [],
 			dataListValue: [],
 			assignment_id: '',
-			assignment_name: '',
 			work_name:'',
+
+			userAssigmentStatus:[],
+			userWorkStatus:[],
+			data_status3:'',
+			data_status4:'',
+			data_status6:'',
 		};
 	},
 	created() {
 		this.user_name = sessionStorage.getItem('user_name')
 		this.user_id = sessionStorage.getItem('user_id')
 		this.assignment_id = sessionStorage.getItem('assignment_id')
+		
+		// 유저의 각 프로젝트 별 전체  api
+		axios.post('http://49.50.164.147:8090/web/work/nums',{
+			assignment_id : this.assignment_id,
+			user_id : this.user_id
+		}).then(({ data }) => {
+			this.userAssigmentStatus = data.data.data;
+			console.log(this.userAssigmentStatus);
+		})
 	},
 	mounted() {
 		const setData = new FormData();
@@ -152,13 +165,36 @@ export default {
 
 		getUserWorkId(setData).then((result) => {
 			this.projectList = result.data.data;
-			console.log(this.projectList);
 		});
 	},
 	methods: {
 		showProject(e) {
 			this.pjName = e.target.options[e.target.options.selectedIndex].text;
+			// 유저의 프로젝트 > 과제별 전체 api
+			axios.post('http://49.50.164.147:8090/web/work/nums',{
+				user_id : this.user_id,
+				work_id : this.selectedProjectCode
+			}).then(({ data }) => {
+				this.userWorkStatus = data.data.data;
+				console.log(this.userWorkStatus);
+			})
 			this.showTable();
+		},
+		//유저 프로젝트 작업량
+		userAssignment_progress(){
+
+		},
+		// 프로젝트 전체 작업량
+		totalAssignment_progress(){
+
+		},
+		// 유저 과제별 작업량
+		userWork_progress(){
+
+		},
+		// 전체 과제별 작업량
+		totalWork_progress(){
+
 		},
 		showTable() {
 			if (this.pjName !== '') {
@@ -167,7 +203,7 @@ export default {
 				setData.set('work_id', this.selectedProjectCode);
 
 				getDataInfo(setData).then((result) => {
-					console.log('result: ', result);
+					// console.log('result: ', result);
 					this.dataList = result.data;
 
 					for (let i = 0; i < this.dataList.data.length; i++) {
@@ -178,52 +214,27 @@ export default {
 					for (let i = 0; i < this.dataList.data.length; i++) {
 						this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
 					}
-					// this.defineTotalItems();
 				});
 			}
 		},
 		goInput() {
 			this.$router.replace('/');
 		},
-		
-		onClickHandler(page) {
-			console.log(page);
-		},
+		// total_progress( data_status4 , data_status6 , data_status2) {
+        // this.totals =  data_status4 + data_status6 + data_status2
+        // // console.log(this.totals);
+		// }, 
+		// asd(data_status6, totals) {
+		// 	this.asds = Math.round(data_status6/totals)
+		// 	// console.log(this.asds);
+		// },
+
 	},
-	
 };
 
 </script>
 
 <style scoped>
-
-/* ==================== */
-.pagination-container {
-    display: flex;
-    column-gap: 10px;
-  }
-  .paginate-buttons {
-    height: 40px;
-    width: 40px;
-    border-radius: 20px;
-    cursor: pointer;
-    background-color: rgb(242, 242, 242);
-    border: 1px solid rgb(217, 217, 217);
-    color: black;
-  }
-  .paginate-buttons:hover {
-    background-color: #d8d8d8;
-  }
-  .active-page {
-    background-color: #3498db;
-    border: 1px solid #3498db;
-    color: white;
-  }
-  .active-page:hover {
-    background-color: #2988c8;
-  }
-/* ==================== */
-
 .select-project {
 	margin-right: 0;
 }
@@ -268,16 +279,16 @@ option {
 }
 .theme_total {
 	display: inline-block;
-	margin-left: 18%;
+	margin-left: 8%;
 	font-size: 1.5rem;
 	font-weight: 800;
 }
 .user_per {
 	display: inline-block;
-	font-size: 1.7em;
+	font-size: 1.5em;
 	color: #e17b46;
 	font-weight: 800;
-	margin-left: 15px;
+	margin-left: 20px;
 }
 .avg_per {
 	font-size: 0.8rem;
