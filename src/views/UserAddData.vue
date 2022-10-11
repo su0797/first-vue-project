@@ -10,7 +10,7 @@
         <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_name] = note)" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-else-if="column.meta_type === '5'" />
         <UserRadioBox :label="column.meta_name" :radioValue="(inputValueList[column.meta_name] = radioValue)" @radioFromChild="inputValueList[column.meta_name] = Number($event.target.value)" v-else-if="column.meta_type === '4'" />
       </div>
-      <UserRadioBox :radioValue="(data_status = null)" @radioFromChild="changeStatusValue($event)" />
+      <UserRadioBox :label="dataStatusLabel" :radioValue="(data_status = null)" @radioFromChild="changeStatusValue($event)" />
       <button type="submit" class="btn btn-secondary">저장</button>
     </form>
   </div>
@@ -48,6 +48,7 @@ export default {
       extraRdAddress: null,
       detailAddress: null,
       isPassValidatoin: false,
+      dataStatusLabel: '데이터 상태',
     };
   },
   created() {

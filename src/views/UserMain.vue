@@ -285,6 +285,7 @@ h3 {
   position: sticky;
   left: 0;
   z-index: 99;
+  min-width: 37.31px;
 }
 .table-responsive tr td:nth-child(-n + 2) {
   background: #fff;
