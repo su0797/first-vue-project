@@ -48,12 +48,14 @@ export default {
       projectCode: '',
       data_id: '',
       user_id: '',
+      user_name: '',
       data_status: 0,
       isPassValidatoin: false,
     };
   },
   created() {
     this.user_id = this.$cookies.get('userId');
+    this.user_name = this.$cookies.get('name');
 
     const setAddData = new FormData();
     const setEditData = new FormData();
@@ -130,6 +132,7 @@ export default {
             user_id: this.user_id,
             data_json: inputData,
             data_status: this.data_status,
+            work_user_name: this.work_user_name,
           },
         })
           .then((res) => {
