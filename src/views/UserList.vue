@@ -24,6 +24,7 @@
           <table class="table" id="intern-list">
             <thead class="table head">
               <tr>
+                <th>No.</th>
                 <th scope="col">이름</th>
                 <th scope="col">아이디</th>
                 <th scope="col">전화번호</th>
@@ -32,7 +33,7 @@
               </tr>
             </thead>
             <tbody class="table-body">
-              <user-list-row v-for="(user, i) in users" :key="i" :user="user" :assignment_name="assignment_name" @openModal="openModal($event)" :user_id="user.user_id"></user-list-row>
+              <user-list-row v-for="(user, i) in users" :key="i" :index="i" :user="user" :assignment_name="assignment_name" @openModal="openModal($event)" :user_id="user.user_id"></user-list-row>   
             </tbody>
           </table>
         </div>

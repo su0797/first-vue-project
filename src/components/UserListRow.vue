@@ -1,5 +1,6 @@
 <template>
-    <tr class="tr" :class="{ 'tr-disabled' : user.user_status === 0 }" >
+    <tr class="tr" :class="{ 'tr-disabled' : user.user_status === 0 }">
+        <td>{{ index+1 }}</td>
         <td class="user_name" style="width: 20%;">{{user.user_name}}</td>
         <td class="user_email" style="width: 20%;">{{user.user_email}}</td>
         <td class="user_phone" style="width: 20%;">{{user.user_phone}}</td>
@@ -23,13 +24,14 @@ export default {
         user_id : Number,
         assignment_name: Array,
         user_status: Number,
+        index: Number
     },
     data() {
     return {
         message: '',
         isDisalbed: true,
         msg:"활성화",
-        nextMsg:"계정 정지"  
+        nextMsg:"계정 정지",
     }
   }, 
   methods: {
