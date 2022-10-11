@@ -39,40 +39,40 @@
 <script>
 
 export default {
-    name: 'AdminMainView',
-    props: {
-        assignment_id: Number,
-        data_status1: Number,
-        data_status6: Number,
-        data_status3: Number,
-        data_status4: Number,
-        data_status5: Number,
-    },
-    data() {
-      return {
-        totals: 0,
-        avgs: 0,
-      }
-    },
-    methods: {
-      total() {
-        this.totals = this.data_status5 + this.data_status4 + this.data_status3 + this.data_status6 + this.data_status1
+  name: 'AdminMainView',
+  props: {
+      assignment_id: Number,
+      data_status1: Number,
+      data_status6: Number,
+      data_status3: Number,
+      data_status4: Number,
+      data_status5: Number,
+  },
+  data() {
+    return {
+      totals: 0,
+      avgs: 0,
+    }
+  },
+  methods: {
+    total() {
+      this.totals = this.data_status5 + this.data_status4 + this.data_status3 + this.data_status6 + this.data_status1
     }, 
-      avg() {
-        if (isNaN()) { 
-          this.avgs = 0;
-        }
-        else {
-          this.avgs = Math.round((this.data_status5/this.totals)*100);
-        }
-    },
-      numberWithCommas(x) { 
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
-    },
-      route() {
-        sessionStorage.setItem('assignment_id', this.assignment_id);
-        this.$router.push('/admin/tasklist').catch(() => {});
+    avg() {
+      if (isNaN(this.avgs)) { 
+        this.avgs = 0;
       }
+      else {  
+        this.avgs = Math.round((this.data_status5/this.totals)*100);
+      }
+    },
+    numberWithCommas(x) { 
+      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
+    },
+    route() {
+      sessionStorage.setItem('assignment_id', this.assignment_id);
+      this.$router.push('/admin/tasklist').catch(() => {});
+    }, 
   } 
 }
 </script>
