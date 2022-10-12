@@ -5,10 +5,10 @@
     </div>
     <form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
       <div v-for="(column, i) in columnList.data" :key="i">
-        <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_name] = inputValue)" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-if="column.meta_type === '1'" />
-        <UserSelectBox :label="column.meta_name" :selectValue="(inputValueList[column.meta_name] = selectValue)" @selectFromChild="inputValueList[column.meta_name] = Number($event.target.value)" v-else-if="column.meta_type === '2'" />
-        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_name] = note)" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-else-if="column.meta_type === '5'" />
-        <UserRadioBox :label="column.meta_name" :radioValue="(inputValueList[column.meta_name] = radioValue)" @radioFromChild="inputValueList[column.meta_name] = Number($event.target.value)" v-else-if="column.meta_type === '4'" />
+        <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_key] = inputValue)" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-if="column.meta_type === '1'" />
+        <UserSelectBox :label="column.meta_name" :selectValue="(inputValueList[column.meta_key] = selectValue)" @selectFromChild="inputValueList[column.meta_key] = Number($event.target.value)" v-else-if="column.meta_type === '2'" />
+        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_name] = note)" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-else-if="column.meta_type === '5'" />
+        <UserRadioBox :label="column.meta_name" :radioValue="(inputValueList[column.meta_key] = radioValue)" @radioFromChild="inputValueList[column.meta_key] = Number($event.target.value)" v-else-if="column.meta_type === '4'" />
       </div>
       <UserRadioBox :label="dataStatusLabel" :radioValue="(data_status = null)" @radioFromChild="changeStatusValue($event)" />
       <button type="submit" class="btn btn-secondary">저장</button>
@@ -141,9 +141,7 @@ export default {
       this.checkForm();
       if (this.isPassValidatoin) {
         var inputData = JSON.stringify(this.inputValueList);
-        if (this.data_status == 4) {
-          this.user_id = -1;
-        }
+
         axios({
           method: 'post',
           url: '/web/db/edit',
@@ -155,7 +153,6 @@ export default {
           },
         })
           .then((res) => {
-            // console.log(inputData, this.data_id, this.data_status, this.user_id);
             e.target.reset();
             this.inputValueList = {};
             var forms = document.querySelectorAll('.needs-validation');

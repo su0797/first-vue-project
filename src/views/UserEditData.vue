@@ -5,19 +5,14 @@
     </div>
     <form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
       <div v-for="(column, i) in columnList.data" :key="i">
-        <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_name] = inputValueList[column.meta_name])" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-if="column.meta_type === '1'" />
+        <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_name] = inputValueList[column.meta_key])" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-if="column.meta_type === '1'" />
         <UserSelectBox
           :label="column.meta_name"
-          :selectValue="(inputValueList[column.meta_name] = inputValueList[column.meta_name])"
+          :selectValue="(inputValueList[column.meta_name] = inputValueList[column.meta_key])"
           @selectFromChild="inputValueList[column.meta_name] = Number($event.target.value)"
           v-else-if="column.meta_type === '2'"
         />
-        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_name] = inputValueList[column.meta_name])" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-else-if="column.meta_type === '5'" />
-        <!-- <UserRadioBox
-					:label="column.meta_name"
-					:radioValue="(inputValueList[column.meta_name] = inputValueList[column.meta_name])"
-					@radioFromChild="inputValueList[column.meta_name] = Number($event.target.value)"
-					v-else-if="column.meta_type === '4'" /> -->
+        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_name] = inputValueList[column.meta_key])" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-else-if="column.meta_type === '5'" />
       </div>
       <UserRadioBox :radioValue="(data_status = data_status)" @radioFromChild="changeStatusValue($event)" />
       <button type="submit" class="btn btn-secondary">저장</button>
@@ -55,7 +50,7 @@ export default {
   },
   created() {
     this.user_id = this.$cookies.get('userId');
-    this.user_name = this.$cookies.get('name');
+    this.work_user_name = this.$cookies.get('name');
 
     const setAddData = new FormData();
     const setEditData = new FormData();
@@ -121,9 +116,7 @@ export default {
       this.checkForm();
       if (this.isPassValidatoin) {
         var inputData = JSON.stringify(this.inputValueList);
-        if (this.data_status == 4) {
-          this.user_id = -1;
-        }
+
         axios({
           method: 'post',
           url: '/web/db/edit',
@@ -132,7 +125,6 @@ export default {
             user_id: this.user_id,
             data_json: inputData,
             data_status: this.data_status,
-            work_user_name: this.work_user_name,
           },
         })
           .then((res) => {
