@@ -228,6 +228,7 @@ export default {
         console.log(this.columnList);
       });
       getDataInfo(setData).then((result) => {
+        this.tableHeaderList = [];
         this.dataList = result.data;
 
         if (this.dataList != null) {
