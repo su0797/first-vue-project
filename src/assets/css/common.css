@@ -142,8 +142,8 @@ html body {
 }
 .table th {
   background-color: #fbebe3 !important;
-  /* border-top: 2px solid #b9b9b9;
-  border-bottom: 2px solid #b9b9b9 !important; */
+  border-top: 2px solid #b9b9b9;
+  border-bottom: 2px solid #b9b9b9 !important;
 }
 .table .btn-secondary {
   margin: 0;
@@ -167,9 +167,9 @@ html body {
   top: 0;
   z-index: 100;
 }
-.table>:not(:last-child)>:last-child>* {
+/* .table>:not(:last-child)>:last-child>* {
   border-bottom: 1px solid #eaecef !important;
-}
+} */
 
 /* 업무 선택영역 셀렉트 */
 .select-project {
