@@ -43,8 +43,8 @@
       <div class="search-area flex-area" v-if="selectedWork && selectedTask">
         <select class="form-select" v-model="selectedSearchOption" ref="searchSelect">
           <option value="">선택</option>
-          <option :value="searchOption" v-for="(searchOption, i) in searchOptionList" :key="i">
-            {{ searchOption }}
+          <option :value="searchOption" v-for="(searchOption, i) in searchOptionList.english" :key="i">
+            {{ searchOptionList.korean[i] }}
           </option>
         </select>
         <input type="text" class="form-control" ref="searchInput" :value="searchedData" @input="changeKeyword" @keypress.enter="searchTable" placeholder="검색어를 입력하세요" />
@@ -168,7 +168,10 @@ export default {
       searchedNone: false,
       searchedData: '',
       selectedSearchOption: '',
-      searchOptionList: [],
+      searchOptionList: {
+        korean: [],
+        english: [],
+      },
       assignment_id: '',
       selectedUser: '',
       selectedUserId: '',
@@ -181,6 +184,8 @@ export default {
         name: [],
       },
       dataId: [],
+      columnList: [],
+      tableHeaderList: [],
     };
   },
   methods: {
@@ -231,7 +236,8 @@ export default {
               }
             }
 
-            this.searchOptionList = this.dataListKey;
+            this.searchOptionList.english = this.dataListKey;
+            this.searchOptionList.korean = this.tableHeaderList;
           }
           this.dataListValue = [];
           for (let i = 0; i < this.dataList.data.length; i++) {
@@ -308,7 +314,8 @@ export default {
                 this.tableHeaderList.push(this.columnList.data[j].meta_name);
               }
             }
-            this.searchOptionList = this.dataListKey;
+            this.searchOptionList.english = this.dataListKey;
+            this.searchOptionList.korean = this.tableHeaderList;
           }
           this.dataListValue = [];
           for (let i = 0; i < this.dataList.data.length; i++) {
