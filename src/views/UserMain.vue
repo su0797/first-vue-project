@@ -243,6 +243,7 @@ export default {
 
         getUserSearch(setSearch).then((result) => {
           this.dataList = result.data;
+          this.totalItems = this.dataList.data.length;
 
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
