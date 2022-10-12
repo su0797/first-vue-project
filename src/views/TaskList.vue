@@ -204,29 +204,25 @@ export default {
       sessionStorage.setItem('selectedWork', work_id);
       sessionStorage.setItem('workName', this.workName);
 
-      if (this.selectedTask == 4) {
-        setData.set('work_id', work_id);
-        setData.set('data_status', this.selectedTask);
-        setData.set('user_id', -1);
-        setData.set('row_count', this.itemsPerPage);
-        setData.set('page_no', this.currentPage);
-      } else {
-        setData.set('work_id', work_id);
-        setData.set('data_status', this.selectedTask);
-        setData.set('row_count', this.itemsPerPage);
-        setData.set('page_no', this.currentPage);
-      }
-
       const setData2 = new FormData();
       this.projectCode = sessionStorage.getItem('projectCode');
       this.projectName = sessionStorage.getItem('projectName');
-
+      // 테이블 헤드 메타데이터와 대조(한글명)
       setData2.set('work_id', work_id);
 
       getUserAddForm(setData2).then((result) => {
         this.columnList = result.data;
-        console.log(this.columnList);
       });
+      // 데이터 불러오기
+      setData.set('work_id', work_id);
+      setData.set('data_status', this.selectedTask);
+      setData.set('row_count', this.itemsPerPage);
+      setData.set('page_no', this.currentPage);
+      // 실측필요의 경우 user_id가 없는 데이터만 불러옴
+      if (this.selectedTask == 4) {
+        setData.set('user_id', -1);
+      }
+
       getDataInfo(setData).then((result) => {
         this.tableHeaderList = [];
         this.dataList = result.data;

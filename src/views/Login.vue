@@ -7,7 +7,7 @@
 			<!-- {{$route.path}} -->
 			<form @submit.prevent="checkData" ref="checkForm">
 				<div class="mb-3">
-					<input type="email" class="form-control" placeholder="아이디" v-model="oauth.username" />
+					<input type="email" class="form-control" placeholder="아이디(이메일)" v-model="oauth.username" />
 				</div>
 				<div class="mb-3">
 					<input
