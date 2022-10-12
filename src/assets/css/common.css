@@ -131,7 +131,8 @@ html body {
 .table {
   width: 100%;
   min-width: 40rem;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 .table th,
 .table td {
