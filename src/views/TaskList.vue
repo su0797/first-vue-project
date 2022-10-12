@@ -20,14 +20,9 @@
     </div>
 
     <!-- Modal -->
-    <AdminModal :user_name ="user.name"  
-                :user_id ="user.id" 
-                :selectedUser = "selectedUser"
-                :divideBtn = "divideBtn"
-                @cancel="cancelModal"
-                @checkRadio="changeRadio($event)"
-                @divideTaskTodo="divideTaskTodo"
-                @divideTaskLocation="divideTaskLocation" />
+    <AdminModal :user_name ="user.name"  :user_id ="user.id" :selectedUser = "selectedUser" :divideBtn = "divideBtn"
+                @cancel="cancelModal" @checkRadio="changeRadio($event)" @divideTaskTodo="divideTaskTodo" @divideTaskLocation="divideTaskLocation" />
+
 
     <div class="flex">
       <!-- 업무분배 버튼 영역 -->
@@ -50,6 +45,7 @@
       </div>
     </div>
 
+    <!-- 테이블 영역 -->
     <div class="show-nothing" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
     <div ref="table" class="table-responsive" v-if="selectedWork && selectedTask && !searchedNone">
       <table class="table">
@@ -139,24 +135,27 @@ export default {
       MaxPagesShown: 5, // 페이지 숫자 버튼 값 기본값 5개
       currentPage: 1, //  현재 활성 페이지 기본값 1
 
-      selectedTask: '',
       lists: [
         { text: '분배 전', value: '1' },
         { text: '실측필요', value: '4' },
         { text: '조사불가', value: '5' },
         { text: '완료', value: '6' },
       ],
+      // 셀렉트 선택 저장된 세션 불러오기
       workName: '',
       selectedWork: '',
+      selectedTask: '',
+      selectedTaskName: '',
+      // 업무분배시 선택된 데이터
+      selectedTaskList: [],
+
       projectList: [],
       workListValue: [],
       workListKey: [],
       dataList: [],
       dataListKey: [],
       dataListValue: [],
-      selectedTaskList: [],
       allChecked: false,
-      selectedTaskName: '',
       selectList: [],
       searchedNone: false,
       searchedData: '',
@@ -208,8 +207,8 @@ export default {
       getDataInfo(setData).then((result) => {
         this.dataList = result.data;
 
-        this.totalItems = this.dataList.total_count;
         if (this.dataList != null) {
+          this.totalItems = this.dataList.total_count;
           for (let i = 0; i < this.dataList.data.length; i++) {
             this.dataId[i] = this.dataList.data[i].data_id;
           }
