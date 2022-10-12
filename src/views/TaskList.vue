@@ -20,9 +20,16 @@
     </div>
 
     <!-- Modal -->
-    <AdminModal :user_name ="user.name"  :user_id ="user.id" :selectedUser = "selectedUser" :divideBtn = "divideBtn"
-                @cancel="cancelModal" @checkRadio="changeRadio($event)" @divideTaskTodo="divideTaskTodo" @divideTaskLocation="divideTaskLocation" />
-
+    <AdminModal
+      :user_name="user.name"
+      :user_id="user.id"
+      :selectedUser="selectedUser"
+      :divideBtn="divideBtn"
+      @cancel="cancelModal"
+      @checkRadio="changeRadio($event)"
+      @divideTaskTodo="divideTaskTodo"
+      @divideTaskLocation="divideTaskLocation"
+    />
 
     <div class="flex">
       <!-- 업무분배 버튼 영역 -->
@@ -68,7 +75,7 @@
             <td scope="row">
               <input type="checkbox" :value="i" v-model="selectList" />
             </td>
-            <td>{{ (((currentPage-1)*100))+(i+1) }}</td>
+            <td>{{ (currentPage - 1) * 100 + (i + 1) }}</td>
             <td>
               <router-link :to="`/admin/tasklist/modify/${dataList.data[i].data_id}`">
                 <button type="button" class="btn btn-secondary" @click="pushDataId(dataList.data[i].data_id)">수정</button>
@@ -104,6 +111,7 @@
 </template>
 <script>
 import { getDataInfo, getUserSearch, getUserList, getWorksInfo, setWorkDistribute } from '/@service/admin/data';
+import { getUserAddForm } from '/@service/user';
 import AdminModal from '/@components/AdminModal.vue';
 
 export default {
@@ -216,6 +224,13 @@ export default {
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
+
+            for (let j = 0; j < this.columnList.data.length; j++) {
+              if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+                this.tableHeaderList.push(this.columnList.data[j].meta_name);
+              }
+            }
+
             this.searchOptionList = this.dataListKey;
           }
           this.dataListValue = [];
@@ -252,6 +267,16 @@ export default {
     showAll() {
       // 셀렉트에 맞는
       if (this.selectedTaskName !== '') {
+        const setData2 = new FormData();
+        this.projectCode = sessionStorage.getItem('projectCode');
+        this.projectName = sessionStorage.getItem('projectName');
+
+        setData2.set('work_id', this.projectCode);
+
+        getUserAddForm(setData2).then((result) => {
+          this.columnList = result.data;
+        });
+
         this.getData();
       }
       this.selectList = [];
@@ -277,6 +302,12 @@ export default {
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
+
+            for (let j = 0; j < this.columnList.data.length; j++) {
+              if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+                this.tableHeaderList.push(this.columnList.data[j].meta_name);
+              }
+            }
             this.searchOptionList = this.dataListKey;
           }
           this.dataListValue = [];
@@ -313,8 +344,8 @@ export default {
     cancelModal() {
       this.selectedUser = '';
       this.user = {
-        'id' : [],
-        'name' : []
+        id: [],
+        name: [],
       };
       this.selectList = [];
       this.divideBtn = true;
@@ -415,20 +446,23 @@ export default {
   margin-top: 20px;
   padding: 0;
 }
-.table-responsive tr td:nth-child(-n+3) {
+.table-responsive tr td:nth-child(-n + 3) {
   background: #fff;
 }
-.table-responsive tr th:first-child, .table-responsive tr td:first-child {
+.table-responsive tr th:first-child,
+.table-responsive tr td:first-child {
   position: sticky;
   left: 0;
   z-index: 99;
 }
-.table-responsive tr th:nth-child(2), .table-responsive tr td:nth-child(2) {
+.table-responsive tr th:nth-child(2),
+.table-responsive tr td:nth-child(2) {
   position: sticky;
   left: 28.99px;
   z-index: 99;
 }
-.table-responsive tr th:nth-child(3), .table-responsive tr td:nth-child(3) {
+.table-responsive tr th:nth-child(3),
+.table-responsive tr td:nth-child(3) {
   position: sticky;
   left: 66.6px;
   z-index: 99;
