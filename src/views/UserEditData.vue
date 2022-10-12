@@ -5,14 +5,14 @@
     </div>
     <form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
       <div v-for="(column, i) in columnList.data" :key="i">
-        <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_name] = inputValueList[column.meta_key])" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-if="column.meta_type === '1'" />
+        <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_key] = inputValueList[column.meta_key])" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-if="column.meta_type === '1'" />
         <UserSelectBox
           :label="column.meta_name"
-          :selectValue="(inputValueList[column.meta_name] = inputValueList[column.meta_key])"
-          @selectFromChild="inputValueList[column.meta_name] = Number($event.target.value)"
+          :selectValue="(inputValueList[column.meta_key] = inputValueList[column.meta_key])"
+          @selectFromChild="inputValueList[column.meta_key] = Number($event.target.value)"
           v-else-if="column.meta_type === '2'"
         />
-        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_name] = inputValueList[column.meta_key])" @inputFromChild="inputValueList[column.meta_name] = $event.target.value" v-else-if="column.meta_type === '5'" />
+        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_key] = inputValueList[column.meta_key])" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-else-if="column.meta_type === '5'" />
       </div>
       <UserRadioBox :radioValue="(data_status = data_status)" @radioFromChild="changeStatusValue($event)" />
       <button type="submit" class="btn btn-secondary">저장</button>
