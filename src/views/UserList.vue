@@ -26,7 +26,7 @@
               <tr>
                 <th>No.</th>
                 <th scope="col">이름</th>
-                <th scope="col">아이디</th>
+                <th scope="col">아이디(이메일)</th>
                 <th scope="col">전화번호</th>
                 <th scope="col">과제</th>
                 <th scope="col" class="manage">관리</th>

@@ -59,7 +59,7 @@ export default {
       this.totals = this.data_status5 + this.data_status4 + this.data_status3 + this.data_status6 + this.data_status1
     }, 
     avg() {
-      if (isNaN(this.avgs)) { 
+      if (this.totals == 0) { 
         this.avgs = 0;
       }
       else {  
@@ -89,22 +89,22 @@ export default {
 }
 
 .card {
-    width: 340px;
-    height: 272px !important;
-    border: 3px solid #e17b45;
-    border-radius: 20px;
-    margin: 0 auto;
+  width: 340px;
+  height: 272px !important;
+  border: 3px solid #e17b45;
+  border-radius: 20px;
+  margin: 0 auto;
 }
 
 .card-title {
-    margin-top: 15px;
-    margin-right: 8px;
-    text-align: center;
-    color: black;
-    text-decoration: underline;
-    text-underline-position: under;
-    font-size: 1.2rem;
-    font-weight: 900;
+  margin-top: 15px;
+  margin-right: 8px;
+  text-align: center;
+  color: black;
+  text-decoration: underline;
+  text-underline-position: under;
+  font-size: 1.2rem;
+  font-weight: 900;
 
 }
 .card-text {

@@ -9,8 +9,8 @@
         <input type="text" class="form-control" id="user_name" name="user_name" v-model="user_name" ref="user_name" required />
       </div>
       <div class="input-group mb-3">
-        <label class="form-label" for="user_email">아이디</label>
-        <input type="text" class="form-control" id="user_email" name="user_email" v-model="user_email" ref="user_email" required />
+        <label class="form-label" for="user_email">아이디(이메일)</label>
+        <input type="text" class="form-control" id="user_email" name="user_email" v-model="user_email" ref="user_email" placeholder="예) startup@startuplab.team" required />
       </div>
       <div class="input-group mb-3">
         <label class="form-label" for="user_password">비밀번호</label>
@@ -18,7 +18,7 @@
       </div>
       <div class="input-group mb-3">
         <label class="form-label" for="user_phone">전화번호</label>
-        <input type="text" class="form-control" id="user_phone" name="user_phone" v-model="user_phone" ref="user_phone" required />
+        <input type="text" class="form-control" id="user_phone" name="user_phone" v-model="user_phone" ref="user_phone" placeholder="예) 010-0000-0000" required />
       </div>
       <div class="input-group mb-3">
         <label class="form-label" for="assignment_id">과제</label>
@@ -30,9 +30,8 @@
           <option :value="4">문정원</option>
         </select>
       </div>
-
       <div style="text-align: center; margin-top: 60px">
-        <button class="btn move" type="button" @click="moveList">취소</button>
+        <button class="btn move" type="button" @click="moveAdminMain">취소</button>
         <button class="btn check" type="submit">저장</button>
       </div>
     </form>
@@ -42,6 +41,8 @@
 <script>
 import axios from 'axios';
 import { isNotEmpty } from '/@service/util';
+import { msgbox } from '/@service/common';
+
 export default {
   data() {
     return {
@@ -59,7 +60,7 @@ export default {
       if (!isNotEmpty(this.user_name) || !isNotEmpty(this.user_email) || !isNotEmpty(this.user_password) || !isNotEmpty(this.user_phone) || !isNotEmpty(this.assignment_id)) {
         this.msgbox('입력란을 채워주세요.');
         this.errors.push('error');
-      }
+      } 
       if (this.errors.length != 0) {
         var forms = document.querySelectorAll('.needs-validation');
         Array.prototype.slice.call(forms).forEach(function (form) {
@@ -83,15 +84,14 @@ export default {
           })
           .then(({ data }) => {
             let msg = '등록을 완료했습니다.';
-            if (data === 'sucess') {
-              msg = '등록 완료';
+            if(data === 'sucess') {
             }
-            msgbox(msg);
-            this.moveList();
+          msgbox(msg);
+          this.moveAdminMain();
           });
       }
     },
-    moveList() {
+    moveAdminMain() {
       this.$router.go(-1);
     },
   },
