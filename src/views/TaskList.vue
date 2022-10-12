@@ -223,6 +223,8 @@ export default {
 
       if (work_id == 12 || work_id == 13) {
         setData2.set('work_id', 5);
+      } else {
+        setData2.set('work_id', work_id);
       }
 
       getUserAddForm(setData2).then((result) => {
