@@ -7,7 +7,7 @@
       <div v-for="(column, i) in columnList.data" :key="i">
         <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_key] = inputValue)" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-if="column.meta_type === '1'" />
         <UserSelectBox :label="column.meta_name" :selectValue="(inputValueList[column.meta_key] = selectValue)" @selectFromChild="inputValueList[column.meta_key] = Number($event.target.value)" v-else-if="column.meta_type === '2'" />
-        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_name] = note)" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-else-if="column.meta_type === '5'" />
+        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_key] = note)" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-else-if="column.meta_type === '5'" />
         <UserRadioBox :label="column.meta_name" :radioValue="(inputValueList[column.meta_key] = radioValue)" @radioFromChild="inputValueList[column.meta_key] = Number($event.target.value)" v-else-if="column.meta_type === '4'" />
       </div>
       <UserRadioBox :label="dataStatusLabel" :radioValue="(data_status = null)" @radioFromChild="changeStatusValue($event)" />
@@ -25,6 +25,7 @@ import UserNote from '/@components/UserNote.vue';
 import axios from 'axios';
 import { getUserAddForm } from '/@service/user';
 import { msgbox } from '/@service/common';
+import { hi } from 'date-fns/locale';
 export default {
   data() {
     return {
@@ -58,12 +59,7 @@ export default {
     this.projectCode = sessionStorage.getItem('projectCode');
     this.projectName = sessionStorage.getItem('projectName');
 
-    setData.set('data_id', this.data_id);
-    if (this.projectCode == 12 || this.projectCode == 13) {
-      setData.set('work_id', 5);
-    } else {
-      setData.set('work_id', this.projectCode);
-    }
+    setData.set('work_id', this.projectCode);
 
     getUserAddForm(setData).then((result) => {
       this.columnList = result.data;
@@ -146,12 +142,13 @@ export default {
       this.checkForm();
       if (this.isPassValidatoin) {
         var inputData = JSON.stringify(this.inputValueList);
+        var work_id = this.projectCode;
 
         axios({
           method: 'post',
-          url: '/web/db/edit',
+          url: '/web/db/store',
           data: {
-            data_id: this.data_id,
+            work_id: work_id,
             user_id: this.user_id,
             data_json: inputData,
             data_status: this.data_status,

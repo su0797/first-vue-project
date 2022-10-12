@@ -104,6 +104,8 @@ export default {
     getUserWorkId(setData).then((result) => {
       this.projectList = result.data.data;
     });
+
+    this.showTable;
   },
 
   mounted() {
@@ -168,53 +170,51 @@ export default {
       sessionStorage.setItem('taskCode', this.selectedTaskCode);
       this.showTable();
     },
+    showTable() {
+      if (this.pjName != '' && this.tkName != '') {
+        const setData = new FormData();
+        this.projectCode = sessionStorage.getItem('projectCode');
+        this.projectName = sessionStorage.getItem('projectName');
+
+        setData.set('work_id', this.projectCode);
+
+        getUserAddForm(setData).then((result) => {
+          this.columnList = result.data;
+          this.getData();
+        });
+      }
+    },
     getData() {
-      const setData = new FormData();
+      const setData2 = new FormData();
 
-      setData.set('work_id', this.selectedProjectCode);
-      setData.set('data_status', this.selectedTaskCode);
-      setData.set('user_id', this.user_id);
-      setData.set('row_count', this.itemsPerPage);
-      setData.set('page_no', this.currentPage);
+      setData2.set('work_id', this.selectedProjectCode);
+      setData2.set('data_status', this.selectedTaskCode);
+      setData2.set('user_id', this.user_id);
+      setData2.set('row_count', this.itemsPerPage);
+      setData2.set('page_no', this.currentPage);
 
-      getUserWorkData(setData).then((result) => {
+      getUserWorkData(setData2).then((result) => {
         this.dataList = result.data;
         this.totalItems = this.dataList.total_count;
+        this.tableHeaderList = [];
         if (this.dataList != null) {
           this.dataListValue = [];
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
+            this.dataListValue.push(arr);
+          }
+          for (let i = 0; i < this.columnList.data.length; i++) {
             for (let j = 0; j < this.columnList.data.length; j++) {
               if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
                 this.tableHeaderList.push(this.columnList.data[j].meta_name);
               }
             }
-
-            this.dataListValue.push(arr);
-            this.searchOptionList.english = this.dataListKey;
-            this.searchOptionList.korean = this.tableHeaderList;
           }
+          this.searchOptionList.english = this.dataListKey;
+          this.searchOptionList.korean = this.tableHeaderList;
         }
       });
-    },
-    showTable() {
-      if (this.pjName != '' && this.tkName != '') {
-        const setData2 = new FormData();
-        this.projectCode = sessionStorage.getItem('projectCode');
-        this.projectName = sessionStorage.getItem('projectName');
-
-        if (this.projectCode == 12 || this.projectCode == 13) {
-          setData2.set('work_id', 5);
-        } else {
-          setData2.set('work_id', this.projectCode);
-        }
-
-        getUserAddForm(setData2).then((result) => {
-          this.columnList = result.data;
-        });
-        this.getData();
-      }
     },
     onClickHandler(page) {
       this.currentPage = page;
@@ -247,14 +247,18 @@ export default {
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
+          }
+
+          for (let i = 0; i < this.columnList.data.length; i++) {
             for (let j = 0; j < this.columnList.data.length; j++) {
               if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
                 this.tableHeaderList.push(this.columnList.data[j].meta_name);
               }
             }
-            this.searchOptionList.english = this.dataListKey;
-            this.searchOptionList.korean = this.tableHeaderList;
           }
+          this.searchOptionList.english = this.dataListKey;
+          this.searchOptionList.korean = this.tableHeaderList;
+
           this.dataListValue = [];
           for (let i = 0; i < this.dataList.data.length; i++) {
             this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
