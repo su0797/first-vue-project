@@ -50,7 +50,6 @@ export default {
   },
   created() {
     this.user_id = this.$cookies.get('userId');
-    this.work_user_name = this.$cookies.get('name');
 
     const setAddData = new FormData();
     const setEditData = new FormData();
@@ -59,8 +58,12 @@ export default {
     this.projectName = sessionStorage.getItem('projectName');
     this.data_id = sessionStorage.getItem('data_id');
 
-    setAddData.set('work_id', this.projectCode);
     setEditData.set('data_id', this.data_id);
+    if (this.projectCode == 12 || this.projectCode == 13) {
+      setAddData.set('work_id', 5);
+    } else {
+      setAddData.set('work_id', this.projectCode);
+    }
 
     getUserAddForm(setAddData).then((result) => {
       this.columnList = result.data;

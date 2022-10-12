@@ -54,8 +54,12 @@ export default {
     this.projectName = sessionStorage.getItem('workName');
     this.data_id = sessionStorage.getItem('data_id');
 
-    setAddData.set('work_id', this.projectCode);
     setEditData.set('data_id', this.data_id);
+    if (this.projectCode == 12 || this.projectCode == 13) {
+      setAddData.set('work_id', 5);
+    } else {
+      setAddData.set('work_id', this.projectCode);
+    }
 
     getUserAddForm(setAddData).then((result) => {
       this.columnList = result.data;
