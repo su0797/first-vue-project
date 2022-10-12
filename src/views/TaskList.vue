@@ -221,11 +221,7 @@ export default {
       this.projectCode = sessionStorage.getItem('projectCode');
       this.projectName = sessionStorage.getItem('projectName');
 
-      if (work_id == 12 || work_id == 13) {
-        setData2.set('work_id', 5);
-      } else {
-        setData2.set('work_id', work_id);
-      }
+      setData2.set('work_id', work_id);
 
       getUserAddForm(setData2).then((result) => {
         this.columnList = result.data;
@@ -307,6 +303,8 @@ export default {
 
         getUserSearch(setSearch).then((result) => {
           this.dataList = result.data;
+
+          this.totalItems = this.dataList.data.length;
 
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
