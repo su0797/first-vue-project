@@ -65,8 +65,8 @@
             <th></th>
             <th scope="col">최종수정날짜</th>
             <th scope="col" v-if="selectedTask == 6">작성자</th>
-            <th :key="i" v-for="(datakey, i) in dataListKey">
-              {{ datakey }}
+            <th scope="col" v-for="(th, i) in tableHeaderList" :key="i">
+              {{ th }}
             </th>
           </tr>
         </thead>
@@ -217,6 +217,18 @@ export default {
         setData.set('page_no', this.currentPage);
       }
 
+      const setData2 = new FormData();
+      this.projectCode = sessionStorage.getItem('projectCode');
+      this.projectName = sessionStorage.getItem('projectName');
+
+      if (work_id == 12 || work_id == 13) {
+        setData2.set('work_id', 5);
+      }
+
+      getUserAddForm(setData2).then((result) => {
+        this.columnList = result.data;
+        console.log(this.columnList);
+      });
       getDataInfo(setData).then((result) => {
         this.dataList = result.data;
 
@@ -235,7 +247,6 @@ export default {
                 this.tableHeaderList.push(this.columnList.data[j].meta_name);
               }
             }
-
             this.searchOptionList.english = this.dataListKey;
             this.searchOptionList.korean = this.tableHeaderList;
           }
@@ -273,16 +284,6 @@ export default {
     showAll() {
       // 셀렉트에 맞는
       if (this.selectedTaskName !== '') {
-        const setData2 = new FormData();
-        this.projectCode = sessionStorage.getItem('projectCode');
-        this.projectName = sessionStorage.getItem('projectName');
-
-        setData2.set('work_id', this.projectCode);
-
-        getUserAddForm(setData2).then((result) => {
-          this.columnList = result.data;
-        });
-
         this.getData();
       }
       this.selectList = [];
