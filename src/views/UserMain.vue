@@ -47,8 +47,8 @@
             <th></th>
             <th scope="col">데이터 상태</th>
             <th scope="col">최종수정날짜</th>
-            <th scope="col" v-for="(dataKey, i) in dataListKey" :key="i">
-              {{ dataKey }}
+            <th scope="col" v-for="(th, i) in tableHeaderList" :key="i">
+              {{ th }}
             </th>
           </tr>
         </thead>
@@ -91,7 +91,7 @@
 
 <script>
 import { msgbox } from '../service/common';
-import { getUserSearch, getUserWorkData, getUserWorkId } from '/@service/user';
+import { getUserSearch, getUserWorkData, getUserWorkId, getUserAddForm } from '/@service/user';
 
 export default {
   created() {
@@ -147,6 +147,8 @@ export default {
       ],
       projectList: [],
       tableTaskList: ['삭제', '할당전', '할일', '임시저장', '실측', '조사불가', '완료'],
+      columnList: [],
+      tableHeaderList: [],
     };
   },
 
@@ -180,6 +182,11 @@ export default {
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
+            for (let j = 0; j < this.columnList.data.length; j++) {
+              if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+                this.tableHeaderList.push(this.columnList.data[j].meta_name);
+              }
+            }
             this.searchOptionList = this.dataListKey;
             this.dataListValue.push(arr);
           }
@@ -188,6 +195,15 @@ export default {
     },
     showTable() {
       if (this.pjName != '' && this.tkName != '') {
+        const setData2 = new FormData();
+        this.projectCode = sessionStorage.getItem('projectCode');
+        this.projectName = sessionStorage.getItem('projectName');
+
+        setData2.set('work_id', this.projectCode);
+
+        getUserAddForm(setData2).then((result) => {
+          this.columnList = result.data;
+        });
         this.getData();
       }
     },
@@ -222,6 +238,11 @@ export default {
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
+            for (let j = 0; j < this.columnList.data.length; j++) {
+              if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+                this.tableHeaderList.push(this.columnList.data[j].meta_name);
+              }
+            }
             this.searchOptionList = this.dataListKey;
           }
           this.dataListValue = [];
