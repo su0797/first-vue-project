@@ -204,7 +204,11 @@ export default {
         this.projectCode = sessionStorage.getItem('projectCode');
         this.projectName = sessionStorage.getItem('projectName');
 
-        setData2.set('work_id', this.projectCode);
+        if (this.projectCode == 12 || this.projectCode == 13) {
+          setData2.set('work_id', 5);
+        } else {
+          setData2.set('work_id', this.projectCode);
+        }
 
         getUserAddForm(setData2).then((result) => {
           this.columnList = result.data;
