@@ -27,14 +27,13 @@
       :divideBtn="divideBtn"
       @cancel="cancelModal"
       @checkRadio="changeRadio($event)"
-      @divideTaskTodo="divideTaskTodo"
-      @divideTaskLocation="divideTaskLocation"
+      @divideTask="divideTask($event)"
     />
 
     <div class="flex">
       <!-- 업무분배 버튼 영역 -->
       <div class="divide-area flex-area" v-if="selectedTask && selectedTaskName !== '완료' && selectedWork">
-        <button class="btn btn-secondary" type="button" v-if="selectList.length !== 0" @click="openModal()" data-bs-toggle="modal" data-bs-target="#taskDivision">업무 분배</button>
+        <button class="btn btn-secondary" type="button" v-if="selectList.length !== 0" @click="getDividenUser()" data-bs-toggle="modal" data-bs-target="#taskDivision">업무 분배</button>
         <button class="btn btn-secondary" type="button" v-else @click="this.msgbox('분배할 데이터를 선택해주세요.')">업무 분배</button>
       </div>
       <div class="divide-area flex-area" v-else></div>
@@ -213,7 +212,7 @@ export default {
       getUserAddForm(setData2).then((result) => {
         this.columnList = result.data;
       });
-      // 데이터 불러오기
+      // 불러올 데이터 세팅하기
       setData.set('work_id', work_id);
       setData.set('data_status', this.selectedTask);
       setData.set('row_count', this.itemsPerPage);
@@ -222,7 +221,7 @@ export default {
       if (this.selectedTask == 4) {
         setData.set('user_id', -1);
       }
-
+      // 데이터 불러오기
       getDataInfo(setData).then((result) => {
         this.tableHeaderList = [];
         this.dataList = result.data;
@@ -233,26 +232,25 @@ export default {
             this.dataId[i] = this.dataList.data[i].data_id;
           }
 
+          this.dataListValue = [];
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
-
+            this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
+          }
+          for (let i = 0; i < this.dataListValue.length; i++) {
+            this.selectedTaskList[i] = this.dataListValue[i];
+          }
+          // table header 이름으로 매칭
+          for (let i = 0; i < this.columnList.data.length; i++) {
             for (let j = 0; j < this.columnList.data.length; j++) {
               if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
                 this.tableHeaderList.push(this.columnList.data[j].meta_name);
               }
-            }
-            this.searchOptionList.english = this.dataListKey;
-            this.searchOptionList.korean = this.tableHeaderList;
+            }    
           }
-          this.dataListValue = [];
-          for (let i = 0; i < this.dataList.data.length; i++) {
-            this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
-          }
-
-          for (let i = 0; i < this.dataListValue.length; i++) {
-            this.selectedTaskList[i] = this.dataListValue[i];
-          }
+          this.searchOptionList.english = this.dataListKey;
+          this.searchOptionList.korean = this.tableHeaderList;
         }
       });
     },
@@ -303,25 +301,25 @@ export default {
 
           this.totalItems = this.dataList.data.length;
 
+          this.dataListValue = [];
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
             this.dataListKey = Object.keys(arr);
-
-            for (let j = 0; j < this.columnList.data.length; j++) {
-              if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
-                this.tableHeaderList.push(this.columnList.data[j].meta_name);
-              }
-            }
-            this.searchOptionList.english = this.dataListKey;
-            this.searchOptionList.korean = this.tableHeaderList;
-          }
-          this.dataListValue = [];
-          for (let i = 0; i < this.dataList.data.length; i++) {
             this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
           }
           if (this.dataListValue.length === 0) {
             this.searchedNone = true;
           }
+          // table header 이름으로 매칭
+          for (let i = 0; i < this.columnList.data.length; i++) {
+            for (let j = 0; j < this.columnList.data.length; j++) {
+              if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+                this.tableHeaderList.push(this.columnList.data[j].meta_name);
+              }
+            }    
+          }
+          this.searchOptionList.english = this.dataListKey;
+          this.searchOptionList.korean = this.tableHeaderList;
         });
 
         this.resetSearchOption();
@@ -342,9 +340,6 @@ export default {
     onClickHandler(page) {
       this.currentPage = page;
       this.showAll();
-    },
-    openModal() {
-      this.getDividenUser();
     },
     cancelModal() {
       this.selectedUser = '';
@@ -373,7 +368,7 @@ export default {
         }
       });
     },
-    divideTaskTodo() {
+    divideTask(e) {
       for (let i = 0; i < this.user.id.length; i++) {
         if (this.user.name[i] === this.selectedUser) {
           this.selectedUserId = this.user.id[i];
@@ -388,41 +383,23 @@ export default {
       const setData = new FormData();
       setData.set('user_id', this.selectedUserId);
       setData.set('idsArray', this.idsArray);
-      setData.set('data_status', 2);
-
-      this.divideTask(setData);
-    },
-    divideTaskLocation() {
-      for (let i = 0; i < this.user.id.length; i++) {
-        if (this.user.name[i] === this.selectedUser) {
-          this.selectedUserId = this.user.id[i];
-        }
+      // 할일분배, 실측분배 분기
+      if(e.target.value === "todo") {
+        setData.set('data_status', 2);
+      } else if(e.target.value === "location") {
+        setData.set('data_status', 4);
       }
-      this.tasks = this.selectList;
-
-      for (let i = 0; i < this.tasks.length; i++) {
-        this.idsArray[i] = this.dataId[this.tasks[i]];
-      }
-
-      const setData = new FormData();
-      setData.set('user_id', this.selectedUserId);
-      setData.set('idsArray', this.idsArray);
-      setData.set('data_status', 4);
-
-      this.divideTask(setData);
-    },
-    divideTask(setData) {
+      
       setWorkDistribute(setData).then((result) => {
-        console.log('result : ', result);
         if (result.error.code != 0) {
           this.msgbox(result.error.msg);
           return;
         }
-        this.msgbox(this.msg.SUCCESS);
+        this.msgbox(this.selectedUser + "님께 분배가 완료되었습니다.");
 
         this.cancelModal();
         this.selectList = [];
-        this.$router.go();
+        this.getData();
       });
     },
   },

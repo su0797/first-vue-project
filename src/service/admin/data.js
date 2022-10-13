@@ -92,13 +92,3 @@ export async function setWorkDistribute(param, callback) {
     throw new Error(err);
   }
 }
-// export const getDataInfo = (param) => {
-//   let data = {
-//     work_id: param.get('work_id'),
-//     data_status: param.get('data_status')
-//   }
-
-//   const result = axios.post('/web/manager/work/info', data);
-//   return result.data;
-
-// }

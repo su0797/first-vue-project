@@ -15,8 +15,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="$emit('cancel')">취소</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="$emit('divideTaskTodo')" :disabled="divideBtn">할일 분배</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="$emit('divideTaskLocation')" :disabled="divideBtn">실측 분배</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" value="todo" @click="$emit('divideTask', $event)" :disabled="divideBtn">할일 분배</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" value="location" @click="$emit('divideTask', $event)" :disabled="divideBtn">실측 분배</button>
         </div>
       </div>
     </div>
