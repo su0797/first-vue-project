@@ -12,28 +12,28 @@
 			</select>
 		</div>
 		<h4 class="title">{{ user_name }}님의<br class="sp" /> 업무현황 페이지</h4>
-		<div class="total-percent bg">
+		<div class="total-percent bg" >
 			<div class="main">
 				<h5 class="theme_total">
 					{{ projects[assignment_id-1] }} <br class="sp" /><span class="theme_name">전체</span>
 				</h5>
 				<p class="user_per">
-					{{ progress[0] }}%<br class="sp" /><span class="avg_per"
+					{{ userAss_progress }}%<br class="sp" /><span class="avg_per"
 						>(평균 {{ avg_progress[0] }}%)</span
 					>
 				</p>
 			</div>
 			<p class="temp_storage">
-				・임시저장 : <br class="sp" /><span class="ts">{{ userAssigmentStatus.data_status3 }}</span
+				・임시저장 : <br class="sp" /><span class="ts">{{ userAssSt.data_status3 }}</span
 				>개
 			</p>
 			<p class="actual_measurement">
 				・실측 : <br class="sp" />
-				<span class="am">{{ userAssigmentStatus.data_status4 }}</span
+				<span class="am">{{ userAssSt.data_status4 }}</span
 				>개
 			</p>
 			<p class="completion">
-				・완료 : <br class="sp" /><span class="com">{{ userAssigmentStatus.data_status6 }}</span
+				・완료 : <br class="sp" /><span class="com">{{ userAssSt.data_status6 }}</span
 				>개
 			</p>
 		</div>
@@ -43,7 +43,7 @@
 				<div class="main">
 					<h5 class="theme_total" @change="showProject($event)">{{ pjName }}</h5>
 					<p class="user_per">
-						{{ progress[0] }}% <br class="sp" /><span class="avg_per"
+						{{ }}% <br class="sp" /><span class="avg_per"
 							>(평균 {{ avg_progress[0] }}%)</span
 						>
 					</p>
@@ -138,11 +138,16 @@ export default {
 			assignment_id: '',
 			work_name:'',
 
-			userAssigmentStatus:[],
+			userAssSt:[],
 			userWorkStatus:[],
+
+			data_status1:'',
+			data_status2:'',
 			data_status3:'',
 			data_status4:'',
+			data_status5:'',
 			data_status6:'',
+			userAss_progress:0,
 		};
 	},
 	created() {
@@ -150,14 +155,18 @@ export default {
 		this.user_id = sessionStorage.getItem('user_id')
 		this.assignment_id = sessionStorage.getItem('assignment_id')
 		
-		// 유저의 각 프로젝트 별 전체  api
+		// 유저의 각 프로젝트 별 전체 api
 		axios.post('http://49.50.164.147:8090/web/work/nums',{
 			assignment_id : this.assignment_id,
 			user_id : this.user_id
 		}).then(({ data }) => {
-			this.userAssigmentStatus = data.data.data;
-			console.log(this.userAssigmentStatus);
+			this.userAssSt = data.data.data;
+
+			//유저 프로젝트 작업량
+			this.userAss_progress = this.userAssSt.data_status6/(this.userAssSt.data_status1+this.userAssSt.data_status2+this.userAssSt.data_status3+this.userAssSt.data_status4+this.userAssSt.data_status5+this.userAssSt.data_status6)*100 ;
+			this.userAss_progress = this.userAss_progress.toPrecision(2) ;
 		})
+
 	},
 	mounted() {
 		const setData = new FormData();
@@ -176,25 +185,9 @@ export default {
 				work_id : this.selectedProjectCode
 			}).then(({ data }) => {
 				this.userWorkStatus = data.data.data;
-				console.log(this.userWorkStatus);
+				// console.log(this.userWorkStatus);
 			})
 			this.showTable();
-		},
-		//유저 프로젝트 작업량
-		userAssignment_progress(){
-
-		},
-		// 프로젝트 전체 작업량
-		totalAssignment_progress(){
-
-		},
-		// 유저 과제별 작업량
-		userWork_progress(){
-
-		},
-		// 전체 과제별 작업량
-		totalWork_progress(){
-
 		},
 		showTable() {
 			if (this.pjName !== '') {
@@ -220,14 +213,19 @@ export default {
 		goInput() {
 			this.$router.replace('/');
 		},
-		// total_progress( data_status4 , data_status6 , data_status2) {
-        // this.totals =  data_status4 + data_status6 + data_status2
-        // // console.log(this.totals);
-		// }, 
-		// asd(data_status6, totals) {
-		// 	this.asds = Math.round(data_status6/totals)
-		// 	// console.log(this.asds);
-		// },
+
+		// 프로젝트 전체 작업량
+		totalAssignment_progress(){
+
+		},
+		// 유저 과제별 작업량
+		userWork_progress(){
+
+		},
+		// 전체 과제별 작업량
+		totalWork_progress(){
+
+		},
 
 	},
 };
