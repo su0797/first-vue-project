@@ -105,8 +105,6 @@ export default {
     getUserWorkId(setData).then((result) => {
       this.projectList = result.data.data;
     });
-
-    this.showTable;
   },
 
   mounted() {
@@ -172,7 +170,7 @@ export default {
       this.showTable();
     },
     showTable() {
-      if (this.pjName != '' && this.tkName != '') {
+      if (this.pjName !== null && this.tkName !== null) {
         const setData = new FormData();
         this.projectCode = sessionStorage.getItem('projectCode');
         this.projectName = sessionStorage.getItem('projectName');

@@ -119,7 +119,6 @@ export default {
       for (var key in this.inputValueList) {
         if (this.inputValueList[key] === null || this.inputValueList[key] === '') {
           this.inputValueList[key] = null;
-          console.log(key);
           this.errors['form'].push('Error');
         }
       }
