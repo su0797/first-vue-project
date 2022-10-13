@@ -10,7 +10,7 @@
       </div>
       <div class="input-group mb-3">
         <label class="form-label" for="user_email">아이디(이메일)</label>
-        <input type="text" class="form-control" id="user_email" name="user_email" v-model="user_email" ref="user_email" placeholder="예) startup@startuplab.team" required />
+        <input type="text" class="form-control" id="user_email" name="user_email" v-model="user_email" ref="user_email"  placeholder="예) startup@startuplab.team" required />
       </div>
       <div class="input-group mb-3">
         <label class="form-label" for="user_password">비밀번호</label>
@@ -52,28 +52,86 @@ export default {
       user_phone: '',
       assignment_id: '',
       isPassValidation: false,
-      errors: [],
+      isNamePassValidation: false,
+      isEmailPassValidation: false,
+      isPWPassValidation: false,
+      isPhonePassValidation: false,
+      isTaskPassValidation: false,
+      msg: '',
+      errors:[],
     };
   },
   methods: {
-    checkValue() {
-      if (!isNotEmpty(this.user_name) || !isNotEmpty(this.user_email) || !isNotEmpty(this.user_password) || !isNotEmpty(this.user_phone) || !isNotEmpty(this.assignment_id)) {
-        this.msgbox('입력란을 채워주세요.');
-        this.errors.push('error');
-      } 
+    checkForm() {
+      this.errors = [];
+      this.checkTask();
+      this.checkPhone();
+      this.checkPassWord();
+      this.checkEmail();
+      this.checkName();
       if (this.errors.length != 0) {
-        var forms = document.querySelectorAll('.needs-validation');
-        Array.prototype.slice.call(forms).forEach(function (form) {
-          form.classList.add('was-validated');
-        });
+      msgbox(this.msg)
       } else {
         this.isPassValidation = true;
+      }
+      },
+
+
+    checkEmail() {
+      const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+      if (regex.test(this.user_email)){
+        this.isEmailPassValidation = true;
+      } else {
+        this.msg = '이메일 형식에 맞게 입력해주세요'
+        this.errors.push("error")
+        this.$refs.user_email.focus();
+      }
+    },
+
+    checkPhone() {
+      const regex = /^\d{3}-\d{4}-\d{4}$/;
+      if (regex.test(this.user_phone)){
+        this.isPhonePassValidation = true;
+      } else {
+        this.msg = '휴대폰 형식에 맞게 입력해주세요'
+        this.errors.push("error")
+        this.$refs.user_phone.focus();
+      }
+    },
+
+    checkName() {
+       if (isNotEmpty(this.user_name)){
+        this.isNamePassValidation = true;
+      } else {
+       this.msg = '이름을 입력해주세요'
+       this.errors.push("error")
+       this.$refs.user_name.focus();
+      }
+    },
+
+    checkPassWord() {
+       if (isNotEmpty(this.user_password)){
+        this.isPWPassValidation = true;
+      } else {
+        this.msg = '비밀번호를 입력해주세요'
+        this.errors.push("error")
+        this.$refs.user_password.focus();
+      }
+    },
+
+    checkTask() {
+       if (isNotEmpty(this.assignment_id)){
+        this.isTaskPassValidation = true;
+      } else {
+      this.msg = '과제를 선택해주세요'
+      this.errors.push("error")
+      this.$refs.assignment_id.focus();
       }
     },
 
     registUser() {
-      this.checkValue();
-      if (this.isPassValidation) {
+      this.checkForm();
+      if(this.isPassValidation){
         axios
           .post('http://49.50.164.147:8090/common/user/join', {
             user_name: this.user_name,
@@ -88,9 +146,9 @@ export default {
             }
           msgbox(msg);
           this.moveAdminMain();
-          });
-      }
+          });}
     },
+
     moveAdminMain() {
       this.$router.go(-1);
     },

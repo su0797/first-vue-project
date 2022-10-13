@@ -43,6 +43,7 @@ export default {
   props: {
       assignment_id: Number,
       data_status1: Number,
+      data_status2: Number,
       data_status6: Number,
       data_status3: Number,
       data_status4: Number,
@@ -56,14 +57,14 @@ export default {
   },
   methods: {
     total() {
-      this.totals = this.data_status5 + this.data_status4 + this.data_status3 + this.data_status6 + this.data_status1
+      this.totals = this.data_status5 + this.data_status4 + this.data_status3 + this.data_status6 + this.data_status1 +this.data_status2
     }, 
     avg() {
       if (this.totals == 0) { 
         this.avgs = 0;
       }
       else {  
-        this.avgs = Math.round((this.data_status5/this.totals)*100);
+        this.avgs = Math.round((this.data_status5/this.totals)*100).toFixed(1);
       }
     },
     numberWithCommas(x) { 

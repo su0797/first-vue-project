@@ -1,7 +1,7 @@
 <template>
   <div style="text-align: right">
-    <button type="submit" class="btn btn-secondary">
-      <router-link to="/admin/user/list"><a>인턴관리</a></router-link>
+    <button type="submit" class="btn btn-secondary" @click="moveUserListPage">
+      <a>인턴관리</a>
     </button>
   </div>
 
@@ -35,8 +35,12 @@ export default {
   components: {
     AdminMainView,
   },
-  methods: {},
-};
+  methods: {
+    moveUserListPage() {
+        this.$router.push('/admin/user/list').catch(() => {});
+  },
+}
+}
 </script>
 
 <style scoped>
