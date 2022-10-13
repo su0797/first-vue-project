@@ -97,6 +97,7 @@ export default {
   created() {
     this.assignment_id = this.$cookies.get('assignmentId');
     this.user_id = this.$cookies.get('userId');
+    sessionStorage.removeItem('isAddPage');
 
     const setData = new FormData();
     setData.set('assignment_id', this.assignment_id);

@@ -7,11 +7,11 @@
         <label class="form-check-label" for="inlineRadio1">임시저장</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" v-model="radioValue" :value="4" @change="$emit('radioFromChild', $event)" required />
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" v-model="radioValue" :value="4" @change="$emit('radioFromChild', $event)" required :disabled="this.isAddPage" />
         <label class="form-check-label" for="inlineRadio2">실측필요</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" v-model="radioValue" :value="5" @change="$emit('radioFromChild', $event)" required />
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" v-model="radioValue" :value="5" @change="$emit('radioFromChild', $event)" required :disabled="this.isAddPage" />
         <label class="form-check-label" for="inlineRadio3">조사불가</label>
       </div>
       <div class="form-check form-check-inline">
@@ -24,9 +24,17 @@
 
 <script>
 export default {
+  created() {
+    this.isAddPage = sessionStorage.getItem('isAddPage');
+  },
+
   props: {
     label: String,
     radioValue: Number,
+  },
+
+  data() {
+    isAddPage: false;
   },
   methods: {},
 };
@@ -63,7 +71,7 @@ export default {
   margin-right: 5px;
 }
 .form-check-label {
-  margin: 5px 0px auto 5px;
+  margin: 3px 0px auto 5px;
 }
 @media (max-width: 768px) {
   .input-group {

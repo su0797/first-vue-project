@@ -5,10 +5,10 @@
     </div>
     <form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
       <div v-for="(column, i) in columnList.data" :key="i">
-        <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_key] = inputValue)" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-if="column.meta_type === '1'" />
-        <UserSelectBox :label="column.meta_name" :selectValue="(inputValueList[column.meta_key] = selectValue)" @selectFromChild="inputValueList[column.meta_key] = Number($event.target.value)" v-else-if="column.meta_type === '2'" />
-        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_key] = note)" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-else-if="column.meta_type === '5'" />
-        <UserRadioBox :label="column.meta_name" :radioValue="(inputValueList[column.meta_key] = radioValue)" @radioFromChild="inputValueList[column.meta_key] = Number($event.target.value)" v-else-if="column.meta_type === '4'" />
+        <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_key] = null)" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-if="column.meta_type === '1'" />
+        <UserSelectBox :label="column.meta_name" :selectValue="(inputValueList[column.meta_key] = '')" @selectFromChild="inputValueList[column.meta_key] = Number($event.target.value)" v-else-if="column.meta_type === '2'" />
+        <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_key] = null)" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-else-if="column.meta_type === '5'" />
+        <UserRadioBox :label="column.meta_name" :radioValue="(inputValueList[column.meta_key] = null)" @radioFromChild="inputValueList[column.meta_key] = Number($event.target.value)" v-else-if="column.meta_type === '4'" />
       </div>
       <UserRadioBox :label="dataStatusLabel" :radioValue="(data_status = null)" @radioFromChild="changeStatusValue($event)" />
       <button type="submit" class="btn btn-secondary">저장</button>
@@ -25,7 +25,7 @@ import UserNote from '/@components/UserNote.vue';
 import axios from 'axios';
 import { getUserAddForm } from '/@service/user';
 import { msgbox } from '/@service/common';
-import { hi } from 'date-fns/locale';
+
 export default {
   data() {
     return {
@@ -41,6 +41,7 @@ export default {
         status: [],
       },
       user_id: '',
+      assignment_id: '',
       projectName: '',
       projectCode: '',
       znCode: null,
@@ -53,7 +54,9 @@ export default {
     };
   },
   created() {
+    sessionStorage.setItem('isAddPage', true);
     this.user_id = this.$cookies.get('userId');
+    this.assignment_id = this.$cookies.get('assignmentId');
     const setData = new FormData();
 
     this.projectCode = sessionStorage.getItem('projectCode');
@@ -114,8 +117,9 @@ export default {
         status: [],
       };
       for (var key in this.inputValueList) {
-        if (this.inputValueList[key] == null || this.inputValueList[key] == '') {
+        if (this.inputValueList[key] === null || this.inputValueList[key] === '') {
           this.inputValueList[key] = null;
+          console.log(key);
           this.errors['form'].push('Error');
         }
       }
@@ -148,6 +152,7 @@ export default {
           method: 'post',
           url: '/web/db/store',
           data: {
+            assignment_id: this.assignment_id,
             work_id: work_id,
             user_id: this.user_id,
             data_json: inputData,

@@ -14,14 +14,15 @@
 export default {
   props: {
     label: String,
-    selectValue: Number,
+    selectValue: String,
   },
+
   data() {
     return {
       selectOptionLists: [
-        { key: '없음', value: 0 },
-        { key: '있음', value: 1 },
-        { key: '확인필요', value: 2 },
+        { key: 'X', value: '0' },
+        { key: 'O', value: '1' },
+        { key: '확인필요', value: '2' },
       ],
     };
   },

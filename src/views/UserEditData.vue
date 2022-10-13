@@ -14,7 +14,7 @@
         />
         <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_key] = inputValueList[column.meta_key])" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-else-if="column.meta_type === '5'" />
       </div>
-      <UserRadioBox :radioValue="(data_status = data_status)" @radioFromChild="changeStatusValue($event)" />
+      <UserRadioBox :label="dataStatusLabel" :radioValue="(data_status = data_status)" @radioFromChild="changeStatusValue($event)" />
       <button type="submit" class="btn btn-secondary">저장</button>
     </form>
   </div>
@@ -46,6 +46,7 @@ export default {
       user_name: '',
       data_status: 0,
       isPassValidatoin: false,
+      dataStatusLabel: '데이터 상태',
     };
   },
   created() {
@@ -87,7 +88,7 @@ export default {
         status: [],
       };
       for (var key in this.inputValueList) {
-        if (this.inputValueList[key] == '' || this.inputValueList[key] == null) {
+        if (this.inputValueList[key] === '' || this.inputValueList[key] === null) {
           this.inputValueList[key] = null;
           this.errors['form'].push('Error');
         }
@@ -127,8 +128,6 @@ export default {
           },
         })
           .then((res) => {
-            console.log(inputData);
-            console.log(inputData);
             e.target.reset();
             this.inputValueList = {};
             var forms = document.querySelectorAll('.needs-validation');
