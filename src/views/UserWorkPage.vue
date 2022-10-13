@@ -212,6 +212,7 @@ export default {
 				const setData = new FormData();
 
 				setData.set('work_id', this.selectedProjectCode);
+				setData.set('user_id', this.user_id);
 
 				getDataInfo(setData).then((result) => {
 					this.dataList = result.data;
