@@ -92,3 +92,19 @@ export async function setWorkDistribute(param, callback) {
     throw new Error(err);
   }
 }
+
+export async function getUserDataNum(param, callback) {
+  try {
+    const data = {
+      work_id : param.get('work_id'),
+      assignment_id : param.get('assignment_id'),
+      user_id : param.get('user_id'),
+    };
+
+    const result = await axios.post('/web/work/nums', data);
+    if (callback) callback(result.data);
+    return result.data;
+  } catch (err) {
+    throw new Error(err);
+  }
+}

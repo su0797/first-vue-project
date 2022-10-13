@@ -19,7 +19,7 @@
 				</h5>
 				<p class="user_per">
 					{{ userAss_progress }}%<br class="sp" /><span class="avg_per"
-						>(평균 {{ avg_progress[0] }}%)</span
+						>(평균 {{ allUser_progress }}%)</span
 					>
 				</p>
 			</div>
@@ -43,22 +43,22 @@
 				<div class="main">
 					<h5 class="theme_total" @change="showProject($event)">{{ pjName }}</h5>
 					<p class="user_per">
-						{{ }}% <br class="sp" /><span class="avg_per"
-							>(평균 {{ avg_progress[0] }}%)</span
+						{{ userWork_progress }}% <br class="sp" /><span class="avg_per"
+							>(평균 {{ totalWork_progress }}%)</span
 						>
 					</p>
 				</div>
 
 				<p class="temp_storage">
-					・임시저장 : <br class="sp" /><span class="ts">{{ userWorkStatus.data_status3 }}</span
+					・임시저장 : <br class="sp" /><span class="ts">{{ userWorkSt.data_status3 }}</span
 					>개
 				</p>
 				<p class="actual_measurement">
-					・실측 : <br class="sp" /><span class="am">{{ userWorkStatus.data_status4 }}</span
+					・실측 : <br class="sp" /><span class="am">{{ userWorkSt.data_status4 }}</span
 					>개
 				</p>
 				<p class="completion">
-					・완료 : <br class="sp" /><span class="com">{{ userWorkStatus.data_status6 }}</span
+					・완료 : <br class="sp" /><span class="com">{{ userWorkSt.data_status6 }}</span
 					>개
 				</p>
 			</div>
@@ -76,8 +76,7 @@
 				</div>
 			</div>
 
-			<div class="table-responsive" v-if="selectedProjectCode">
-				
+			<div class="table-responsive" v-if="selectedProjectCode">			
 				<table class="table">
 					<thead>
 						<tr>
@@ -100,13 +99,6 @@
 						</tr>
 					</tbody>
 				</table>
-				<!-- <vue-awesome-paginate
-						:total-items="defineTotalItems"
-						:items-per-page="itemsPerPage"
-						:max-pages-shown="MaxPagesShown"
-						:current-page="currentPage"
-						:on-click="onClickHandler"
-						:show-breakpoint-buttons="false"/> -->
 			</div>
 		</div>
 	</div>
@@ -115,7 +107,7 @@
 <script>
 import axios from 'axios';
 import { getUserWorkId } from "/@service/user";
-import {getDataInfo} from "/@service/admin/data";
+import {getDataInfo, getUserDataNum} from "/@service/admin/data";
 
 export default {
 	data() {
@@ -139,53 +131,79 @@ export default {
 			work_name:'',
 
 			userAssSt:[],
-			userWorkStatus:[],
-
+			allAss_data:[],
+			allAss_dataTotal:0,
+			allUser_progress:0,
+			userAss_progress:0,
+			userWorkSt:[],
+			totalWork_progress:0,
+			userWork_progress:0,
 			data_status1:'',
 			data_status2:'',
 			data_status3:'',
 			data_status4:'',
 			data_status5:'',
 			data_status6:'',
-			userAss_progress:0,
 		};
 	},
 	created() {
 		this.user_name = sessionStorage.getItem('user_name')
 		this.user_id = sessionStorage.getItem('user_id')
 		this.assignment_id = sessionStorage.getItem('assignment_id')
-		
-		// 유저의 각 프로젝트 별 전체 api
-		axios.post('http://49.50.164.147:8090/web/work/nums',{
-			assignment_id : this.assignment_id,
-			user_id : this.user_id
-		}).then(({ data }) => {
-			this.userAssSt = data.data.data;
-
-			//유저 프로젝트 작업량
-			this.userAss_progress = this.userAssSt.data_status6/(this.userAssSt.data_status1+this.userAssSt.data_status2+this.userAssSt.data_status3+this.userAssSt.data_status4+this.userAssSt.data_status5+this.userAssSt.data_status6)*100 ;
-			this.userAss_progress = this.userAss_progress.toPrecision(2) ;
-		})
-
 	},
 	mounted() {
+		//assignment_id로 프로젝트명 불러오기
 		const setData = new FormData();
 		setData.set('assignment_id', this.assignment_id);
 
 		getUserWorkId(setData).then((result) => {
 			this.projectList = result.data.data;
 		});
+
+		// 전체 작업량 확인
+		const allAssData = new FormData();
+		const userAssData = new FormData();
+
+		allAssData.set('assignment_id', this.assignment_id)
+		userAssData.set('assignment_id', this.assignment_id)
+		userAssData.set('user_id', this.user_id)
+
+		// 해당 프로젝트의 총 작업량
+		getUserDataNum(allAssData).then((data) => {
+			this.allAss_data = data.data.data;
+			this.allAss_dataTotal = this.allAss_data.data_status1+this.allAss_data.data_status2+this.allAss_data.data_status3+this.allAss_data.data_status4+this.allAss_data.data_status5+this.allAss_data.data_status6;
+			//프로젝트 전체 인원의 완료 비율
+			this.allUser_progress = ((this.allAss_data.data_status6/this.allAss_dataTotal)*100).toPrecision(2) ;
+		})
+		//유저 프로젝트 작업량
+		getUserDataNum(userAssData).then((data) => {
+			this.userAssSt = data.data.data;
+			//유저의 작업비율
+			this.userAss_progress = ((this.userAssSt.data_status6/this.allAss_dataTotal)*100).toPrecision(2) ;
+		})
 	},
 	methods: {
 		showProject(e) {
 			this.pjName = e.target.options[e.target.options.selectedIndex].text;
 			// 유저의 프로젝트 > 과제별 전체 api
-			axios.post('http://49.50.164.147:8090/web/work/nums',{
-				user_id : this.user_id,
-				work_id : this.selectedProjectCode
-			}).then(({ data }) => {
-				this.userWorkStatus = data.data.data;
-				// console.log(this.userWorkStatus);
+			const allWorkData = new FormData();
+			const userWorkData = new FormData();
+			allWorkData.set('work_id', this.selectedProjectCode)
+			userWorkData.set('work_id', this.selectedProjectCode)
+			userWorkData.set('user_id', this.user_id)
+			
+			// 전체 work_id별 작업량
+			getUserDataNum(allWorkData).then((data) =>{
+				this.allWork_data = data.data.data;
+				this.allWork_dataTotal = this.allWork_data.data_status1+this.allWork_data.data_status2+this.allWork_data.data_status3+this.allWork_data.data_status4+this.allWork_data.data_status5+this.allWork_data.data_status6;
+				//work_id별 전체 인원의 완료 비율
+				this.totalWork_progress = ((this.allWork_data.data_status6/this.allWork_dataTotal)*100).toPrecision(2) ;
+			})
+			// 유저 work_id별 작업량
+			getUserDataNum(userWorkData).then((data) =>{
+				this.userWorkSt = data.data.data;
+				// 해당 유저의 work_id 완료 비율
+				this.userWork_progress = ((this.userWorkSt.data_status6/this.allWork_dataTotal)*100).toPrecision(2);
 			})
 			this.showTable();
 		},
@@ -196,7 +214,6 @@ export default {
 				setData.set('work_id', this.selectedProjectCode);
 
 				getDataInfo(setData).then((result) => {
-					// console.log('result: ', result);
 					this.dataList = result.data;
 
 					for (let i = 0; i < this.dataList.data.length; i++) {
@@ -213,20 +230,6 @@ export default {
 		goInput() {
 			this.$router.replace('/');
 		},
-
-		// 프로젝트 전체 작업량
-		totalAssignment_progress(){
-
-		},
-		// 유저 과제별 작업량
-		userWork_progress(){
-
-		},
-		// 전체 과제별 작업량
-		totalWork_progress(){
-
-		},
-
 	},
 };
 
