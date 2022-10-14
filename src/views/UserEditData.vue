@@ -162,16 +162,17 @@ h3 {
 }
 .buttons {
   display: flex;
-  margin: 50px auto;
+  margin: 35px auto;
   justify-content: center;
   align-items: center;
 }
 .btn-primary,
 .btn-secondary {
   width: 8%;
-  height: 40px;
+  height: 2%;
   border-radius: 10px;
   margin: 0 20px auto;
+  font-size: 0.9rem;
 }
 .btn-primary {
   background-color: #e17b45;

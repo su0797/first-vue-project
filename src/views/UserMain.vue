@@ -27,7 +27,7 @@
       <div class="flex-area"></div>
       <div class="search-area flex-area" v-if="selectedProjectCode && selectedTaskCode">
         <select v-model="selectedSearchOption" class="form-select" ref="searchSelect">
-          <option value="" selected>선택</option>
+          <option value="" selected disabled>선택</option>
           <option :value="searchOption" v-for="(searchOption, i) in searchOptionList.english" :key="i">
             {{ searchOptionList.korean[i] }}
           </option>
@@ -38,8 +38,9 @@
     </div>
 
     <!-- 테이블 -->
+    <div class="none-data" v-if="dataList.data.length == 0">해당 데이터가 없습니다.</div>
     <div class="none-data" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
-    <div class="table-responsive" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false">
+    <div class="table-responsive" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false && dataList.data.length != 0">
       <table class="table">
         <thead>
           <tr>
@@ -73,7 +74,7 @@
         </tbody>
       </table>
     </div>
-    <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false">
+    <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false && dataList.data.length != 0">
       <vue-awesome-paginate
         :total-items="this.totalItems"
         :max-pages-shown="this.MaxPagesShown"
@@ -95,11 +96,6 @@ import { getUserSearch, getUserWorkData, getUserWorkId, getUserAddForm } from '/
 
 export default {
   created() {
-    history.pushState(history.state, '', location.href);
-    window.onpopstate = function(event) {
-      history.go(1);
-    }
-    
     this.assignment_id = this.$cookies.get('assignmentId');
     this.user_id = this.$cookies.get('userId');
     sessionStorage.removeItem('isAddPage');
@@ -181,7 +177,6 @@ export default {
         this.projectName = sessionStorage.getItem('projectName');
 
         setData.set('work_id', this.projectCode);
-
         getUserAddForm(setData).then((result) => {
           this.columnList = result.data;
           this.getData();
@@ -201,7 +196,9 @@ export default {
         this.dataList = result.data;
         this.totalItems = this.dataList.total_count;
         this.tableHeaderList = [];
+
         if (this.dataList != null) {
+          this.dataListKey = [];
           this.dataListValue = [];
           for (let i = 0; i < this.dataList.data.length; i++) {
             const arr = JSON.parse(this.dataList.data[i].data_json);
@@ -244,7 +241,10 @@ export default {
         setSearch.set('data_status', this.selectedTaskCode);
         setSearch.set('columnName', this.selectedSearchOption);
         setSearch.set('keyword', this.searchedData);
-
+        this.searchOptionList = {
+          korean: [],
+          english: [],
+        };
         getUserSearch(setSearch).then((result) => {
           this.dataList = result.data;
           this.totalItems = this.dataList.data.length;

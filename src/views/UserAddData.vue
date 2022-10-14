@@ -72,39 +72,6 @@ export default {
     });
   },
   methods: {
-    openApi() {
-      new window.daum.Postcode({
-        oncomplete: (data) => {
-          var roadAddr = data.roadAddress;
-          var jibunAddr = data.jibunAddress;
-          var zoneCd = data.zonecode;
-          var extraRoadAddr = '';
-          var detailAddr = '';
-          if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-            extraRoadAddr += data.bname;
-          }
-          if (data.buildingName !== '' && data.apartment === 'Y') {
-            extraRoadAddr += extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName;
-          }
-          if (extraRoadAddr !== '') {
-            extraRoadAddr = ' (' + extraRoadAddr + ')';
-          }
-          document.getElementById('postcode').value = zoneCd;
-          document.getElementById('roadAddress').value = roadAddr;
-          document.getElementById('jibunAddress').value = jibunAddr;
-          if (roadAddr !== '') {
-            document.getElementById('extraAddress').value = extraRoadAddr;
-          } else {
-            document.getElementById('extraAddress').value = '';
-          }
-          this.rdAddress = roadAddr;
-          this.jbAddress = jibunAddr;
-          this.znCode = zoneCd;
-          this.extraRdAddress = extraRoadAddr;
-          this.detailAddress = detailAddr;
-        },
-      }).open();
-    },
     changeStatusValue(e) {
       this.data_status = Number(e.target.value);
       if (this.data_status != 2 && this.data_status != 6 && this.data_status != 4 && this.data_status != 5) {
@@ -119,6 +86,7 @@ export default {
         form: [],
         status: [],
       };
+
       for (var key in this.inputValueList) {
         if (this.inputValueList[key] === null || this.inputValueList[key] === '') {
           this.inputValueList[key] = null;
@@ -193,16 +161,17 @@ h3 {
 }
 .buttons {
   display: flex;
-  margin: 50px auto;
+  margin: 35px auto;
   justify-content: center;
   align-items: center;
 }
 .btn-primary,
 .btn-secondary {
   width: 8%;
-  height: 40px;
+  height: 2%;
   border-radius: 10px;
   margin: 0 20px auto;
+  font-size: 0.9rem;
 }
 .btn-primary {
   background-color: #e17b45;
