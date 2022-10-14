@@ -13,11 +13,11 @@
         </router-link>
       </div>
       
-      <div class="inform">
+      <div class="inform"  v-if="loginName!==null">
         <router-link to="/" @click="logout">
           <span>로그아웃</span>
         </router-link>
-        <div class="username" v-if="loginName!==null">
+        <div class="username">
           <span></span> <b><span class="empha">{{ loginName }}</span>님</b>
         </div>
       </div>
@@ -25,7 +25,7 @@
   </div>
 </template>
 <script>
-import { getLoginInfo, logout } from '/@service/login';
+import { logout } from '/@service/login';
 
 export default {
   emits: [],
