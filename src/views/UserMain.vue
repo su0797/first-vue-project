@@ -38,8 +38,8 @@
     </div>
 
     <!-- 테이블 -->
-    <div class="none-data" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
     <div class="none-data" v-if="dataNone">해당 데이터가 없습니다.</div>
+    <div class="none-data" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
     <div class="table-responsive" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false && dataNone === false">
       <table class="table">
         <thead>
@@ -199,6 +199,7 @@ export default {
         this.tableHeaderList = [];
 
         if (this.dataList.data.length !== 0) {
+          this.dataNone = false;
           this.dataListKey = [];
           this.dataListValue = [];
           for (let i = 0; i < this.dataList.data.length; i++) {
