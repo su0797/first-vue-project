@@ -38,9 +38,9 @@
     </div>
 
     <!-- 테이블 -->
-    <div class="none-data" v-if="dataList.data.length == 0">해당 데이터가 없습니다.</div>
     <div class="none-data" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
-    <div class="table-responsive" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false && dataList.data.length != 0">
+    <div class="none-data" v-if="dataNone">해당 데이터가 없습니다.</div>
+    <div class="table-responsive" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false && dataNone === false">
       <table class="table">
         <thead>
           <tr>
@@ -74,7 +74,7 @@
         </tbody>
       </table>
     </div>
-    <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false && dataList.data.length != 0">
+    <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false && dataNone === false">
       <vue-awesome-paginate
         :total-items="this.totalItems"
         :max-pages-shown="this.MaxPagesShown"
@@ -134,6 +134,7 @@ export default {
       tkName: '',
       selectedTaskCode: '',
       selectedProjectCode: '',
+      dataNone: false,
       searchedNone: false,
       dataList: [],
       dataListKey: [],
@@ -197,7 +198,7 @@ export default {
         this.totalItems = this.dataList.total_count;
         this.tableHeaderList = [];
 
-        if (this.dataList != null) {
+        if (this.dataList.data.length !== 0) {
           this.dataListKey = [];
           this.dataListValue = [];
           for (let i = 0; i < this.dataList.data.length; i++) {
@@ -214,6 +215,8 @@ export default {
           }
           this.searchOptionList.english = this.dataListKey;
           this.searchOptionList.korean = this.tableHeaderList;
+        } else {
+          this.dataNone = true;
         }
       });
     },
@@ -241,10 +244,7 @@ export default {
         setSearch.set('data_status', this.selectedTaskCode);
         setSearch.set('columnName', this.selectedSearchOption);
         setSearch.set('keyword', this.searchedData);
-        this.searchOptionList = {
-          korean: [],
-          english: [],
-        };
+
         getUserSearch(setSearch).then((result) => {
           this.dataList = result.data;
           this.totalItems = this.dataList.data.length;
