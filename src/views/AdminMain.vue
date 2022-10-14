@@ -24,6 +24,11 @@ export default {
     };
   },
   created() {
+    history.pushState(null, null, location.href);
+    window.onpopstate = function(event) {
+      history.go(1);
+    }
+
     axios.get('http://49.50.164.147:8090/web/assignment/nums/').then(({ data }) => {
       this.datas = data.data.data;
       sessionStorage.removeItem('selectedWork');

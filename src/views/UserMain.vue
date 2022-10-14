@@ -95,6 +95,11 @@ import { getUserSearch, getUserWorkData, getUserWorkId, getUserAddForm } from '/
 
 export default {
   created() {
+    history.pushState(null, null, location.href);
+    window.onpopstate = function(event) {
+      history.go(1);
+    }
+    
     this.assignment_id = this.$cookies.get('assignmentId');
     this.user_id = this.$cookies.get('userId');
     sessionStorage.removeItem('isAddPage');
