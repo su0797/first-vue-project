@@ -32,14 +32,14 @@
 
     <div class="flex">
       <!-- 업무분배 버튼 영역 -->
-      <div class="divide-area flex-area" v-if="selectedTask && selectedTaskName !== '완료' && selectedWork">
+      <div class="divide-area flex-area" v-if="selectedTask && selectedTaskName !== '완료' && selectedWork && !dataNone">
         <button class="btn btn-secondary" type="button" v-if="selectList.length !== 0" @click="getDividenUser()" data-bs-toggle="modal" data-bs-target="#taskDivision">업무 분배</button>
         <button class="btn btn-secondary" type="button" v-else @click="this.msgbox('분배할 데이터를 선택해주세요.')">업무 분배</button>
       </div>
       <div class="divide-area flex-area" v-else></div>
 
       <!-- 검색영역 -->
-      <div class="search-area flex-area" v-if="selectedWork && selectedTask">
+      <div class="search-area flex-area" v-if="selectedWork && selectedTask && !dataNone">
         <select class="form-select" v-model="selectedSearchOption" ref="searchSelect">
           <option value="">선택</option>
           <option :value="searchOption" v-for="(searchOption, i) in searchOptionList.english" :key="i">
