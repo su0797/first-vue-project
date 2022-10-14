@@ -15,7 +15,10 @@
         <UserNote :label="column.meta_name" :note="(inputValueList[column.meta_key] = inputValueList[column.meta_key])" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-else-if="column.meta_type === '5'" />
       </div>
       <UserRadioBox :label="dataStatusLabel" :radioValue="(data_status = data_status)" @radioFromChild="changeStatusValue($event)" />
-      <button type="submit" class="btn btn-secondary">저장</button>
+      <div class="buttons">
+        <button type="button" class="btn btn-secondary" @click="cancel">취소</button>
+        <button type="submit" class="btn btn-primary">저장</button>
+      </div>
     </form>
   </div>
 </template>
@@ -128,18 +131,21 @@ export default {
           },
         })
           .then((res) => {
-            e.target.reset();
-            this.inputValueList = {};
             var forms = document.querySelectorAll('.needs-validation');
             Array.prototype.slice.call(forms).forEach(function (form) {
               form.classList.remove('was-validated');
             });
-            this.$router.go(-1);
+            e.target.reset();
+            this.cancel();
           })
           .catch((err) => {
             console.log(err);
           });
       }
+    },
+    cancel() {
+      this.inputValueList = {};
+      this.$router.go(-1);
     },
   },
   components: { UserInput, Address, UserSelectBox, UserRadioBox, UserNote },
@@ -154,17 +160,37 @@ h3 {
   margin: 50px;
   text-align: center;
 }
-.btn-secondary {
+.buttons {
   display: flex;
+  margin: 50px auto;
   justify-content: center;
-  margin: 30px auto;
-  font-size: 0.9rem;
-  border: none;
-  width: 15%;
-  background-color: #e17b46;
+  align-items: center;
+}
+.btn-primary,
+.btn-secondary {
+  width: 8%;
+  height: 40px;
+  border-radius: 10px;
+  margin: 0 20px auto;
+}
+.btn-primary {
+  background-color: #e17b45;
+  border-color: #e17b45;
+  color: white;
+}
+.btn-primary:hover {
+  background-color: #dc6425;
+  border-color: #dc6425;
+  color: white;
+}
+.btn-secondary {
+  background-color: white;
+  border-color: #e17b45;
+  color: #e17b45;
 }
 .btn-secondary:hover {
-  background-color: #c15a33;
+  background: #fbebe3;
+  border-color: #e17b45;
 }
 @media (max-width: 768px) {
   h3 {
