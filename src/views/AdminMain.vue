@@ -24,7 +24,7 @@ export default {
     };
   },
   created() {
-    history.pushState(null, null, location.href);
+    history.pushState(history.state, '', location.href);
     window.onpopstate = function(event) {
       history.go(1);
     }
