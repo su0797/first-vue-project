@@ -59,7 +59,24 @@ export default {
       isTaskPassValidation: false,
       msg: '',
       errors:[],
+      users: [],
+      userNameList: [],
+      userEmailList: [], 
+      userPhoneList: [],
     };
+  },
+  mounted() {
+    this.userNameList = [];
+    this.userEmailList = [];
+    this.userPhoneList = [];
+    axios
+      .post('http://49.50.164.147:8090/web/assignment/user/list/', {
+        assignment_id: 0,
+        user_status: 1
+      })
+      .then(({ data }) => {
+        this.users = data.data.user;
+      });
   },
   methods: {
     checkForm() {
@@ -75,20 +92,37 @@ export default {
         this.isPassValidation = true;
       }
       },
+      
 
+    addUserInfo() {
+      for (let i = 0; i < this.users.length; i++) {
+        this.userNameList.push(this.users[i].user_name);
+        this.userEmailList.push(this.users[i].user_email);
+        this.userPhoneList.push(this.users[i].user_phone);
+      }
+    },
 
     checkEmail() {
+      this.addUserInfo();
       const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
       if (regex.test(this.user_email)){
         this.isEmailPassValidation = true;
       } else {
-        this.msg = '이메일 형식에 맞게 입력해주세요'
-        this.errors.push("error")
+        this.msg = '이메일 형식에 맞게 입력해주세요';
+        this.errors.push("error");
         this.$refs.user_email.focus();
+      }
+      if (this.userEmailList.includes(this.user_email)) {
+        this.msg = '이미 사용중인 이메일입니다.';
+        this.errors.push("error");
+        this.$refs.user_email.focus();
+      } else {
+          this.isEmailPassValidation = true;
       }
     },
 
     checkPhone() {
+      this.addUserInfo();
       const regex = /^\d{3}-\d{4}-\d{4}$/;
       if (regex.test(this.user_phone)){
         this.isPhonePassValidation = true;
@@ -97,15 +131,30 @@ export default {
         this.errors.push("error")
         this.$refs.user_phone.focus();
       }
+      if (this.userPhoneList.includes(this.user_phone)) {
+        this.msg = '이미 등록된 번호입니다.';
+        this.errors.push("error");
+        this.$refs.user_phone.focus();
+      } else {
+        this.isPhonePassValidation = true;
+      }
     },
 
     checkName() {
+      this.addUserInfo();
        if (isNotEmpty(this.user_name)){
         this.isNamePassValidation = true;
       } else {
        this.msg = '이름을 입력해주세요'
        this.errors.push("error")
        this.$refs.user_name.focus();
+      }
+      if (this.userNameList.includes(this.user_name)) {
+        this.msg = '이미 등록된 사용자입니다.';
+        this.errors.push("error");
+        this.$refs.user_name.focus();
+      } else {
+        this.isEmailPassValidation = true;
       }
     },
 

@@ -10,7 +10,7 @@
       </div>
       <div class="input-group mb-3">
         <label class="form-label" for="user_phone">전화번호</label>
-        <input type="text" class="form-control" id="user_phone" name="user_phone" v-model="user_phone" ref="user_phone" required />
+        <input type="text" class="form-control" id="user_phone" name="user_phone" v-model="user_phone" ref="user_phone" placeholder="예) 010-0000-0000" required />
       </div>
       <div class="input-group mb-3">
         <label class="form-label" for="assignment_id">과제</label>
@@ -44,10 +44,27 @@ export default {
       user_phone: '',
       user_type: '',
       isPassValidation: false,
+      isNamePassValidation: false,
+      isPhonePassValidation: false,
       assignment_id: 0,
-
-      errors: [],
+      msg: '',
+      errors:[],
+      users: [],
+      userNameList: [],
+      userPhoneList: [],
     };
+  },
+  mounted() {
+    this.userNameList = [];
+    this.userPhoneList = [];
+    axios
+      .post('http://49.50.164.147:8090/web/assignment/user/list/', {
+        assignment_id: 0,
+        user_status:1,
+      })
+      .then(({ data }) => {
+        this.users = data.data.user;
+      });
   },
   created() {
     axios.get(`http://49.50.164.147:8090/common/user/info/${this.$route.params.user_id}`).then(({ data }) => {
@@ -60,24 +77,63 @@ export default {
     });
   },
   methods: {
-    checkValue() {
+    checkForm() {
       this.errors = [];
-      if (!isNotEmpty(this.user_name) || !isNotEmpty(this.user_phone) || !isNotEmpty(this.assignment_id)) {
-        this.msgbox('입력란을 채워주세요.');
-        this.errors.push('error');
-      }
+      this.checkPhone();
+      this.checkName();
       if (this.errors.length != 0) {
-        var forms = document.querySelectorAll('.needs-validation');
-        Array.prototype.slice.call(forms).forEach(function (form) {
-          form.classList.add('was-validated');
-        });
+      msgbox(this.msg)
       } else {
         this.isPassValidation = true;
       }
+      },
+
+    addUserInfo() {
+      for (let i = 0; i < this.users.length; i++) {
+        this.userNameList.push(this.users[i].user_name);
+        this.userPhoneList.push(this.users[i].user_phone);
+      }
     },
 
+    checkPhone() {
+      this.addUserInfo();
+      const regex = /^\d{3}-\d{4}-\d{4}$/;
+      if (regex.test(this.user_phone)){
+        this.isPhonePassValidation = true;
+      } else {
+        this.msg = '휴대폰 형식에 맞게 입력해주세요'
+        this.errors.push("error")
+        this.$refs.user_phone.focus();
+      }
+      if (this.userPhoneList.includes(this.user_phone)) {
+        this.msg = '이미 등록된 번호입니다.';
+        this.errors.push("error");
+        this.$refs.user_phone.focus();
+      } else {
+        this.isPhonePassValidation = true;
+      }
+    },
+
+    checkName() {
+      this.addUserInfo();
+       if (isNotEmpty(this.user_name)){
+        this.isNamePassValidation = true;
+      } else {
+       this.msg = '이름을 입력해주세요'
+       this.errors.push("error")
+       this.$refs.user_name.focus();
+      }
+      if (this.userNameList.includes(this.user_name)) {
+        this.msg = '이미 등록된 사용자입니다.';
+        this.errors.push("error");
+        this.$refs.user_name.focus();
+      } else {
+        this.isEmailPassValidation = true;
+      }
+    },
+   
     modifyArticle() {
-      this.checkValue();
+      this.checkForm();
       if (this.isPassValidation) {
         axios
           .put('http://49.50.164.147:8090/common/user/edit', {
