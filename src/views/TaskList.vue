@@ -52,8 +52,10 @@
     </div>
 
     <!-- 테이블 영역 -->
+    <div class="show-nothing" v-if="dataNone">해당 데이터가 없습니다.</div>
     <div class="show-nothing" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
-    <div ref="table" class="table-responsive" v-if="selectedWork && selectedTask && !searchedNone">
+
+    <div ref="table" class="table-responsive" v-if="selectedWork && selectedTask && !searchedNone && !dataNone">
       <table class="table">
         <thead>
           <tr>
@@ -93,7 +95,7 @@
         </tbody>
       </table>
     </div>
-    <div class="pagination-center" v-if="selectedWork && selectedTask && !searchedNone">
+    <div class="pagination-center" v-if="selectedWork && selectedTask && !searchedNone && !dataNone">
       <vue-awesome-paginate
         :total-items="this.totalItems"
         :items-per-page="this.itemsPerPage"
@@ -165,6 +167,7 @@ export default {
       allChecked: false,
       selectList: [],
       searchedNone: false,
+      dataNone: false,
       searchedData: '',
       selectedSearchOption: '',
       searchOptionList: {
@@ -203,15 +206,6 @@ export default {
       sessionStorage.setItem('selectedWork', work_id);
       sessionStorage.setItem('workName', this.workName);
 
-      const setData2 = new FormData();
-      this.projectCode = sessionStorage.getItem('projectCode');
-      this.projectName = sessionStorage.getItem('projectName');
-      // 테이블 헤드 메타데이터와 대조(한글명)
-      setData2.set('work_id', work_id);
-
-      getUserAddForm(setData2).then((result) => {
-        this.columnList = result.data;
-      });
       // 불러올 데이터 세팅하기
       setData.set('work_id', work_id);
       setData.set('data_status', this.selectedTask);
@@ -226,7 +220,11 @@ export default {
         this.tableHeaderList = [];
         this.dataList = result.data;
 
-        if (this.dataList != null) {
+        if (this.dataList.data.length !== 0) {
+          this.dataNone = false;
+          this.dataListKey = [];
+          this.dataListValue = [];
+
           this.totalItems = this.dataList.total_count;
           for (let i = 0; i < this.dataList.data.length; i++) {
             this.dataId[i] = this.dataList.data[i].data_id;
@@ -250,7 +248,9 @@ export default {
             }    
           }
           this.searchOptionList.english = this.dataListKey;
-          this.searchOptionList.korean = this.tableHeaderList;
+          this.searchOptionList.korean = this.tableHeaderList; 
+        } else {
+          this.dataNone = true;
         }
       });
     },
@@ -276,8 +276,23 @@ export default {
     },
     showAll() {
       // 셀렉트에 맞는
-      if (this.selectedTaskName !== '') {
-        this.getData();
+      if (this.selectedTaskName !== null) {
+        let work_id = '';
+        for (let i = 0; i < this.workListValue.length; i++) {
+          if (this.workListValue[i] === this.workName) {
+            work_id = this.workListKey[i];
+          }
+        }
+        const setData2 = new FormData();
+        this.projectCode = sessionStorage.getItem('projectCode');
+        this.projectName = sessionStorage.getItem('projectName');
+        // 테이블 헤드 메타데이터와 대조(한글명)
+        setData2.set('work_id', work_id);
+
+        getUserAddForm(setData2).then((result) => {
+          this.columnList = result.data;
+          this.getData();
+        });
       }
       this.selectList = [];
     },
