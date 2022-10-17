@@ -38,7 +38,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .modal-content {
     width: 80%;
     margin: 0 auto;
@@ -80,12 +80,5 @@ export default {
     text-align: left;
     padding-top: 3px;
     margin-left: 10px;
-  }
-  .show-nothing {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.3rem;
-    margin-top: 15rem;
   }
 </style>

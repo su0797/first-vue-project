@@ -258,6 +258,13 @@ table::-webkit-scrollbar-thumb {
   background-color: #efefef;
   color: #828282;
 }
+.show-nothing {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  margin-top: 15rem;
+}
 @media (max-width: 420px) {
   .select-project {
     width: 30% !important;
