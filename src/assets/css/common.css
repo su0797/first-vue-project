@@ -265,6 +265,14 @@ table::-webkit-scrollbar-thumb {
   font-size: 1.3rem;
   margin-top: 15rem;
 }
+@media (max-width: 768px) {
+  .search-area{
+    width: 57%;
+  }
+  .search-area .form-control {
+    width: 50%;
+  }
+}
 @media (max-width: 420px) {
   .select-project {
     width: 30% !important;

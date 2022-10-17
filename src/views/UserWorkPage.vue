@@ -1,9 +1,9 @@
 <template>
 	<div>
-		<div class="select-project">
+		<div>
 			<select
+				class="form-select select-project"
 				v-model="selectedProjectCode"
-				class="form-select"
 				@change="showProject($event)">
 				<option value="" selected disabled>업무 선택</option>
 				<option :value="project.work_id" :key="i" v-for="(project, i) in projectList">
@@ -78,8 +78,9 @@
 				</div>
 			</div>
 			
-			<div class="none-data" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
-			<div class="table-responsive" v-if="selectedProjectCode ">		
+			<div class="show-nothing" v-if="dataNone">해당 데이터가 없습니다.</div>
+			<div class="show-nothing" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
+			<div class="table-responsive" v-if="selectedProjectCode && !dataNone  && !searchedNone">	
 				<table class="table">
 					<thead>
 						<tr>
@@ -113,7 +114,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="pagination-center" v-if="selectedProjectCode ">
+			<div class="pagination-center" v-if="selectedProjectCode && !dataNone  && !searchedNone">
 				<vue-awesome-paginate
 					:total-items="this.totalItems"
 					:max-pages-shown="this.MaxPagesShown"
@@ -183,6 +184,7 @@ export default {
 				english: [],
 			},
 			searchedNone : false,
+			dataNone : false,
 
 			// pagination
 			totalItems: 0,
@@ -303,7 +305,8 @@ export default {
 				this.dataList = result.data;
 				this.totalItems = result.data.total_count;
 				this.tableHeaderList = [];	
-				if (this.dataList != null) {
+				if (this.dataList.data.length !== 0) {
+					this.dataNone = false;
 					this.dataListValue = [];
 					for (let i = 0; i < this.dataList.data.length; i++) {
 						const arr = JSON.parse(this.dataList.data[i].data_json);
@@ -319,6 +322,9 @@ export default {
 					}
 					this.searchOptionList.english = this.dataListKey;
 					this.searchOptionList.korean = this.tableHeaderList;
+				}
+				else {
+					this.dataNone = true;
 				}
 			});
 		},
@@ -400,6 +406,8 @@ export default {
 <style scoped>
 .select-project {
 	margin-right: 0;
+	width: 20%;
+	margin-top: 20px;
 }
 .selectbox .form-select {
 	width: 100%;
@@ -411,11 +419,7 @@ option {
 	font-size: 0.9rem;
 }
 .title {
-	display: inline-block;
-	width: 40%;
-	margin-top: 30px;
-	margin-left: 10%;
-	padding-bottom: 5px;
+	padding-bottom: 20px;
 	text-align: center;
 }
 
@@ -438,11 +442,11 @@ option {
 	align-items: center;
 }
 .main {
-	width: 40%;
+	width: 45%;
 }
 .theme_total {
 	display: inline-block;
-	margin-left: 8%;
+	margin-left: 15%;
 	font-size: 1.5rem;
 	font-weight: 800;
 }
@@ -462,7 +466,7 @@ option {
 .temp_storage,
 .actual_measurement,
 .completion {
-	margin-left: 8%;
+	margin-left: 7%;
 }
 .ts {
 	color: #d64c57;
@@ -512,11 +516,6 @@ th {
 	.completion {
 		font-size: 0.8rem !important;
 	}
-	.title {
-		width: 40%;
-		margin-left: 25%;
-	}
-
 	.search-area .form-select {
 		min-width: 70px;
 	}
