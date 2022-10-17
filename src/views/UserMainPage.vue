@@ -38,8 +38,8 @@
     </div>
 
     <!-- 테이블 -->
-    <div class="none-data" v-if="dataNone">해당 데이터가 없습니다.</div>
-    <div class="none-data" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
+    <div class="show-nothing" v-if="dataNone">해당 데이터가 없습니다.</div>
+    <div class="show-nothing" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
     <div class="table-responsive" v-if="selectedProjectCode && selectedTaskCode && !searchedNone && !dataNone">
       <table class="table">
         <thead>
@@ -74,7 +74,7 @@
         </tbody>
       </table>
     </div>
-    <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false && dataNone === false">
+    <div class="pagination-center" v-if="selectedProjectCode && selectedTaskCode && !searchedNone && !dataNone">
       <vue-awesome-paginate
         :total-items="this.totalItems"
         :max-pages-shown="this.MaxPagesShown"
@@ -98,7 +98,7 @@ export default {
   created() {
     this.assignment_id = this.$cookies.get('assignmentId');
     this.user_id = this.$cookies.get('userId');
-    sessionStorage.removeItem('isAddPage');
+    sessionStorage.setItem('isAddPage', false);
 
     const setData = new FormData();
     setData.set('assignment_id', this.assignment_id);
@@ -244,6 +244,7 @@ export default {
         setSearch.set('data_status', this.selectedTaskCode);
         setSearch.set('columnName', this.selectedSearchOption);
         setSearch.set('keyword', this.searchedData);
+        setSearch.set('user_id', this.user_id);
 
         getUserSearch(setSearch).then((result) => {
           this.dataList = result.data;
@@ -308,13 +309,6 @@ h3 {
 }
 .btn-add-data:hover {
   background-color: #c15a33;
-}
-.none-data {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.3rem;
-  margin-top: 15rem;
 }
 .pagination-center {
   display: flex;

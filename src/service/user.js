@@ -29,6 +29,7 @@ export async function getUserSearch(param, callback) {
       data_status: param.get('data_status'),
       columnName: param.get('columnName'),
       keyword: param.get('keyword'),
+      user_id: param.get('user_id'),
     };
     const result = await axios.post('/web/search', data);
     if (callback) callback(result.data);
