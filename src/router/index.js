@@ -114,6 +114,12 @@ router.beforeEach((to, from, next) => {
       next('/');
       return;
     }
+  } else {
+    if(from.path == '/admin') {
+      history.go(1);
+    } else if(from.path == '/user') {
+      history.go(1);
+    }
   }
   next();
 });
