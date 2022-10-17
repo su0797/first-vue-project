@@ -32,13 +32,24 @@ export async function getDataInfo(param, callback) {
 
 export async function getUserSearch(param, callback) {
   try {
-    const data = {
-      work_id: param.get('work_id'),
-      data_status: param.get('data_status'),
-      columnName: param.get('columnName'),
-      keyword: param.get('keyword'),
-      user_id: param.get('user_id'),
-    };
+    let data = {};
+    if(param.get('user_id')) {
+      data = {
+        work_id: param.get('work_id'),
+        data_status: param.get('data_status'),
+        columnName: param.get('columnName'),
+        keyword: param.get('keyword'),
+        user_id: param.get('user_id'),
+      };
+    } else {
+      data = {
+        work_id: param.get('work_id'),
+        data_status: param.get('data_status'),
+        columnName: param.get('columnName'),
+        keyword: param.get('keyword'),
+      }
+    }
+
 
     const result = await axios.post('/web/search', data);
     if (callback) callback(result.data);

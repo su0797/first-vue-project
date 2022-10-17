@@ -311,6 +311,11 @@ export default {
         setSearch.set('columnName', this.selectedSearchOption);
         setSearch.set('keyword', this.searchedData);
 
+        // 실측필요의 경우 user_id가 없는 데이터만 불러옴
+        if (this.selectedTask == 4) {
+          setSearch.set('user_id', -1);
+        }
+
         getUserSearch(setSearch).then((result) => {
           this.dataList = result.data;
 
