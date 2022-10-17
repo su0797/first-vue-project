@@ -113,7 +113,7 @@ export default {
         this.$refs.user_email.focus();
       }
       if (this.userEmailList.includes(this.user_email)) {
-        this.msg = '이미 사용중인 이메일입니다.';
+        this.msg = '중복된 이메일입니다.';
         this.errors.push("error");
         this.$refs.user_email.focus();
       } else {
@@ -132,7 +132,7 @@ export default {
         this.$refs.user_phone.focus();
       }
       if (this.userPhoneList.includes(this.user_phone)) {
-        this.msg = '이미 등록된 번호입니다.';
+        this.msg = '중복된 번호입니다.';
         this.errors.push("error");
         this.$refs.user_phone.focus();
       } else {
@@ -150,7 +150,7 @@ export default {
        this.$refs.user_name.focus();
       }
       if (this.userNameList.includes(this.user_name)) {
-        this.msg = '이미 등록된 사용자입니다.';
+        this.msg = '중복된 이름입니다.';
         this.errors.push("error");
         this.$refs.user_name.focus();
       } else {

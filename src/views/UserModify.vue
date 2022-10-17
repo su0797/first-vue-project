@@ -6,11 +6,11 @@
     <form class="needs-validation" @submit.prevent="modifyArticle()" novalidate>
       <div class="input-group mb-3">
         <label class="form-label" for="user_name">이름</label>
-        <input type="text" class="form-control" id="user_name" name="user_name" v-model="user_name" ref="user_name" required />
+        <input type="text" class="form-control" id="user_name" name="user_name" v-model="user_name" ref="user_name" :disabled="isDisalbed" required />
       </div>
       <div class="input-group mb-3">
         <label class="form-label" for="user_phone">전화번호</label>
-        <input type="text" class="form-control" id="user_phone" name="user_phone" v-model="user_phone" ref="user_phone" placeholder="예) 010-0000-0000" required />
+        <input type="text" class="form-control" id="user_phone" name="user_phone" v-model="user_phone" ref="user_phone" :disabled="isDisalbed" placeholder="예) 010-0000-0000" required />
       </div>
       <div class="input-group mb-3">
         <label class="form-label" for="assignment_id">과제</label>
@@ -52,6 +52,7 @@ export default {
       users: [],
       userNameList: [],
       userPhoneList: [],
+      isDisalbed: true,
     };
   },
   mounted() {
@@ -79,8 +80,8 @@ export default {
   methods: {
     checkForm() {
       this.errors = [];
-      this.checkPhone();
-      this.checkName();
+      // this.checkPhone();
+      // this.checkName();
       if (this.errors.length != 0) {
       msgbox(this.msg)
       } else {
@@ -95,42 +96,42 @@ export default {
       }
     },
 
-    checkPhone() {
-      this.addUserInfo();
-      const regex = /^\d{3}-\d{4}-\d{4}$/;
-      if (regex.test(this.user_phone)){
-        this.isPhonePassValidation = true;
-      } else {
-        this.msg = '휴대폰 형식에 맞게 입력해주세요'
-        this.errors.push("error")
-        this.$refs.user_phone.focus();
-      }
-      if (this.userPhoneList.includes(this.user_phone)) {
-        this.msg = '이미 등록된 번호입니다.';
-        this.errors.push("error");
-        this.$refs.user_phone.focus();
-      } else {
-        this.isPhonePassValidation = true;
-      }
-    },
+    // checkPhone() {
+    //   this.addUserInfo();
+    //   const regex = /^\d{3}-\d{4}-\d{4}$/;
+    //   if (regex.test(this.user_phone)){
+    //     this.isPhonePassValidation = true;
+    //   } else {
+    //     this.msg = '휴대폰 형식에 맞게 입력해주세요'
+    //     this.errors.push("error")
+    //     this.$refs.user_phone.focus();
+    //   }
+    //   if (this.userPhoneList.includes(this.user_phone)) {
+    //     this.msg = '이미 등록된 번호입니다.';
+    //     this.errors.push("error");
+    //     this.$refs.user_phone.focus();
+    //   } else {
+    //     this.isPhonePassValidation = true;
+    //   }
+    // },
 
-    checkName() {
-      this.addUserInfo();
-       if (isNotEmpty(this.user_name)){
-        this.isNamePassValidation = true;
-      } else {
-       this.msg = '이름을 입력해주세요'
-       this.errors.push("error")
-       this.$refs.user_name.focus();
-      }
-      if (this.userNameList.includes(this.user_name)) {
-        this.msg = '이미 등록된 사용자입니다.';
-        this.errors.push("error");
-        this.$refs.user_name.focus();
-      } else {
-        this.isEmailPassValidation = true;
-      }
-    },
+    // checkName() {
+    //   this.addUserInfo();
+    //    if (isNotEmpty(this.user_name)){
+    //     this.isNamePassValidation = true;
+    //   } else {
+    //    this.msg = '이름을 입력해주세요'
+    //    this.errors.push("error")
+    //    this.$refs.user_name.focus();
+    //   }
+    //   if (this.userNameList.includes(this.user_name)) {
+    //     this.msg = '이미 등록된 사용자입니다.';
+    //     this.errors.push("error");
+    //     this.$refs.user_name.focus();
+    //   } else {
+    //     this.isEmailPassValidation = true;
+    //   }
+    // },
    
     modifyArticle() {
       this.checkForm();
