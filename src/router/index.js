@@ -120,6 +120,7 @@ router.beforeEach((to, from, next) => {
     } else if(from.path == '/user') {
       history.go(1);
     }
+    console.log(from.path);
   }
   next();
 });
