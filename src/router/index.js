@@ -8,7 +8,7 @@ import UserAddData from '/@views/UserAddData.vue';
 import UserEditData from '/@views/UserEditData.vue';
 import AdminMain from '/@views/AdminMain.vue';
 import TaskList from '/@views/TaskList.vue';
-import UserMain from '/@views/UserMain.vue';
+import UserMainPage from '/@views/UserMainPage.vue';
 import UserList from '/@views/UserList.vue';
 import UserReg from '/@views/UserReg.vue';
 import UserModify from '/@views/UserModify.vue';
@@ -54,7 +54,7 @@ const routes = [
   },
   {
     path: '/user',
-    component: UserMain,
+    component: UserMainPage,
     meta: { requireAuth: true },
   },
   {
@@ -88,7 +88,7 @@ const routes = [
   },
   {
     path: '/admin/user/workpage/:user_id',
-    name : 'UserWorkPage',
+    name: 'UserWorkPage',
     component: UserWorkPage,
   },
 ];

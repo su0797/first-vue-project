@@ -1,7 +1,10 @@
 <template>
   <div class="container">
     <div>
-      <h3>{{ projectName }}</h3>
+      <h3>
+        {{ projectName }}
+      </h3>
+      <h4>데이터 추가</h4>
     </div>
     <form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
       <div v-for="(column, i) in columnList.data" :key="i">
@@ -57,7 +60,6 @@ export default {
     };
   },
   created() {
-    sessionStorage.setItem('isAddPage', true);
     this.user_id = this.$cookies.get('userId');
     this.assignment_id = this.$cookies.get('assignmentId');
     const setData = new FormData();
@@ -97,7 +99,7 @@ export default {
         this.errors['status'].push('Error');
       }
       if (this.errors['form'].length != 0 && (this.data_status == 6 || this.data_status == 4 || this.data_status == 5)) {
-        msgbox('모든 입력창을 채워주세요');
+        msgbox('모든 입력란을 채워주세요');
         var forms = document.querySelectorAll('.needs-validation');
         Array.prototype.slice.call(forms).forEach(function (form) {
           form.classList.add('was-validated');
@@ -156,7 +158,11 @@ export default {
   margin-top: 20px;
 }
 h3 {
-  margin: 50px;
+  margin: 50px auto 20px auto;
+  text-align: center;
+}
+h4 {
+  margin-bottom: 50px;
   text-align: center;
 }
 .buttons {

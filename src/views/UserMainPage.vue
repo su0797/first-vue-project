@@ -40,11 +40,11 @@
     <!-- 테이블 -->
     <div class="none-data" v-if="dataNone">해당 데이터가 없습니다.</div>
     <div class="none-data" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
-    <div class="table-responsive" v-if="selectedProjectCode && selectedTaskCode && searchedNone === false && dataNone === false">
+    <div class="table-responsive" v-if="selectedProjectCode && selectedTaskCode && !searchedNone && !dataNone">
       <table class="table">
         <thead>
           <tr>
-            <th>#</th>
+            <th>No.</th>
             <th></th>
             <th scope="col">데이터 상태</th>
             <th scope="col">최종수정날짜</th>
@@ -124,11 +124,9 @@ export default {
       itemsPerPage: 100,
       MaxPagesShown: 5, // 페이지 숫자 버튼 값 기본값 5개
       currentPage: 1, //  현재 활성 페이지 기본값 1
-
       //⬇️ user 데이터
       assignment_id: '',
       user_id: '',
-
       //⬇️ 업무관련 데이터
       pjName: '',
       tkName: '',
@@ -227,6 +225,7 @@ export default {
     },
     goAddForm() {
       this.$router.push('/user/add').catch(() => {});
+      sessionStorage.setItem('isAddPage', true);
     },
     pushDataId(id) {
       sessionStorage.setItem('data_id', id);
