@@ -44,11 +44,13 @@ const routes = [
   },
   {
     path: '/admin',
+    name: "AdminMain",
     component: AdminMain,
     meta: { requireAuth: true },
   },
   {
     path: '/admin/tasklist',
+    name: 'TaskList',
     component: TaskList,
     meta: { requireAuth: true },
   },

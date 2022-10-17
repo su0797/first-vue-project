@@ -24,9 +24,10 @@ export default {
     };
   },
   created() {
-    history.pushState(history.state, '', location.href);
-    window.onpopstate = function(event) {
-      history.go(1);
+    window.onpageshow = function(event) {
+      if( event.persisted || (window.performance && window.performance.type == 2)) {
+        this.$router.push('/admin').catch(() => {});
+      }
     }
 
     axios.get('http://49.50.164.147:8090/web/assignment/nums/').then(({ data }) => {

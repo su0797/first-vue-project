@@ -112,9 +112,9 @@ export default {
 						this.$cookies.set('userId', uesr_id);
 
 						if (user_type == 1) {
-							this.$router.push('/admin').catch(() => {});
+							this.$router.replace('/admin').catch(() => {});
 						} else {
-							this.$router.push('/user').catch(() => {});
+							this.$router.replace('/user').catch(() => {});
 						}
 					});
 				} else {
