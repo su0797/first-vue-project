@@ -61,12 +61,12 @@ export default {
 
 		return { user };
 	},
-	created() {
-		this.$cookies.remove('name');
-		this.$cookies.remove('type');
+	// created() {
+		// this.$cookies.remove('name');
+		// this.$cookies.remove('type');
 
-		deleteStorage();
-	},
+		// deleteStorage();
+	// },
 	mounted() {
 		getLoginInfo().then((result) => {
 			if (!result) {
@@ -112,9 +112,9 @@ export default {
 						this.$cookies.set('userId', uesr_id);
 
 						if (user_type == 1) {
-							this.$router.replace('/admin').catch(() => {});
+							this.$router.push('/admin').catch(() => {});
 						} else {
-							this.$router.replace('/user').catch(() => {});
+							this.$router.push('/user').catch(() => {});
 						}
 					});
 				} else {
