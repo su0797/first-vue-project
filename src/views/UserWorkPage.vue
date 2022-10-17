@@ -12,6 +12,7 @@
 			</select>
 		</div>
 		<h4 class="title">{{ user_name }}님의<br class="sp" /> 업무현황 페이지</h4>
+		
 		<div class="total-percent bg" >
 			<div class="main">
 				<h5 class="theme_total">
@@ -65,48 +66,73 @@
 			<!-- 검색영역 -->
 			<div class="flex">
 				<div class="flex-area"></div>
-				<div class="search-area flex-area">
-					<select class="form-select">
-						<option value="">선택</option>
-						<option value="시설명">시설명</option>
-						<option value="주소">주소</option>
+				<div class="search-area flex-area" v-if="selectedProjectCode">
+					<select v-model="selectedSearchOption" class="form-select" ref="searchSelect">
+					<option value="" selected>선택</option>
+					<option :value="searchOption" v-for="(searchOption, i) in searchOptionList.english" :key="i">
+						{{ searchOptionList.korean[i] }}
+					</option>
 					</select>
-					<input type="text" class="form-control" placeholder="검색어를 입력하세요" />
-					<button class="btn" type="button">검색</button>
+					<input type="text" class="form-control" ref="searchInput" :value="searchedData" @input="changeKeyword" @keypress.enter="searchTable" placeholder="검색어를 입력하세요" />
+					<button type="button" class="btn" @click="searchTable">검색</button>
 				</div>
 			</div>
-
-			<div class="table-responsive" v-if="selectedProjectCode">			
+			
+			<div class="none-data" v-if="searchedNone">해당 검색어를 찾을 수 없습니다.</div>
+			<div class="table-responsive" v-if="selectedProjectCode ">		
 				<table class="table">
 					<thead>
 						<tr>
+							<th>#</th>
 							<th></th>
-							<th scope="col" v-for="(dataKey, i) in dataListKey" :key="i">
-								{{ dataKey }}
+							<th scope="col">데이터 상태</th>
+							<th scope="col">최종수정날짜</th>
+							<th scope="col" v-for="(th, i) in tableHeaderList" :key="i">
+							{{ th }}
 							</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr v-for="(data, i) in dataListValue" :key="i">
+							<td>{{ (currentPage - 1) * 100 + (i + 1) }}</td>
 							<td scope="row">
-								<button class="btn btn-secondary" type="button" id="buttonInput">
-									수정
-								</button>
+							<router-link :to="`/user/edit/${dataList.data[i].data_id}`">
+								<button class="btn btn-secondary" type="button" id="buttonInput" @click="pushDataId(dataList.data[i].data_id)">수정</button>
+							</router-link>
+							</td>
+							<td scoped="row">
+							{{ tableTaskList[dataList.data[i].data_status] }}
+							</td>
+							<td scoped="row">
+							{{ $filters.dateFormat(dataList.data[i].update_time) }}
 							</td>
 							<td v-for="(datakey, j) in dataListKey" :key="j">
-								{{ data[datakey] }}
+							{{ data[datakey] }}
 							</td>
 						</tr>
 					</tbody>
 				</table>
+			</div>
+			<div class="pagination-center" v-if="selectedProjectCode ">
+				<vue-awesome-paginate
+					:total-items="this.totalItems"
+					:max-pages-shown="this.MaxPagesShown"
+					:current-page="this.currentPage"
+					:itemsPerPage="this.itemsPerPage"
+					:on-click="onClickHandler"
+					:show-breakpoint-buttons="false"
+					:show-ending-buttons="true"
+					firstPageContent="<<"
+					lastPageContent=">>"
+				/>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import axios from 'axios';
-import { getUserWorkId } from "/@service/user";
+import { msgbox } from '../service/common';
+import { getUserWorkId,getUserSearch,getUserWorkData } from "/@service/user";
 import {getDataInfo, getUserDataNum} from "/@service/admin/data";
 
 export default {
@@ -115,21 +141,25 @@ export default {
 			user_name: '',
 			user_id: '',
 			pjName: '',
+			assignment_id: '',
+			work_name:'',
 			selectedProjectCode: '',
-			projectList: [],
-			projects: ['광진구', '순천', '광주', '문정원'],
-			
-			progress: [],
-			avg_progress: [],
-			temp_storage: [],
-			actual_measurement: [],
-			completion: [],
 			dataList: [],
 			dataListKey: [],
 			dataListValue: [],
-			assignment_id: '',
-			work_name:'',
+			projectList: [],
+			projects: ['광진구', '순천', '광주', '문정원'],
+			taskList: [
+				{ tkname: '할일', tkcode: 2 },
+				{ tkname: '실측', tkcode: 4 },
+				{ tkname: '임시저장', tkcode: 3 },
+				{ tkname: '완료', tkcode: 6 },
+			],
+			tableTaskList: ['삭제', '할당전', '할일', '임시저장', '실측', '조사불가', '완료'],
+			columnList: [],
+			tableHeaderList: [],
 
+			// 유저 작업 진행률
 			userAssSt:[],
 			allAss_data:[],
 			allAss_dataTotal:0,
@@ -144,9 +174,24 @@ export default {
 			data_status4:'',
 			data_status5:'',
 			data_status6:'',
+
+			//검색
+			searchedData: '',
+			selectedSearchOption: '',
+			searchOptionList: {
+				korean: [],
+				english: [],
+			},
+
+			// pagination
+			totalItems: 0,
+			itemsPerPage: 100,
+			MaxPagesShown: 5, // 페이지 숫자 버튼 값 기본값 5개
+			currentPage: 1, //  현재 활성 페이지 기본값 1
 		};
 	},
 	created() {
+		// 이전페이지 세션스토리지에서 저장되는 값
 		this.user_name = sessionStorage.getItem('user_name')
 		this.user_id = sessionStorage.getItem('user_id')
 		this.assignment_id = sessionStorage.getItem('assignment_id')
@@ -173,13 +218,23 @@ export default {
 			this.allAss_data = data.data.data;
 			this.allAss_dataTotal = this.allAss_data.data_status1+this.allAss_data.data_status2+this.allAss_data.data_status3+this.allAss_data.data_status4+this.allAss_data.data_status5+this.allAss_data.data_status6;
 			//프로젝트 전체 인원의 완료 비율
-			this.allUser_progress = ((this.allAss_data.data_status6/this.allAss_dataTotal)*100).toPrecision(2) ;
+			if (this.allUser_progress == 0) { 
+				this.allUser_progress = 0;
+			}
+			else {  
+				this.allUser_progress = ((this.allAss_data.data_status6/this.allAss_dataTotal)*100).toPrecision(2) ;
+			}
 		})
 		//유저 프로젝트 작업량
 		getUserDataNum(userAssData).then((data) => {
 			this.userAssSt = data.data.data;
 			//유저의 작업비율
-			this.userAss_progress = ((this.userAssSt.data_status6/this.allAss_dataTotal)*100).toPrecision(2) ;
+			if (this.userAss_progress == 0) { 
+				this.userAss_progress = 0;
+			}
+			else {  
+				this.userAss_progress = ((this.userAssSt.data_status6/this.allAss_dataTotal)*100).toPrecision(2) ;
+			}
 		})
 	},
 	methods: {
@@ -197,16 +252,27 @@ export default {
 				this.allWork_data = data.data.data;
 				this.allWork_dataTotal = this.allWork_data.data_status1+this.allWork_data.data_status2+this.allWork_data.data_status3+this.allWork_data.data_status4+this.allWork_data.data_status5+this.allWork_data.data_status6;
 				//work_id별 전체 인원의 완료 비율
-				this.totalWork_progress = ((this.allWork_data.data_status6/this.allWork_dataTotal)*100).toPrecision(2) ;
+				if (this.totalWork_progress == 0) { 
+					this.totalWork_progress = 0;
+				}
+				else {  
+					this.totalWork_progress = ((this.allWork_data.data_status6/this.allWork_dataTotal)*100).toPrecision(2) ;
+				}
 			})
 			// 유저 work_id별 작업량
 			getUserDataNum(userWorkData).then((data) =>{
 				this.userWorkSt = data.data.data;
 				// 해당 유저의 work_id 완료 비율
-				this.userWork_progress = ((this.userWorkSt.data_status6/this.allWork_dataTotal)*100).toPrecision(2);
+				if (this.userWork_progress == 0) { 
+					this.userWork_progress = 0;
+				}
+				else {  
+					this.userWork_progress = ((this.userWorkSt.data_status6/this.allWork_dataTotal)*100).toPrecision(2) ;
+				}
 			})
 			this.showTable();
 		},
+		// api데이터 테이블로 출력
 		showTable() {
 			if (this.pjName !== '') {
 				const setData = new FormData();
@@ -216,20 +282,66 @@ export default {
 
 				getDataInfo(setData).then((result) => {
 					this.dataList = result.data;
-
+					this.getData();
 					for (let i = 0; i < this.dataList.data.length; i++) {
 						const arr = JSON.parse(this.dataList.data[i].data_json);
 						this.dataListKey = Object.keys(arr);
 					}
 					this.dataListValue = [];
+					this.tableHeaderList = [];
 					for (let i = 0; i < this.dataList.data.length; i++) {
 						this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
 					}
+					
 				});
 			}
 		},
-		goInput() {
-			this.$router.replace('/');
+
+		// pagination
+		getData() {
+			const setData2 = new FormData();
+
+			setData2.set('work_id', this.selectedProjectCode);
+			setData2.set('user_id', this.user_id);
+			setData2.set('row_count', this.itemsPerPage);
+			setData2.set('page_no', this.currentPage);
+
+			getUserWorkData(setData2).then((result) => {
+				this.dataList = result.data;
+				this.totalItems = this.dataList.total_count;
+				console.log(this.dataList)	
+				this.tableHeaderList = [];
+				if (this.dataList != null) {
+				this.dataListValue = [];
+				for (let i = 0; i < this.dataList.data.length; i++) {
+					const arr = JSON.parse(this.dataList.data[i].data_json);
+					this.dataListKey = Object.keys(arr);
+					this.dataListValue.push(arr);
+				}
+				for (let i = 0; i < this.columnList.data.length; i++) {
+					for (let j = 0; j < this.columnList.data.length; j++) {
+						if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+							this.tableHeaderList.push(this.columnList.data[j].meta_name);
+						}
+					}
+				}
+				this.searchOptionList.english = this.dataListKey;
+				this.searchOptionList.korean = this.tableHeaderList;
+				}
+			});
+		},
+
+		onClickHandler(page) {
+			this.currentPage = page;
+			this.getData();
+		},
+
+		// 검색기능
+		changeKeyword(w) {
+			this.searchedData = w.target.value;
+		},
+		resetSearchOption() {
+			this.selectedSearchOption = '';
 		},
 	},
 };
