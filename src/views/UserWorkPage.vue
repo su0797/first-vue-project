@@ -68,7 +68,7 @@
 				<div class="flex-area"></div>
 				<div class="search-area flex-area" v-if="selectedProjectCode">
 					<select v-model="selectedSearchOption" class="form-select" ref="searchSelect">
-					<option value="" selected>선택</option>
+					<option value="" selected disabled>선택</option>
 					<option :value="searchOption" v-for="(searchOption, i) in searchOptionList.english" :key="i">
 						{{ searchOptionList.korean[i] }}
 					</option>
@@ -83,7 +83,7 @@
 				<table class="table">
 					<thead>
 						<tr>
-							<th>#</th>
+							<th>No.</th>
 							<th></th>
 							<th scope="col">데이터 상태</th>
 							<th scope="col">최종수정날짜</th>
@@ -96,8 +96,8 @@
 						<tr v-for="(data, i) in dataListValue" :key="i">
 							<td>{{ (currentPage - 1) * 100 + (i + 1) }}</td>
 							<td scope="row">
-							<router-link :to="`/user/edit/${dataList.data[i].data_id}`">
-								<button class="btn btn-secondary" type="button" id="buttonInput" @click="pushDataId(dataList.data[i].data_id)">수정</button>
+							<router-link :to="`/admin/tasklist/modify/${dataList.data[i].data_id}`">
+								<button class="btn btn-secondary" type="button" id="buttonInput" @click="pushDataId(dataList.data[i].data_id, dataList.data[i].data_status_name)">수정</button>
 							</router-link>
 							</td>
 							<td scoped="row">
@@ -132,8 +132,8 @@
 
 <script>
 import { msgbox } from '../service/common';
-import { getUserWorkId,getUserSearch,getUserWorkData } from "/@service/user";
-import {getDataInfo, getUserDataNum} from "/@service/admin/data";
+import { getUserWorkId,getUserSearch,getUserAddForm } from "/@service/user";
+import {getUserDataNum,getUserWorkData2} from "/@service/admin/data";
 
 export default {
 	data() {
@@ -182,6 +182,7 @@ export default {
 				korean: [],
 				english: [],
 			},
+			searchedNone : false,
 
 			// pagination
 			totalItems: 0,
@@ -240,6 +241,8 @@ export default {
 	methods: {
 		showProject(e) {
 			this.pjName = e.target.options[e.target.options.selectedIndex].text;
+			sessionStorage.setItem('workName', this.pjName)
+			sessionStorage.setItem('selectedWork', this.selectedProjectCode)
 			// 유저의 프로젝트 > 과제별 전체 api
 			const allWorkData = new FormData();
 			const userWorkData = new FormData();
@@ -269,8 +272,8 @@ export default {
 				else {  
 					this.userWork_progress = ((this.userWorkSt.data_status6/this.allWork_dataTotal)*100).toPrecision(2) ;
 				}
+				this.showTable();
 			})
-			this.showTable();
 		},
 		// api데이터 테이블로 출력
 		showTable() {
@@ -279,20 +282,10 @@ export default {
 
 				setData.set('work_id', this.selectedProjectCode);
 				setData.set('user_id', this.user_id);
-
-				getDataInfo(setData).then((result) => {
-					this.dataList = result.data;
+				
+				getUserAddForm(setData).then((result) => {
+					this.columnList = result.data;
 					this.getData();
-					for (let i = 0; i < this.dataList.data.length; i++) {
-						const arr = JSON.parse(this.dataList.data[i].data_json);
-						this.dataListKey = Object.keys(arr);
-					}
-					this.dataListValue = [];
-					this.tableHeaderList = [];
-					for (let i = 0; i < this.dataList.data.length; i++) {
-						this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
-					}
-					
 				});
 			}
 		},
@@ -306,27 +299,26 @@ export default {
 			setData2.set('row_count', this.itemsPerPage);
 			setData2.set('page_no', this.currentPage);
 
-			getUserWorkData(setData2).then((result) => {
+			getUserWorkData2(setData2).then((result) => {
 				this.dataList = result.data;
-				this.totalItems = this.dataList.total_count;
-				console.log(this.dataList)	
-				this.tableHeaderList = [];
+				this.totalItems = result.data.total_count;
+				this.tableHeaderList = [];	
 				if (this.dataList != null) {
-				this.dataListValue = [];
-				for (let i = 0; i < this.dataList.data.length; i++) {
-					const arr = JSON.parse(this.dataList.data[i].data_json);
-					this.dataListKey = Object.keys(arr);
-					this.dataListValue.push(arr);
-				}
-				for (let i = 0; i < this.columnList.data.length; i++) {
-					for (let j = 0; j < this.columnList.data.length; j++) {
-						if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
-							this.tableHeaderList.push(this.columnList.data[j].meta_name);
+					this.dataListValue = [];
+					for (let i = 0; i < this.dataList.data.length; i++) {
+						const arr = JSON.parse(this.dataList.data[i].data_json);
+						this.dataListKey = Object.keys(arr);
+						this.dataListValue.push(arr);
+					}
+					for (let i = 0; i < this.columnList.data.length; i++) {
+						for (let j = 0; j < this.columnList.data.length; j++) {
+							if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+								this.tableHeaderList.push(this.columnList.data[j].meta_name);
+							}
 						}
 					}
-				}
-				this.searchOptionList.english = this.dataListKey;
-				this.searchOptionList.korean = this.tableHeaderList;
+					this.searchOptionList.english = this.dataListKey;
+					this.searchOptionList.korean = this.tableHeaderList;
 				}
 			});
 		},
@@ -342,6 +334,63 @@ export default {
 		},
 		resetSearchOption() {
 			this.selectedSearchOption = '';
+		},
+		searchTable() {
+			if (this.selectedSearchOption != '' && this.searchedData != '') {
+				const setSearch = new FormData();
+
+				setSearch.set('work_id', this.selectedProjectCode);
+				setSearch.set('columnName', this.selectedSearchOption);
+				setSearch.set('keyword', this.searchedData);
+				setSearch.set('user_id', this.user_id);
+
+				getUserSearch(setSearch).then((result) => {
+				this.dataList = result.data;
+				this.totalItems = this.dataList.data.length;
+
+				for (let i = 0; i < this.dataList.data.length; i++) {
+					const arr = JSON.parse(this.dataList.data[i].data_json);
+					this.dataListKey = Object.keys(arr);
+				}
+
+				for (let i = 0; i < this.columnList.data.length; i++) {
+					for (let j = 0; j < this.columnList.data.length; j++) {
+					if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+						this.tableHeaderList.push(this.columnList.data[j].meta_name);
+					}
+					}
+				}
+				this.searchOptionList.english = this.dataListKey;
+				this.searchOptionList.korean = this.tableHeaderList;
+
+				this.dataListValue = [];
+				for (let i = 0; i < this.dataList.data.length; i++) {
+					this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
+				}
+				if (this.dataListValue.length === 0) {
+					this.searchedNone = true;
+				}
+				});
+				this.resetSearchOption();
+				this.searchedData = '';
+			} else if ((this.selectedSearchOption == '') & (this.searchedData != '')) {
+				msgbox('검색할 칼럼을 선택해주세요');
+				this.$refs.searchSelect.focus();
+			} else if ((this.selectedSearchOption != '') & (this.searchedData == '')) {
+				msgbox('검색할 키워드를 입력해주세요');
+				this.$refs.searchInput.focus();
+			} else {
+				this.searchedNone = false;
+				this.resetSearchOption();
+				this.searchedData = '';
+				this.showTable();
+			}
+		},
+		pushDataId(id, name) {
+			let statusCode = ''
+			statusCode = Number(this.tableTaskList.indexOf(name));
+			sessionStorage.setItem('data_status', statusCode)
+			  sessionStorage.setItem('data_id', id);
 		},
 	},
 };

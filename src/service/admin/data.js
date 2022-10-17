@@ -37,6 +37,7 @@ export async function getUserSearch(param, callback) {
       data_status: param.get('data_status'),
       columnName: param.get('columnName'),
       keyword: param.get('keyword'),
+      user_id: param.get('user_id'),
     };
 
     const result = await axios.post('/web/search', data);
@@ -106,5 +107,23 @@ export async function getUserDataNum(param, callback) {
     return result.data;
   } catch (err) {
     throw new Error(err);
+  }
+}
+
+// 관리자 유저 데이터 조회
+export async function getUserWorkData2(param, callback) {
+  try {
+    const data = {
+      work_id: param.get('work_id'),
+      user_id: param.get('user_id'),
+      row_count: param.get('row_count'),
+      page_no: param.get('page_no'),
+    };
+    const result = await axios.post('/web/manager/work/info', data);
+
+    if (callback) callback(result.data);
+    return result.data;
+  } catch (err) {
+    if (callback) callback(err.response);
   }
 }

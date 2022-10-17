@@ -50,6 +50,7 @@ export default {
     };
   },
   created() {
+    this.data_status = sessionStorage.getItem('data_status')
     const setAddData = new FormData();
     const setEditData = new FormData();
 
@@ -58,11 +59,7 @@ export default {
     this.data_id = sessionStorage.getItem('data_id');
 
     setEditData.set('data_id', this.data_id);
-    if (this.projectCode == 12 || this.projectCode == 13) {
-      setAddData.set('work_id', 5);
-    } else {
-      setAddData.set('work_id', this.projectCode);
-    }
+    setAddData.set('work_id', this.projectCode);
 
     getUserAddForm(setAddData).then((result) => {
       this.columnList = result.data;
