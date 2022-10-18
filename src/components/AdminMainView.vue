@@ -57,14 +57,14 @@ export default {
   },
   methods: {
     total() {
-      this.totals = this.data_status5 + this.data_status4 + this.data_status3 + this.data_status6 + this.data_status1 + this.data_status2
+      this.totals = this.data_status5 + this.data_status4 + this.data_status3 + this.data_status6 + this.data_status1 + this.data_status2;
     }, 
     avg() {
       if (this.totals == 0) { 
         this.avgs = 0;
       }
       else {  
-        this.avgs = ((this.data_status6/this.totals)*100).toPrecision(1);
+        this.avgs = ((this.data_status6/this.totals)*100).toFixed(1);
       }
     },
     numberWithCommas(x) { 
