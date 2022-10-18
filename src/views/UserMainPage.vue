@@ -15,7 +15,7 @@
     </select>
 
     <!-- 데이터 추가버튼 -->
-    <button class="btn btn-secondary btn-add-data" type="button" v-show="selectedProjectCode != null" @click="goAddForm">데이터 추가</button>
+    <button class="btn btn-secondary btn-add-data" type="button" v-show="selectedProjectCode != ''" @click="goAddForm">데이터 추가</button>
 
     <!-- 제목 -->
     <div v-if="selectedProjectCode && selectedTaskCode">
@@ -235,6 +235,7 @@ export default {
     },
     resetSearchOption() {
       this.selectedSearchOption = '';
+      this.searchedData = '';
     },
     searchTable() {
       if (this.selectedSearchOption != '' && this.searchedData != '') {
@@ -274,17 +275,15 @@ export default {
           }
         });
         this.resetSearchOption();
-        this.searchedData = '';
       } else if ((this.selectedSearchOption == '') & (this.searchedData != '')) {
-        msgbox('검색할 칼럼을 선택해주세요');
+        msgbox('검색할 칼럼을 선택해주세요.');
         this.$refs.searchSelect.focus();
       } else if ((this.selectedSearchOption != '') & (this.searchedData == '')) {
-        msgbox('검색할 키워드를 입력해주세요');
+        msgbox('검색할 키워드를 입력해주세요.');
         this.$refs.searchInput.focus();
       } else {
         this.searchedNone = false;
         this.resetSearchOption();
-        this.searchedData = '';
         this.showTable();
       }
     },

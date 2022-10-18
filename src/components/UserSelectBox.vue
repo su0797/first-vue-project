@@ -2,7 +2,7 @@
   <div class="input-group mb-3">
     <label class="form-label">{{ label }}</label>
     <select class="form-select" v-model="selectValue" @change="$emit('selectFromChild', $event)" required>
-      <option disabled value="" selected>선택</option>
+      <option value="" disabled selected>선택</option>
       <option v-for="(option, i) in selectOptionLists" :key="i" :value="option.value">
         {{ option.key }}
       </option>
@@ -37,6 +37,9 @@ select option[value=''][disabled] {
 select:invalid {
   color: #b9b9b9;
 }
+select option {
+  color: black;
+}
 .input-group {
   flex-wrap: nowrap;
   margin: 0 auto;
@@ -60,9 +63,6 @@ select:invalid {
   justify-content: right;
   word-break: keep-all;
   font-weight: 500;
-}
-.not-selected {
-  color: #b9b9b9;
 }
 @media (max-width: 768px) {
   .input-group {
