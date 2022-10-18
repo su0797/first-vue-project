@@ -107,8 +107,12 @@ export default {
       const regex = /^\d{3}-\d{4}-\d{4}$/;
       if (regex.test(this.user_phone)){
         this.isPhonePassValidation = true;
+      } else if(!isNotEmpty(this.user_phone)) {
+        this.msg = '전화번호를 입력하세요.';
+        this.errors.push("error");
+        this.$refs.user_phone.focus();
       } else {
-        this.msg = '휴대폰 형식에 맞게 입력해주세요'
+        this.msg = '전화번호 형식에 맞게 입력해주세요'
         this.errors.push("error")
         this.$refs.user_phone.focus();
       }

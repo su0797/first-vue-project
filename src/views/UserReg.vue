@@ -107,6 +107,10 @@ export default {
       const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
       if (regex.test(this.user_email)){
         this.isEmailPassValidation = true;
+      } else if (!isNotEmpty(this.user_email)) {
+        this.msg = '이메일을 입력해주세요';
+        this.errors.push("error");
+        this.$refs.user_email.focus();
       } else {
         this.msg = '이메일 형식에 맞게 입력해주세요';
         this.errors.push("error");
@@ -126,8 +130,12 @@ export default {
       const regex = /^\d{3}-\d{4}-\d{4}$/;
       if (regex.test(this.user_phone)){
         this.isPhonePassValidation = true;
+      } else if (!isNotEmpty(this.user_phone)) {
+        this.msg = '전화번호를 입력해주세요.';
+        this.errors.push("error");
+        this.$refs.user_phone.focus();
       } else {
-        this.msg = '휴대폰 형식에 맞게 입력해주세요'
+        this.msg = '전화번호 형식에 맞게 입력해주세요'
         this.errors.push("error")
         this.$refs.user_phone.focus();
       }
@@ -206,6 +214,12 @@ export default {
 </script>
 
 <style scoped>
+select:invalid {
+  color: #b9b9b9;
+}
+select option {
+  color: black;
+}
 h4 {
   text-align: center;
   margin-top: 40px;
