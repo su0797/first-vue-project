@@ -31,6 +31,12 @@ export default {
 </script>
 
 <style scoped>
+select option[value=''][disabled] {
+  display: none;
+}
+select:invalid {
+  color: #b9b9b9;
+}
 .input-group {
   flex-wrap: nowrap;
   margin: 0 auto;
@@ -54,6 +60,9 @@ export default {
   justify-content: right;
   word-break: keep-all;
   font-weight: 500;
+}
+.not-selected {
+  color: #b9b9b9;
 }
 @media (max-width: 768px) {
   .input-group {

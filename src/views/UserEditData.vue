@@ -56,6 +56,7 @@ export default {
     };
   },
   created() {
+    sessionStorage.setItem('isAddPage', 0);
     this.user_id = this.$cookies.get('userId');
 
     const setAddData = new FormData();
@@ -65,13 +66,12 @@ export default {
     this.projectName = sessionStorage.getItem('projectName');
     this.data_id = sessionStorage.getItem('data_id');
 
-    setEditData.set('data_id', this.data_id);
     setAddData.set('work_id', this.projectCode);
-
     getUserAddForm(setAddData).then((result) => {
       this.columnList = result.data;
     });
 
+    setEditData.set('data_id', this.data_id);
     getUserEditForm(setEditData).then((result) => {
       this.dataList = result.data;
       this.data_status = this.dataList.data.data_status;
@@ -79,6 +79,9 @@ export default {
     });
   },
   methods: {
+    changeSelectedValue(e) {
+      select.classList.remove('not-selected');
+    },
     changeStatusValue(e) {
       this.data_status = Number(e.target.value);
       if (this.data_status != 2 && this.data_status != 6) {
@@ -95,7 +98,7 @@ export default {
       };
       for (var key in this.inputValueList) {
         if (this.inputValueList[key] === '' || this.inputValueList[key] === null) {
-          this.inputValueList[key] = null;
+          this.inputValueList[key] = '';
           this.errors['form'].push('Error');
         }
       }

@@ -7,11 +7,11 @@
         <label class="form-check-label" for="inlineRadio1">임시저장</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" v-model="radioValue" :value="4" @change="$emit('radioFromChild', $event)" required :disabled="this.isAddPage" />
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" v-model="radioValue" :value="4" @change="$emit('radioFromChild', $event)" :disabled="this.isAddPage == 1" required />
         <label class="form-check-label" for="inlineRadio2">실측필요</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" v-model="radioValue" :value="5" @change="$emit('radioFromChild', $event)" required :disabled="this.isAddPage" />
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" v-model="radioValue" :value="5" @change="$emit('radioFromChild', $event)" :disabled="this.isAddPage == 1" required />
         <label class="form-check-label" for="inlineRadio3">조사불가</label>
       </div>
       <div class="form-check form-check-inline">
@@ -34,9 +34,10 @@ export default {
   },
 
   data() {
-    isAddPage: false;
+    return {
+      isAddPage: 0,
+    };
   },
-  methods: {},
 };
 </script>
 
