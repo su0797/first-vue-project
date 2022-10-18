@@ -15,7 +15,7 @@
     </select>
 
     <!-- 데이터 추가버튼 -->
-    <button class="btn btn-secondary btn-add-data" type="button" v-show="selectedProjectCode != ''" @click="goAddForm">데이터 추가</button>
+    <button class="btn btn-secondary btn-add-data" type="button" v-show="selectedProjectCode != null" @click="goAddForm">데이터 추가</button>
 
     <!-- 제목 -->
     <div v-if="selectedProjectCode && selectedTaskCode">
