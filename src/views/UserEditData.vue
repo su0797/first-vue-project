@@ -4,7 +4,7 @@
       <h3>
         {{ projectName }}
       </h3>
-      <h4>데이터 수정</h4>
+      <h4>{{ taskName }} 데이터 수정</h4>
     </div>
     <form class="needs-validation" @submit.prevent="submitForm($event)" novalidate>
       <div v-for="(column, i) in columnList.data" :key="i">
@@ -45,6 +45,7 @@ export default {
         form: [],
         status: [],
       },
+      taskName: '',
       projectName: '',
       projectCode: '',
       data_id: '',
@@ -56,6 +57,7 @@ export default {
     };
   },
   created() {
+    this.taskName = sessionStorage.getItem('taskName');
     sessionStorage.setItem('isAddPage', 0);
     this.user_id = this.$cookies.get('userId');
 
@@ -76,13 +78,9 @@ export default {
       this.dataList = result.data;
       this.data_status = this.dataList.data.data_status;
       this.inputValueList = JSON.parse(this.dataList.data.data_json);
-      console.log(this.inputValueList);
     });
   },
   methods: {
-    changeSelectedValue(e) {
-      select.classList.remove('not-selected');
-    },
     changeStatusValue(e) {
       this.data_status = Number(e.target.value);
       if (this.data_status != 2 && this.data_status != 6) {

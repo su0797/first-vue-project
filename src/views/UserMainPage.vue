@@ -99,6 +99,7 @@ export default {
     this.assignment_id = this.$cookies.get('assignmentId');
     this.user_id = this.$cookies.get('userId');
     sessionStorage.removeItem('isAddPage');
+    sessionStorage.removeItem('data_id');
 
     const setData = new FormData();
     setData.set('assignment_id', this.assignment_id);
@@ -275,10 +276,10 @@ export default {
           }
         });
         this.resetSearchOption();
-      } else if ((this.selectedSearchOption == '') & (this.searchedData != '')) {
+      } else if (this.selectedSearchOption == '' && this.searchedData != '') {
         msgbox('검색할 칼럼을 선택해주세요.');
         this.$refs.searchSelect.focus();
-      } else if ((this.selectedSearchOption != '') & (this.searchedData == '')) {
+      } else if (this.selectedSearchOption != '' && this.searchedData == '') {
         msgbox('검색할 키워드를 입력해주세요.');
         this.$refs.searchInput.focus();
       } else {
