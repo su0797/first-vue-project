@@ -64,7 +64,7 @@
 				</p>
 			</div>
 			<!-- 검색영역 -->
-			<div class="flex">
+			<div class="flex mt-30">
 				<div class="flex-area"></div>
 				<div class="search-area flex-area" v-if="selectedProjectCode">
 					<select v-model="selectedSearchOption" class="form-select" ref="searchSelect">
@@ -392,6 +392,7 @@ export default {
 				this.showTable();
 			}
 		},
+		// 데이터 수정 버튼
 		pushDataId(id, name) {
 			let statusCode = ''
 			statusCode = Number(this.tableTaskList.indexOf(name));
@@ -501,6 +502,10 @@ th {
 .sp {
 	display: none;
 }
+.mt-30{
+	margin-top: 30px;
+}
+
 @media (max-width: 768px) {
 	* {
 		font-size: 1rem !important;
