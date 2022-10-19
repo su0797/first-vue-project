@@ -11,7 +11,7 @@
             <button type="button" class="btn btn-primary btn-modal" @click="moveModifyPage" :disabled="user.user_status === 0" >수정</button>
             <button type="button" class="btn btn-primary btn-modal btn-stop" data-bs-toggle="modal" data-bs-target="#adminModal" style="width: 75px; text-align: center;" @click="openModal(user.user_id)" :disabled="user.user_status === 0"  v-if="user.user_status == 1" >{{ msg }}</button> 
             <button type="button" class="btn btn-primary btn-modal btn-stop" data-bs-toggle="modal" data-bs-target="#adminModal" style="width: 75px; text-align: center;" @click="openModal(user.user_id)" :disabled="user.user_status === 0"  v-if="user.user_status == 0">{{ nextMsg }}</button> 
-            <router-link :to="'/admin/user/workpage/${user_id}'">
+            <router-link :to="`/admin/user/workpage/${user_id}`">
               <button class="btn btn-primary btn-modal btn-stop"  :disabled="user.user_status === 0" @click="moveUserWorkPage">작업 내역</button>
             </router-link>
         </td>
