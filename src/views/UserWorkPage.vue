@@ -69,7 +69,7 @@
 				<div class="search-area flex-area" v-if="selectedProjectCode">
 					<select v-model="selectedSearchOption" class="form-select" ref="searchSelect">
 					<option value="" selected disabled>선택</option>
-					<option value="dataStatus">데이터 상태</option>
+					<!-- <option value="dataStatus">데이터 상태</option> -->
 					<option :value="searchOption" v-for="(searchOption, i) in searchOptionList.english" :key="i">
 						{{ searchOptionList.korean[i] }}
 					</option>
@@ -184,7 +184,6 @@ export default {
 				korean: [],
 				english: [],
 			},
-			index: '',
 			searchedNone : false,
 			dataNone : false,
 
@@ -338,90 +337,54 @@ export default {
 			this.selectedSearchOption = '';
 		},
 		searchTable() {
-			if (this.selectedSearchOption == 'dataStatus' && this.searchedData != '' ) {
-				for (let i = 0; i < this.tableTaskList.length; i++) {
-					if (this.tableTaskList[i].includes(this.searchedData)) {
-						this.index = i
-					}
-				}
-				this.dataList.data = this.dataList.data.filter((data) => data.data_status == this.index);
+			if (this.selectedSearchOption != '' && this.searchedData != '') {
+				const setSearch = new FormData();
+
+				setSearch.set('work_id', this.selectedProjectCode);
+				setSearch.set('columnName', this.selectedSearchOption);
+				setSearch.set('keyword', this.searchedData);
+				setSearch.set('user_id', this.user_id);
+
+				getUserSearch(setSearch).then((result) => {
+				this.dataList = result.data;
 				this.totalItems = this.dataList.data.length;
-				this.tableHeaderList = [];	
-				if (this.dataList.data.length !== 0) {
-					this.searchedNone = false;
-					this.dataListValue = [];
-					for (let i = 0; i < this.dataList.data.length; i++) {
-						const arr = JSON.parse(this.dataList.data[i].data_json);
-						this.dataListKey = Object.keys(arr);
-						this.dataListValue.push(arr);
-					}
-					for (let i = 0; i < this.columnList.data.length; i++) {
-						for (let j = 0; j < this.columnList.data.length; j++) {
-							if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
-								this.tableHeaderList.push(this.columnList.data[j].meta_name);
-							}
-						}
-					}
-					this.searchOptionList.english = this.dataListKey;
-					this.searchOptionList.korean = this.tableHeaderList;
 
-					this.resetSearchOption();
-					this.searchedData = '';
-				} else {
+				for (let i = 0; i < this.dataList.data.length; i++) {
+					const arr = JSON.parse(this.dataList.data[i].data_json);
+					this.dataListKey = Object.keys(arr);
+				}
+
+				for (let i = 0; i < this.columnList.data.length; i++) {
+					for (let j = 0; j < this.columnList.data.length; j++) {
+					if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+						this.tableHeaderList.push(this.columnList.data[j].meta_name);
+					}
+					}
+				}
+				this.searchOptionList.english = this.dataListKey;
+				this.searchOptionList.korean = this.tableHeaderList;
+
+				this.dataListValue = [];
+				for (let i = 0; i < this.dataList.data.length; i++) {
+					this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
+				}
+				if (this.dataListValue.length === 0) {
 					this.searchedNone = true;
-					this.resetSearchOption();
-					this.searchedData = '';
 				}
+				});
+				this.resetSearchOption();
+				this.searchedData = '';
+			} else if ((this.selectedSearchOption == '') & (this.searchedData != '')) {
+				msgbox('검색할 칼럼을 선택해주세요');
+				this.$refs.searchSelect.focus();
+			} else if ((this.selectedSearchOption != '') & (this.searchedData == '')) {
+				msgbox('검색할 키워드를 입력해주세요');
+				this.$refs.searchInput.focus();
 			} else {
-				if (this.selectedSearchOption != '' && this.searchedData != '') {
-					const setSearch = new FormData();
-
-					setSearch.set('work_id', this.selectedProjectCode);
-					setSearch.set('columnName', this.selectedSearchOption);
-					setSearch.set('keyword', this.searchedData);
-					setSearch.set('user_id', this.user_id);
-
-					getUserSearch(setSearch).then((result) => {
-					this.dataList = result.data;
-					this.totalItems = this.dataList.data.length;
-
-					for (let i = 0; i < this.dataList.data.length; i++) {
-						const arr = JSON.parse(this.dataList.data[i].data_json);
-						this.dataListKey = Object.keys(arr);
-					}
-
-					for (let i = 0; i < this.columnList.data.length; i++) {
-						for (let j = 0; j < this.columnList.data.length; j++) {
-						if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
-							this.tableHeaderList.push(this.columnList.data[j].meta_name);
-						}
-						}
-					}
-					this.searchOptionList.english = this.dataListKey;
-					this.searchOptionList.korean = this.tableHeaderList;
-
-					this.dataListValue = [];
-					for (let i = 0; i < this.dataList.data.length; i++) {
-						this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
-					}
-					if (this.dataListValue.length === 0) {
-						this.searchedNone = true;
-					}
-					});
-					this.resetSearchOption();
-					this.searchedData = '';
-				}else if ((this.selectedSearchOption == '') & (this.searchedData != '')) {
-					msgbox('검색할 칼럼을 선택해주세요');
-					this.$refs.searchSelect.focus();
-				}else if ((this.selectedSearchOption != '') & (this.searchedData == '')) {
-					msgbox('검색할 키워드를 입력해주세요');
-					this.$refs.searchInput.focus();
-				}else {
-					this.searchedNone = false;
-					this.resetSearchOption();
-					this.searchedData = '';
-					this.showTable();
-				}
+				this.searchedNone = false;
+				this.resetSearchOption();
+				this.searchedData = '';
+				this.showTable();
 			}
 		},
 		// 데이터 수정 버튼
