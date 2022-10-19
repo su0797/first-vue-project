@@ -69,6 +69,7 @@
 				<div class="search-area flex-area" v-if="selectedProjectCode">
 					<select v-model="selectedSearchOption" class="form-select" ref="searchSelect">
 					<option value="" selected disabled>선택</option>
+					<option value="dataStatus">데이터 상태</option> 
 					<option :value="searchOption" v-for="(searchOption, i) in searchOptionList.english" :key="i">
 						{{ searchOptionList.korean[i] }}
 					</option>
@@ -183,6 +184,7 @@ export default {
 				korean: [],
 				english: [],
 			},
+			searchDataIndex: '',
 			searchedNone : false,
 			dataNone : false,
 
@@ -221,7 +223,7 @@ export default {
 			this.allAss_data = data.data.data;
 			this.allAss_dataTotal = this.allAss_data.data_status1+this.allAss_data.data_status2+this.allAss_data.data_status3+this.allAss_data.data_status4+this.allAss_data.data_status5+this.allAss_data.data_status6;
 			//프로젝트 전체 인원의 완료 비율
-			if (this.allUser_progress == 0) { 
+			if (isNaN(this.totalWork_progress)== true) { 
 				this.allUser_progress = 0;
 			}
 			else {  
@@ -232,7 +234,7 @@ export default {
 		getUserDataNum(userAssData).then((data) => {
 			this.userAssSt = data.data.data;
 			//유저의 작업비율
-			if (this.userAss_progress == 0) { 
+			if (isNaN(this.totalWork_progress)== true) { 
 				this.userAss_progress = 0;
 			}
 			else {  
@@ -257,7 +259,7 @@ export default {
 				this.allWork_data = data.data.data;
 				this.allWork_dataTotal = this.allWork_data.data_status1+this.allWork_data.data_status2+this.allWork_data.data_status3+this.allWork_data.data_status4+this.allWork_data.data_status5+this.allWork_data.data_status6;
 				//work_id별 전체 인원의 완료 비율
-				if (this.totalWork_progress == 0) { 
+				if (isNaN(this.totalWork_progress)== true) { 
 					this.totalWork_progress = 0;
 				}
 				else {  
@@ -268,7 +270,7 @@ export default {
 			getUserDataNum(userWorkData).then((data) =>{
 				this.userWorkSt = data.data.data;
 				// 해당 유저의 work_id 완료 비율
-				if (this.userWork_progress == 0) { 
+				if (isNaN(this.totalWork_progress)== true) { 
 					this.userWork_progress = 0;
 				}
 				else {  
@@ -342,54 +344,92 @@ export default {
 			this.selectedSearchOption = '';
 		},
 		searchTable() {
-			if (this.selectedSearchOption != '' && this.searchedData != '') {
-				const setSearch = new FormData();
-
-				setSearch.set('work_id', this.selectedProjectCode);
-				setSearch.set('columnName', this.selectedSearchOption);
-				setSearch.set('keyword', this.searchedData);
-				setSearch.set('user_id', this.user_id);
-
-				getUserSearch(setSearch).then((result) => {
-				this.dataList = result.data;
+			// 데이터 상태로 검색
+			if (this.selectedSearchOption == 'dataStatus' && this.searchedData != '' ) {
+				for (let i = 0; i < this.tableTaskList.length; i++) {
+					if (this.tableTaskList[i].includes(this.searchedData)) {
+						this.searchDataIndex = i
+					}
+				}
+				this.dataList.data = this.dataList.data.filter((data) => data.data_status == this.searchDataIndex);
 				this.totalItems = this.dataList.data.length;
-
-				for (let i = 0; i < this.dataList.data.length; i++) {
-					const arr = JSON.parse(this.dataList.data[i].data_json);
-					this.dataListKey = Object.keys(arr);
-				}
-
-				for (let i = 0; i < this.columnList.data.length; i++) {
-					for (let j = 0; j < this.columnList.data.length; j++) {
-					if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
-						this.tableHeaderList.push(this.columnList.data[j].meta_name);
+				this.tableHeaderList = [];	
+				if (this.dataList.data.length !== 0) {
+					this.searchedNone = false;
+					this.dataListValue = [];
+					for (let i = 0; i < this.dataList.data.length; i++) {
+						const arr = JSON.parse(this.dataList.data[i].data_json);
+						this.dataListKey = Object.keys(arr);
+						this.dataListValue.push(arr);
 					}
+					for (let i = 0; i < this.columnList.data.length; i++) {
+						for (let j = 0; j < this.columnList.data.length; j++) {
+							if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+								this.tableHeaderList.push(this.columnList.data[j].meta_name);
+							}
+						}
 					}
-				}
-				this.searchOptionList.english = this.dataListKey;
-				this.searchOptionList.korean = this.tableHeaderList;
+					this.searchOptionList.english = this.dataListKey;
+					this.searchOptionList.korean = this.tableHeaderList;
 
-				this.dataListValue = [];
-				for (let i = 0; i < this.dataList.data.length; i++) {
-					this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
-				}
-				if (this.dataListValue.length === 0) {
+					this.resetSearchOption();
+					this.searchedData = '';
+				} else {
 					this.searchedNone = true;
+					this.resetSearchOption();
+					this.searchedData = '';
 				}
-				});
-				this.resetSearchOption();
-				this.searchedData = '';
-			} else if ((this.selectedSearchOption == '') & (this.searchedData != '')) {
-				msgbox('검색할 칼럼을 선택해주세요');
-				this.$refs.searchSelect.focus();
-			} else if ((this.selectedSearchOption != '') & (this.searchedData == '')) {
-				msgbox('검색할 키워드를 입력해주세요');
-				this.$refs.searchInput.focus();
 			} else {
-				this.searchedNone = false;
-				this.resetSearchOption();
-				this.searchedData = '';
-				this.showTable();
+				// 그 외 칼럼명으로 검색
+				if (this.selectedSearchOption != '' && this.searchedData != '') {
+					const setSearch = new FormData();
+
+					setSearch.set('work_id', this.selectedProjectCode);
+					setSearch.set('columnName', this.selectedSearchOption);
+					setSearch.set('keyword', this.searchedData);
+					setSearch.set('user_id', this.user_id);
+
+					getUserSearch(setSearch).then((result) => {
+					this.dataList = result.data;
+					this.totalItems = this.dataList.data.length;
+
+					for (let i = 0; i < this.dataList.data.length; i++) {
+						const arr = JSON.parse(this.dataList.data[i].data_json);
+						this.dataListKey = Object.keys(arr);
+					}
+
+					for (let i = 0; i < this.columnList.data.length; i++) {
+						for (let j = 0; j < this.columnList.data.length; j++) {
+						if (this.columnList.data[j].meta_key == this.dataListKey[i]) {
+							this.tableHeaderList.push(this.columnList.data[j].meta_name);
+						}
+						}
+					}
+					this.searchOptionList.english = this.dataListKey;
+					this.searchOptionList.korean = this.tableHeaderList;
+
+					this.dataListValue = [];
+					for (let i = 0; i < this.dataList.data.length; i++) {
+						this.dataListValue.push(JSON.parse(this.dataList.data[i].data_json));
+					}
+					if (this.dataListValue.length === 0) {
+						this.searchedNone = true;
+					}
+					});
+					this.resetSearchOption();
+					this.searchedData = '';
+				} else if ((this.selectedSearchOption == '') & (this.searchedData != '')) {
+					msgbox('검색할 칼럼을 선택해주세요');
+					this.$refs.searchSelect.focus();
+				} else if ((this.selectedSearchOption != '') & (this.searchedData == '')) {
+					msgbox('검색할 키워드를 입력해주세요');
+					this.$refs.searchInput.focus();
+				} else {
+					this.searchedNone = false;
+					this.resetSearchOption();
+					this.searchedData = '';
+					this.showTable();
+				}
 			}
 		},
 		// 데이터 수정 버튼
