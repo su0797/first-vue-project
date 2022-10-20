@@ -58,7 +58,6 @@ export default {
   props: {
     dataNone: Boolean,
     searchedNone: Boolean,
-    searchedNone: Boolean,
     user_id: Number,
     assignment_id: Number,
     selectedProjectCode: Number,
@@ -67,7 +66,6 @@ export default {
     tkName: String,
     searchedData: String,
     selectedSearchOption: String,
-    searchOptionList: Object,
   },
   data() {
     return {
@@ -107,8 +105,8 @@ export default {
           this.searchOptionList.korean.push(this.tableHeaderList[i].meta_name);
         }
         this.$emit('setSearchOptions', this.searchOptionList);
+        this.getTableBodyData();
       });
-      this.getTableBodyData();
     },
     getTableBodyData() {
       const setData = new FormData();
