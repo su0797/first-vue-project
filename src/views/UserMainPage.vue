@@ -66,14 +66,14 @@ export default {
   created() {
     this.assignment_id = this.$cookies.get('assignmentId');
     this.user_id = this.$cookies.get('userId');
-    sessionStorage.removeItem('isAddPage');
-    sessionStorage.removeItem('data_id');
-  },
-  mounted() {
     this.pjName = sessionStorage.getItem('projectName');
     this.tkName = sessionStorage.getItem('taskName');
     this.selectedProjectCode = sessionStorage.getItem('projectCode');
     this.selectedTaskCode = sessionStorage.getItem('taskCode');
+    sessionStorage.removeItem('isAddPage');
+    sessionStorage.removeItem('data_id');
+  },
+  mounted() {
     const setData = new FormData();
     setData.set('assignment_id', this.assignment_id);
     getUserWorkId(setData).then((result) => {

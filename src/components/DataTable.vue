@@ -58,16 +58,16 @@ export default {
   props: {
     dataNone: Boolean,
     searchedNone: Boolean,
-    assignment_id: Number,
+    searchedNone: Boolean,
     user_id: Number,
-    pjName: String,
+    assignment_id: Number,
     selectedProjectCode: Number,
-    tkName: String,
     selectedTaskCode: Number,
+    pjName: String,
+    tkName: String,
     searchedData: String,
     selectedSearchOption: String,
     searchOptionList: Object,
-    searchedNone: Boolean,
   },
   data() {
     return {
