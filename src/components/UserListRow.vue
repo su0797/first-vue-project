@@ -45,7 +45,7 @@ export default {
         sessionStorage.setItem('user_name', this.user.user_name)
         sessionStorage.setItem('user_id', this.user.user_id)
         sessionStorage.setItem('assignment_id', this.user.assignment_id)
-        this.$router.push('/admin/user/workpage/${this.user_id}').catch(() => {});
+        this.$router.push(`/admin/user/workpage/${this.user_id}`).catch(() => {});
     },
 
   },
