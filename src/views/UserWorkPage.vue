@@ -135,7 +135,7 @@
 <script>
 import { msgbox } from '../service/common';
 import { getUserWorkId,getUserSearch,getUserAddForm } from "/@service/user";
-import {getUserDataNum,getUserWorkData2} from "/@service/admin/data";
+import {getUserDataNum,getUserWorkData2,getUsertotallangth} from "/@service/admin/data";
 
 export default {
 	data() {
@@ -144,6 +144,7 @@ export default {
 			user_id: '',
 			pjName: '',
 			assignment_id: '',
+			user_status: 1,
 			work_name:'',
 			selectedProjectCode: '',
 			dataList: [],
@@ -167,6 +168,7 @@ export default {
 			allAss_dataTotal:0,
 			allUser_progress:0,
 			userAss_progress:0,
+			assUsertotal:[],
 			userWorkSt:[],
 			totalWork_progress:0,
 			userWork_progress:0,
@@ -213,17 +215,25 @@ export default {
 		// 전체 작업량 확인
 		const allAssData = new FormData();
 		const userAssData = new FormData();
+		const Usertotallangth = new FormData();
 
 		allAssData.set('assignment_id', this.assignment_id)
 		userAssData.set('assignment_id', this.assignment_id)
 		userAssData.set('user_id', this.user_id)
+		Usertotallangth.set('assignment_id', this.assignment_id)
+		Usertotallangth.set('user_status', this.user_status)
 
 		// 해당 프로젝트의 총 작업량
 		getUserDataNum(allAssData).then((data) => {
 			this.allAss_data = data.data.data;
 			this.allAss_dataTotal = this.allAss_data.data_status1+this.allAss_data.data_status2+this.allAss_data.data_status3+this.allAss_data.data_status4+this.allAss_data.data_status5+this.allAss_data.data_status6;
+			
+			getUsertotallangth(Usertotallangth).then((data)=>{
+				this.assUsertotal =data.data.user.length
+			})
 			//프로젝트 전체 인원의 완료 비율
-			this.allUser_progress = ((this.allAss_data.data_status6/this.allAss_dataTotal)*100).toFixed(1) ;
+			this.allUser_progress = (((this.allAss_data.data_status6/this.allAss_dataTotal)/this.assUsertotal)*100).toFixed(1) ;
+			console.log(this.allUser_progress)
 			if (isNaN(this.allUser_progress)== true) { 
 				this.allUser_progress = 0;
 			}
