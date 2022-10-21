@@ -1,9 +1,11 @@
 <template>
   <Spinner v-if="spiner" />
+  <router-view :key="$route.fullPath"><TopBar /></router-view>
+  
   <div class="container">
-    <TopBar />
+    
     <slot />
-    <Footer />
+    <!-- <Footer /> -->
   </div>
 </template>
 <script>

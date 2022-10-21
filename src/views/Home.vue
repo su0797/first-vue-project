@@ -108,7 +108,7 @@
 import { computed, ref, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import { getUser, joinUser, editUser, uploadFile } from '/@service/api';
-import { oauthLogin, geLoginInfo } from '/@service/login';
+import { oauthLogin, getLoginInfo } from '/@service/login';
 import { selectboxOption, jsonFromFormData, isNotEmpty } from '/@service/util';
 import Select from '/@components/Select.vue';
 

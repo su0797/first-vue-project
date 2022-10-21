@@ -45,6 +45,7 @@ export const deleteStorage = () => {
 export async function oauthLogin(param, callback) {
   try {
     param.set('grant_type', 'password');
+
     const result = await axios.post('/oauth/token', param, { auth });
     // login success
     if (result.status == 200) setOauthToken(result.data);
@@ -86,7 +87,7 @@ export async function setFcmToken(param, callback) {
   }
 }
 
-export async function geLoginInfo(callback) {
+export async function getLoginInfo(callback) {
   try {
     const result = await axios.post('/common/token/info');
     if (callback) callback(result.data);
