@@ -11,7 +11,7 @@
         <UserInput :label="column.meta_name" :inputValue="(inputValueList[column.meta_key] = inputValueList[column.meta_key])" @inputFromChild="inputValueList[column.meta_key] = $event.target.value" v-if="column.meta_type === '1'" />
         <UserSelectBox
           :label="column.meta_name"
-          :selectValue="(inputValueList[column.meta_key] = inputValueList[column.meta_key])"
+          :selectValue="(inputValueList[column.meta_key] = Number(inputValueList[column.meta_key]))"
           @selectFromChild="inputValueList[column.meta_key] = Number($event.target.value)"
           v-else-if="column.meta_type === '2'"
         />
