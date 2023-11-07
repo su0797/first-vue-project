@@ -17,29 +17,24 @@ BitBucket
 
 ## **[목차]**
 
-1. 기숳 및 개발 환경
+1. 기술 및 개발 환경
 2. 폴더구조
 3. 구현 기능
 4. 기능 UI
 5. 후기
 
-## 1. 기능
+## 1. 기술 및 개발 환경
 
-### 1.1. 주요 기능
+### [기술 스택]
 
-
-
-## 2. 개발 환경 및 배포 URL
-
-### 2.1. 개발 환경
-
--  npm == 8.13.2
 <table>
 <tr>
  <td align="center" width="100px">사용 기술</td>
  <td width="800px">
  <img src="https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D"/>&nbsp  
    <img src="https://img.shields.io/badge/axios-7F2B7B?style=for-the-badge&logo=axios&logoColor=white"/>&nbsp 
+  <img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"/>&nbsp
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"/>&nasp
     </td>
 </tr>
 <tr>
@@ -51,8 +46,7 @@ BitBucket
 <tr>
  <td align="center">협업</td>
  <td>
-    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>&nbsp 
-    <img src="https://img.shields.io/badge/Notion-5a5d69?style=for-the-badge&logo=Notion&logoColor=white"/>&nbsp
+    <img src="https://img.shields.io/badge/Bitbucket-2684FF?style=for-the-badge&logo=Bitbucket&logoColor=white"/>&nbsp 
     <img src="https://img.shields.io/badge/Discord-4263f5?style=for-the-badge&logo=Discord&logoColor=white"/>&nbsp  
  </td>
 <tr>
