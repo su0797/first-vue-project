@@ -1,4 +1,4 @@
-# Vue Project
+# Vue.JS Project
 
 
 ## 0. 목차
