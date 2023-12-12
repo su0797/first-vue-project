@@ -57,7 +57,77 @@
 
 
 ## 3. 폴더구조
-
+```
+📦src
+ ┣ 📂assets
+ ┃ ┣ 📂css
+ ┃ ┃ ┗ 📜common.css
+ ┃ ┗ 📂img
+ ┃ ┃ ┣ 📜empty.png
+ ┃ ┃ ┣ 📜loading.gif
+ ┃ ┃ ┗ 📜loading_circle.gif
+ ┣ 📂components
+ ┃ ┣ 📜Address.vue
+ ┃ ┣ 📜AdminMainView.vue
+ ┃ ┣ 📜AdminModal.vue
+ ┃ ┣ 📜AppInit.vue
+ ┃ ┣ 📜Base.vue
+ ┃ ┣ 📜CountrySelect.vue
+ ┃ ┣ 📜CustomToast.vue
+ ┃ ┣ 📜DataTable.vue
+ ┃ ┣ 📜DatePicker.vue
+ ┃ ┣ 📜DaumMapApi.vue
+ ┃ ┣ 📜FileDrop.vue
+ ┃ ┣ 📜Footer.vue
+ ┃ ┣ 📜Modal.vue
+ ┃ ┣ 📜Phone.vue
+ ┃ ┣ 📜Select.vue
+ ┃ ┣ 📜Spinner.vue
+ ┃ ┣ 📜Table.vue
+ ┃ ┣ 📜TimePicker.vue
+ ┃ ┣ 📜TopBar.vue
+ ┃ ┣ 📜UserInput.vue
+ ┃ ┣ 📜UserListRow.vue
+ ┃ ┣ 📜UserNote.vue
+ ┃ ┣ 📜UserRadioBox.vue
+ ┃ ┗ 📜UserSelectBox.vue
+ ┣ 📂router
+ ┃ ┗ 📜index.js
+ ┣ 📂service
+ ┃ ┣ 📂admin
+ ┃ ┃ ┗ 📜data.js
+ ┃ ┣ 📜api.js
+ ┃ ┣ 📜axios.js
+ ┃ ┣ 📜chat.js
+ ┃ ┣ 📜common.js
+ ┃ ┣ 📜extension.js
+ ┃ ┣ 📜firebase-message.js
+ ┃ ┣ 📜global.js
+ ┃ ┣ 📜login.js
+ ┃ ┣ 📜string.js
+ ┃ ┣ 📜user.js
+ ┃ ┗ 📜util.js
+ ┣ 📂store
+ ┃ ┗ 📜index.js
+ ┣ 📂views
+ ┃ ┣ 📜AdminMain.vue
+ ┃ ┣ 📜AdminModifyData.vue
+ ┃ ┣ 📜Home.vue
+ ┃ ┣ 📜Login.vue
+ ┃ ┣ 📜NotFound.vue
+ ┃ ┣ 📜TaskList.vue
+ ┃ ┣ 📜Test.vue
+ ┃ ┣ 📜UserAddData.vue
+ ┃ ┣ 📜UserEditData.vue
+ ┃ ┣ 📜UserList.vue
+ ┃ ┣ 📜UserMainPage.vue
+ ┃ ┣ 📜UserModify.vue
+ ┃ ┣ 📜UserReg.vue
+ ┃ ┗ 📜UserWorkPage.vue
+ ┣ 📜.DS_Store
+ ┣ 📜App.vue
+ ┗ 📜main.js
+```
 
 
 ## 4. 구현 기능
