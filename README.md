@@ -138,7 +138,18 @@
 
 ## 4. 구현 기능
 
-### 데이터 입력 및 수정 ![데이터입력및수정(UI-U-002)](https://github.com/su0797/first-vue-project/assets/95666574/d0102b62-0692-4450-859e-2a5c51138383)
+### 데이터 입력 및 수정 
+![데이터입력및수정(UI-U-002)](https://github.com/su0797/first-vue-project/assets/95666574/d0102b62-0692-4450-859e-2a5c51138383)
+
+### 인턴 개인 작업내역 확인하기
+![인턴작업내역(UI-A-003-1)_문정원OTT 선택](https://github.com/su0797/first-vue-project/assets/95666574/20d5e1fb-d040-43da-9003-44d633e2499f)
+
+
+### 관리자의 인턴 관리
+![인턴관리(UI-A-002)](https://github.com/su0797/first-vue-project/assets/95666574/4050c7ca-3619-4c6a-8a7d-ad303eadeddd)
+
+### 전체 진행률 확인 가능한 관리자 메인
+![관리자메인(UI-A-001)](https://github.com/su0797/first-vue-project/assets/95666574/bcd10838-4524-441b-8c0d-d590520e74d0)
 
 
 
