@@ -138,7 +138,7 @@
 
 ## 4. 구현 기능
 
-### [데이터입력및수정](https://github.com/su0797/first-vue-project/assets/95666574/d0102b62-0692-4450-859e-2a5c51138383)
+### ![데이터입력및수정(UI-U-002)](https://github.com/su0797/first-vue-project/assets/95666574/d0102b62-0692-4450-859e-2a5c51138383)
 
 
 
