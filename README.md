@@ -152,9 +152,9 @@
 ![인턴관리(UI-A-002)](https://github.com/su0797/first-vue-project/assets/95666574/91fa3db0-a15a-49e4-b0c8-2b6f768f845a)
 
 - ### 업무 분배
-![과제별업무목록(UI-A-004-1)_분배전](https://github.com/su0797/first-vue-project/assets/95666574/4b7e6255-0ef4-4a84-a378-cb0d5e606f39)
-
 ![과제별업무목록(UI-A-004-1)_분배전체크박스전체선택](https://github.com/su0797/first-vue-project/assets/95666574/0bd4f9bf-13da-41cc-b932-0f0c016706bb)
+
+![데이터입력분배모달](https://github.com/su0797/first-vue-project/assets/95666574/3b101b08-956b-4877-b154-0517e2ccc0fb)
 
 
 
