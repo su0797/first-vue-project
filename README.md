@@ -137,7 +137,7 @@
 
 
 ## 4. 기능 UI
-- ### 인턴 계정 추가, 로그인
+- ### 로그인, 인턴 계정 추가
 ![로그인(UI-C-001)_user](https://github.com/su0797/first-vue-project/assets/95666574/a7f4fb56-7b27-42fe-9386-b76de906af11)
 
 ![인턴 추가(UI-A-00_)](https://github.com/su0797/first-vue-project/assets/95666574/e20a716d-d123-4f84-aa91-8ce60c31be89)
