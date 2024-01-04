@@ -142,6 +142,12 @@
 
 ![인턴 추가(UI-A-00_)](https://github.com/su0797/first-vue-project/assets/95666574/e20a716d-d123-4f84-aa91-8ce60c31be89)
 
+- ### 관리자 메인
+![관리자메인(UI-A-001)](https://github.com/su0797/first-vue-project/assets/95666574/bcd10838-4524-441b-8c0d-d590520e74d0)
+
+- ### 인턴 메인
+![인턴작업내역(UI-A-003-1)_문정원OTT 선택](https://github.com/su0797/first-vue-project/assets/95666574/e82e58e8-25e9-4686-83db-a45e35b3ccb2)
+
 - ### 데이터 입력 및 수정
 ![데이터입력및수정(UI-U-002)](https://github.com/su0797/first-vue-project/assets/95666574/2267a05f-570e-4d64-97dc-e95c27dd877a)
   
